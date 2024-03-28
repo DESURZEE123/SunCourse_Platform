@@ -38,7 +38,8 @@ export default [
     icon: 'FileDoneOutlined',
     // access: 'canRoute',
     routes: [
-      { path: '/homework', component: './homework' },
+      { path: '/homework/my', name:'我的作业', component: './homework/my' },
+      { path: '/homework/new', name: '发布作业', component: './homework/new' },
       { path: '/homework/details/StuWork', component: './homework/details/StuWork' },
       { path: '/homework/details/TeaPubWork', component: './homework/details/TeaPubWork' }
     ]
