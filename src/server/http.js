@@ -106,8 +106,22 @@ app.post('/discuss/replay', (req, res) => {
 // 查找讨论
 app.post('/discuss/id=:id', (req, res) => {
   const { id } = req.params
-  console.log('~~~~~~',id);
   pool.query(`SELECT * FROM discussion WHERE id = ? and replayId = 0;`, [id], (err, rows) => {
+    if (err) {
+      console.error('Error querying database:', err)
+      res.status(500).send('Internal Server Error')
+    } else {
+      res.json(rows)
+    }
+  })
+})
+
+
+// 查找讨论，有bug，应该查询出对应IdDiscuss，再去查找；否则会不显示回复数量
+app.post('/discuss/search/title=:title', (req, res) => {
+  const { title } = req.params
+  console.log(title);
+  pool.query(`SELECT * FROM discussion WHERE title LIKE ? and replayId = 0;`, [`%${title}%`], (err, rows) => {
     if (err) {
       console.error('Error querying database:', err)
       res.status(500).send('Internal Server Error')

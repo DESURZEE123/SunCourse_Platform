@@ -2,15 +2,16 @@ import DiscussCard from '@/components/DiscussCard'
 import { Button, Card, Input, Space } from 'antd'
 import { useModel } from 'umi'
 import NewModel from './NewModel'
-import { findDiscuss, getDiscussList } from '@/api/discuss'
+import { findDiscuss, getDiscussList, SearchDiscuss } from '@/api/discuss'
 import { discussTrans } from '../../utils'
 
 const Discuss = () => {
   const { Search } = Input
   const { discussList, setDiscussList } = useModel('system')
 
-  const onSearch = (value, _e, info) => {
-
+  const onSearch = async(value:string) => {
+    const res = await SearchDiscuss({ title: value })
+    setDiscussList((discussTrans(res)))
   }
 
   const allDiscussion = async() => {
