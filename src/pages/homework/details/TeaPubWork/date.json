@@ -1,0 +1,21 @@
+[
+  {
+    "backImg": "https://sares.kfc.com.cn/ycmsuat/uat/hotspot/202312/202312271448589500.jpeg",
+    "hotZoneConfigList": [
+      {
+        "h": 112,
+        "linkConfigList": [
+          {
+            "link": 83
+          }
+        ],
+        "linkType": 1,
+        "positionId": "0-0",
+        "w": 202,
+        "x": 64,
+        "y": 124,
+        "zoneName": "热区1"
+      }
+    ]
+  }
+]
