@@ -2,20 +2,34 @@ import DiscussCard from '@/components/DiscussCard'
 import { Button, Card, Input, Space } from 'antd'
 import { useModel } from 'umi'
 import NewModel from './NewModel'
+import { findDiscuss, getDiscussList } from '@/api/discuss'
+import { discussTrans } from '../../utils'
 
 const Discuss = () => {
   const { Search } = Input
-  const { discussList } = useModel('system')
+  const { discussList, setDiscussList } = useModel('system')
 
-  const onSearch = (value, _e, info) => console.log(info?.source, value)
+  const onSearch = (value, _e, info) => {
+
+  }
+
+  const allDiscussion = async() => {
+    const res = await getDiscussList()
+    setDiscussList((discussTrans(res)))
+  }
+
+  const FindDiscuss = async()=> {
+    const res = await findDiscuss({id:1}) 
+    setDiscussList(res)
+  } 
 
   return (
     <Card>
       <Space style={{ marginBottom: '20px' }}>
-        <span style={{ fontSize: '20px', fontWeight: 'bold' }}>全部话题</span>
+        <span style={{ fontSize: '20px', fontWeight: 'bold' }} onClick={allDiscussion}>全部话题</span>
         <Search style={{ width: 200, marginLeft: '40px' }} placeholder='搜索话题' onSearch={onSearch} />
         <NewModel />
-        <Button type='link' style={{ marginRight: '30px' }}>
+        <Button type='link' style={{ marginRight: '30px' }} onClick={FindDiscuss} >
           我的话题
         </Button>
       </Space>

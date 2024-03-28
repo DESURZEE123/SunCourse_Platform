@@ -10,3 +10,5 @@ export const changeLike = (parmas) => post(`/api/discuss/like/idDiscussion=${par
 export const newDiscuss = (parmas) => post(`/api/discuss/new`, parmas)
 // 回复
 export const replayDiscuss = (parmas) => post(`/api/discuss/replay`, parmas)
+// 查找讨论
+export const findDiscuss = (params) => post(`/api/discuss/id=${params.id}`, params)

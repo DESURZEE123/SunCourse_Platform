@@ -103,7 +103,19 @@ app.post('/discuss/replay', (req, res) => {
   })
 })
 
-
+// 查找讨论
+app.post('/discuss/id=:id', (req, res) => {
+  const { id } = req.params
+  console.log('~~~~~~',id);
+  pool.query(`SELECT * FROM discussion WHERE id = ? and replayId = 0;`, [id], (err, rows) => {
+    if (err) {
+      console.error('Error querying database:', err)
+      res.status(500).send('Internal Server Error')
+    } else {
+      res.json(rows)
+    }
+  })
+})
 
 const port = 3000
 app.listen(port, () => {
