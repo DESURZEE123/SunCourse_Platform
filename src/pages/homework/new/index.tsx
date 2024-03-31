@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
-import { Space, Button, message, Steps, Form, Input, DatePicker, Divider, Flex, Select } from 'antd';
-import { PlusSquareOutlined } from '@ant-design/icons'
+import { Space, Tooltip, Button, message, Steps, Form, Input, DatePicker, Divider, Flex, Select } from 'antd';
+import { PlusSquareOutlined, EyeOutlined } from '@ant-design/icons'
 import { PageContainer } from '@ant-design/pro-components'
-import { FORM_TITLE, FORM_DATE, FORM_DESCRIPTION, FORM_SHORTANSWER, FORM_SELECT, FORM_SELECTOPTION, FORM_SELECTQUSITION, FORM_SELECTANSWER, FORM_TRUEFALSE } from '../../../constants'
+import { FORM_STATUS, FORM_AUTHOR, FORM_TITLE, FORM_DATE, FORM_DESCRIPTION, FORM_SHORTANSWER, FORM_SELECT, FORM_SELECTOPTION, FORM_SELECTQUSITION, FORM_SELECTANSWER, FORM_TRUEFALSE } from '../../../constants'
 import styled from 'styled-components'
 
 const StepContent = styled.div`
   min-height: 260px;
-  color: rgba(0, 0, 0, 0.45);
-  background-color: #ffffff;
-  border-radius: 8px;
-  border: 8px;
   margin-top: 16px;
+  padding: 15px;
+  background-color: #ffffff;
+  border: 8px;
+  border-radius: 8px;
+  color: rgba(0, 0, 0, 0.45);
 `
 
 const steps = [
@@ -35,19 +36,19 @@ const steps = [
 
 export default () => {
   const [form] = Form.useForm()
-  const [current, setCurrent] = useState(1)
+  const [current, setCurrent] = useState(3)
+  const [formContext, setFormContext] = useState({})
   const [selectNumber, setSelectNumber] = useState(1)
+  const [answerNumber, setAnswerNumber] = useState(1)
 
   const items = steps.map((item) => ({ key: item.title, title: item.title }));
 
   const FormSelect = ({ index: number }) => {
-    console.log(number);
-
     const options = [
-      { label: 'A', value: 'A' },
-      { label: 'B', value: 'B' },
-      { label: 'C', value: 'C' },
-      { label: 'D', value: 'D' }
+      { label: '选项一', value: 'A' },
+      { label: '选项二', value: 'B' },
+      { label: '选项三', value: 'C' },
+      { label: '选项四', value: 'D' }
     ]
     return (
       <>
@@ -58,7 +59,7 @@ export default () => {
           {options.map((item, index) => (
             <Form.Item
               name={[FORM_SELECT, `${number}`, FORM_SELECTOPTION, item.value]}
-              label={item.value}
+              label={item.label}
               style={{ marginRight: index < options.length - 1 ? '10px' : undefined }}
             >
               <Input />
@@ -66,24 +67,34 @@ export default () => {
           ))}
         </Flex>
         <Form.Item name={[FORM_SELECT, `${number}`, FORM_SELECTANSWER]} label='答案'>
-          <Select optionLabelProp='label' options={options}/>
+          <Select options={options} style={{ width: '200px' }} />
         </Form.Item>
       </>
     )
   }
 
-  const onChange = (changedValues, allValues) => {
-    console.log(allValues);
-
+  const next = () => {
+    setCurrent(current + 1)
+    setFormContext((prevCount) => {
+      return { ...prevCount, ...form.getFieldsValue() }
+    })
   }
-  // 需要加上发布状态、发布人
+
+  const onFinish = () => {
+    setFormContext((prevCount) => {
+      return { ...prevCount, ...form.getFieldsValue(), author: 'wyy' }
+    })
+    message.success('Processing complete!')
+  }
+  console.log(formContext)
+
   return (
     <PageContainer>
       <Steps current={current} items={items} />
       <StepContent>
-        <Form onValuesChange={onChange}>
+        <Form form={form}>
           {current === 0 &&
-            <div style={{ padding: '20px' }}>
+            <div>
               <Form.Item name={FORM_TITLE} label="作业名称">
                 <Input />
               </Form.Item>
@@ -96,9 +107,14 @@ export default () => {
             </div>
           }
           {current === 1 &&
-            <div style={{ padding: '15px' }}>
+            <>
               <Flex justify={'space-between'} style={{ marginBottom: '10px' }}>
-                <h3 style={{ marginRight: '20px', fontWeight: 'bold' }}>设置单选题</h3>
+                <Space>
+                  <h3 style={{ fontWeight: 'bold' }}>设置简答题</h3>
+                  <Tooltip title="选项数为2时，题型为判断题">
+                    <EyeOutlined />
+                  </Tooltip>
+                </Space>
                 <Button shape='circle' icon={<PlusSquareOutlined />} onClick={() => { setSelectNumber(selectNumber + 1) }} />
               </Flex>
               {Array.from({ length: selectNumber }, (_, index) => (
@@ -107,19 +123,42 @@ export default () => {
                   <Divider />
                 </>
               ))}
-            </div>}
-          {current === 2 && <div>2-content</div>}
+            </>}
+          {current === 2 &&
+            <>
+              <Flex justify={'space-between'} style={{ marginBottom: '10px' }}>
+                <h3 style={{ marginRight: '20px', fontWeight: 'bold' }}>设置简答题</h3>
+                <Button shape='circle' icon={<PlusSquareOutlined />} onClick={() => { setAnswerNumber(answerNumber + 1) }} />
+              </Flex>
+              {Array.from({ length: answerNumber }, (_, index) => (
+                <>
+                  <Form.Item name={[FORM_SHORTANSWER, `${index + 1}`]} label={`简答题${index + 1}`}>
+                    <Input />
+                  </Form.Item>
+                  <Divider />
+                </>
+              ))}
+            </>}
+          {current === 3 &&
+            <>
+              <h3 style={{ fontWeight: 'bold' }}>作业发布</h3>
+              <Form.Item name={FORM_STATUS} label='发布状态'>
+                <Select options={[{ label: '已发布', value: 1 }, { label: '未发布', value: 0 }]} />
+              </Form.Item>
+              <Form.Item name={FORM_AUTHOR} label='发布人'>
+                <div>{'wyy'}</div>
+              </Form.Item>
+            </>
+          }
         </Form>
 
       </StepContent>
       <div style={{ marginTop: 24 }}>
         {current < steps.length - 1 && (
-          <Button type="primary" onClick={() => setCurrent(current + 1)}>
-            下一步
-          </Button>
+          <Button type="primary" onClick={next}>下一步</Button>
         )}
         {current === steps.length - 1 && (
-          <Button type="primary" onClick={() => message.success('Processing complete!')}>
+          <Button type="primary" onClick={onFinish}>
             完成
           </Button>
         )}
