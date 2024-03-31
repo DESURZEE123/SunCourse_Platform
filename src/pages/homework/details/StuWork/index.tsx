@@ -1,4 +1,5 @@
-import { Button, Form, Image, Input, Radio, Space, Table } from 'antd'
+import { Button, Form, Image, Input, Radio, Space, Table, Watermark } from 'antd'
+import { PageContainer } from '@ant-design/pro-components'
 import styled from 'styled-components'
 const QImage = require('../../../../assets/images/题目1.jpeg')
 const Info = styled.div``
@@ -94,53 +95,55 @@ export default () => {
     console.log(values)
   }
   return (
-    <>
-      <Info>姓名：王怡阳 班级：20信管1 成绩：100</Info>
-      <Table dataSource={dataSource} columns={columns} pagination={false} />
-      <Form form={form} name='control-hooks' onFinish={onFinish} style={{ padding: '0 20px', backgroundColor: '#fff' }}>
-        {/* 选择题 */}
-        <div>
-          <QuestionTitle>一、选择题(共3题,30.0分)</QuestionTitle>
-          {selectOption.map((item) => {
-            return (
-              <div key={item.id}>
-                <div>
-                  {item.id}.{item.title}
-                </div>
-                <Form.Item name='radio1'>
-                  <Radio.Group options={item.option} onChange={(e) => onChange1(e.target.value)} />
-                </Form.Item>
-              </div>
-            )
-          })}
-        </div>
-
-        {/* 简答题 */}
-        <div>
-          <QuestionTitle>二、简答题(共2题,70.0分)</QuestionTitle>
+    <PageContainer>
+      <Watermark content="20201505117" font={{ fontSize: '10' }} gap={[110, 100]}>
+        <Info>姓名：王怡阳 班级：20信管1 成绩：100</Info>
+        <Table dataSource={dataSource} columns={columns} pagination={false} />
+        <Form form={form} name='control-hooks' onFinish={onFinish} style={{ padding: '0 20px', backgroundColor: '#fff' }}>
+          {/* 选择题 */}
           <div>
-            {shortQ.map((item, index) => (
-              <div key={index}>
-                <div>第{index + 1}题</div>
-                <Image preview={false} src={QImage} />
-                <div>{item.title}</div>
-                <Form.Item name='radio2'>
-                  <Input.TextArea />
-                </Form.Item>
-              </div>
-            ))}
+            <QuestionTitle>一、选择题(共3题,30.0分)</QuestionTitle>
+            {selectOption.map((item) => {
+              return (
+                <div key={item.id}>
+                  <div>
+                    {item.id}.{item.title}
+                  </div>
+                  <Form.Item name='radio1'>
+                    <Radio.Group options={item.option} onChange={(e) => onChange1(e.target.value)} />
+                  </Form.Item>
+                </div>
+              )
+            })}
           </div>
-        </div>
 
-        <Form.Item>
-          <Space>
-            <Button type='primary' htmlType='submit'>
-              保存
-            </Button>
-            <Button type='primary'>提交</Button>
-          </Space>
-        </Form.Item>
-      </Form>
-    </>
+          {/* 简答题 */}
+          <div>
+            <QuestionTitle>二、简答题(共2题,70.0分)</QuestionTitle>
+            <div>
+              {shortQ.map((item, index) => (
+                <div key={index}>
+                  <div>第{index + 1}题</div>
+                  <Image preview={false} src={QImage} />
+                  <div>{item.title}</div>
+                  <Form.Item name='radio2'>
+                    <Input.TextArea />
+                  </Form.Item>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <Form.Item>
+            <Space>
+              <Button type='primary' htmlType='submit'>
+                保存
+              </Button>
+              <Button type='primary'>提交</Button>
+            </Space>
+          </Form.Item>
+        </Form>
+      </Watermark >
+    </PageContainer>
   )
 }

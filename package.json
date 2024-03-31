@@ -14,8 +14,12 @@
     "@ant-design/icons": "^5.2.6",
     "@ant-design/pro-components": "^2.4.4",
     "@umijs/max": "^4.0.87",
+    "ahooks": "^3.7.10",
     "antd": "^5.4.0",
+    "dayjs": "^1.11.10",
     "express": "^4.17.1",
+    "lodash": "^4.17.21",
+    "moment": "^2.30.1",
     "mysql": "^2.18.1",
     "styled-components": "^6.1.8",
     "uuid": "^9.0.1"

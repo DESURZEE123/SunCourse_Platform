@@ -33,9 +33,7 @@ const HomeWork = () => {
         <Tabs defaultActiveKey='1' items={items} onChange={onChange} />
         <Flex style={{ flexWrap: 'wrap' }}>
           <HomeCard goDetail={goDetail} />
-          <HomeCard goDetail={goDetail} />
-          <HomeCard goDetail={goDetail} />
-          <HomeCard goDetail={goDetail} />
+          <HomeCard goDetail={()=> {history.push('/homework/details/StuWork')}} />
         </Flex>
       </div>
     </PageContainer>

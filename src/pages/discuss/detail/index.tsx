@@ -1,10 +1,11 @@
 import DiscussCard from '@/components/DiscussCard'
 import { Button, Card } from 'antd'
 import { useEffect, useState, useCallback } from 'react'
-import styled from 'styled-components'
+import { PageContainer } from '@ant-design/pro-components'
 import { useModel, history } from 'umi'
 import { discussTrans } from '@/utils'
 import { getDiscussDetail } from '@/api/discuss'
+import styled from 'styled-components'
 
 const Line = styled.div`
   margin: 10px 0 20px;
@@ -31,7 +32,7 @@ export default () => {
   }, [idDiscussion])
 
   return (
-    <>
+    <PageContainer>
       <div
         style={{ textAlign: 'right' }}
         onClick={() => {
@@ -49,6 +50,6 @@ export default () => {
           </div>
         ))}
       </Card>
-    </>
+    </PageContainer>
   )
 }
