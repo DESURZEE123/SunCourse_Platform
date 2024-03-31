@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Button, message, Steps, Form, Input, DatePicker } from 'antd';
+import { Space, Button, message, Steps, Form, Input, DatePicker, Divider, Flex } from 'antd';
+import { PlusSquareOutlined } from '@ant-design/icons'
 import { PageContainer } from '@ant-design/pro-components'
-import { FORM_TITLE, FORM_DATE, FORM_DESCRIPTION } from '../../../constants'
+import { FORM_TITLE, FORM_DATE, FORM_DESCRIPTION, FORM_SHORTANSWER, FORM_SELECT, FORM_SELECTQUSITION, FORM_SELECTANSWER, FORM_TRUEFALSE } from '../../../constants'
 import styled from 'styled-components'
 
 const StepContent = styled.div`
-  height: 260px;
+  min-height: 260px;
   color: rgba(0, 0, 0, 0.45);
   background-color: #ffffff;
   border-radius: 8px;
@@ -19,7 +20,11 @@ const steps = [
     content: 'First-content',
   },
   {
-    title: '作业内容',
+    title: '作业内容—客观题',
+    content: 'Second-content',
+  },
+  {
+    title: '作业内容—主观题',
     content: 'Second-content',
   },
   {
@@ -30,17 +35,45 @@ const steps = [
 
 export default () => {
   const [form] = Form.useForm()
-  const [current, setCurrent] = useState(0)
+  const [current, setCurrent] = useState(1)
+  const [selectNumber, setSelectNumber] = useState(1)
 
   const items = steps.map((item) => ({ key: item.title, title: item.title }));
 
+  const FormSelect = ({ index: number }) => {
+    console.log(number);
 
+    const options = ['A', 'B', 'C', 'D']
+    return (
+      <>
+        <Form.Item name={[FORM_SELECT, `${number}`, FORM_SELECTQUSITION]} label={`单选${number}`} >
+          <Input />
+        </Form.Item>
+        <Flex>
+          {options.map((option, index) => (
+            <Form.Item
+              name={[FORM_SELECT, `${number}`, FORM_SELECTANSWER, option]}
+              label={option}
+              style={{ marginRight: index < options.length - 1 ? '10px' : undefined }}
+            >
+              <Input />
+            </Form.Item>
+          ))}
+        </Flex>
+      </>
+    )
+  }
+
+  const onChange = (changedValues, allValues) => {
+    console.log(allValues);
+
+  }
   // 需要加上发布状态、发布人
   return (
     <PageContainer>
       <Steps current={current} items={items} />
       <StepContent>
-        <Form>
+        <Form onValuesChange={onChange}>
           {current === 0 &&
             <div style={{ padding: '20px' }}>
               <Form.Item name={FORM_TITLE} label="作业名称">
@@ -55,8 +88,17 @@ export default () => {
             </div>
           }
           {current === 1 &&
-            <div>
-
+            <div style={{ padding: '15px' }}>
+              <Flex justify={'space-between'} style={{ marginBottom: '10px' }}>
+                <h3 style={{ marginRight: '20px', fontWeight: 'bold' }}>设置单选题</h3>
+                <Button shape='circle' icon={<PlusSquareOutlined />} onClick={() => { setSelectNumber(selectNumber + 1) }} />
+              </Flex>
+              {Array.from({ length: selectNumber }, (_, index) => (
+                <>
+                  <FormSelect index={index + 1} />
+                  <Divider />
+                </>
+              ))}
             </div>}
           {current === 2 && <div>2-content</div>}
         </Form>
