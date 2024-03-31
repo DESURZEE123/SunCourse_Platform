@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Space, Tooltip, Button, message, Steps, Form, Input, DatePicker, Divider, Flex, Select } from 'antd';
+import { InputNumber, Space, Tooltip, Button, message, Steps, Form, Input, DatePicker, Divider, Flex, Select } from 'antd';
 import { PlusSquareOutlined, EyeOutlined } from '@ant-design/icons'
 import { PageContainer } from '@ant-design/pro-components'
 import { FORM_STATUS, FORM_AUTHOR, FORM_TITLE, FORM_DATE, FORM_DESCRIPTION, FORM_SHORTANSWER, FORM_SELECT, FORM_SELECTOPTION, FORM_SELECTQUSITION, FORM_SELECTANSWER, FORM_TRUEFALSE } from '../../../constants'
@@ -84,7 +84,7 @@ export default () => {
     setFormContext((prevCount) => {
       return { ...prevCount, ...form.getFieldsValue(), author: 'wyy' }
     })
-    message.success('Processing complete!')
+    // message.success('Processing complete!')
   }
   console.log(formContext)
 
@@ -135,6 +135,9 @@ export default () => {
                   <Form.Item name={[FORM_SHORTANSWER, `${index + 1}`]} label={`简答题${index + 1}`}>
                     <Input />
                   </Form.Item>
+                  <Form.Item name='sort' label='分值'>
+                    <InputNumber />
+                  </Form.Item>
                   <Divider />
                 </>
               ))}
@@ -147,6 +150,12 @@ export default () => {
               </Form.Item>
               <Form.Item name={FORM_AUTHOR} label='发布人'>
                 <div>{'wyy'}</div>
+              </Form.Item>
+              <Form.Item name='客观题分数' label='客观题分数'>
+                4 × <Form.Item name='客观题分数' noStyle><InputNumber /></Form.Item> = {100}分
+              </Form.Item>
+              <Form.Item name='主观题分数' label='客观题分数'>
+                4 × <Form.Item name='客观题分数' noStyle><InputNumber /></Form.Item> = {100}分
               </Form.Item>
             </>
           }
