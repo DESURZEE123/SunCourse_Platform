@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Space, Button, message, Steps, Form, Input, DatePicker, Divider, Flex } from 'antd';
+import { Space, Button, message, Steps, Form, Input, DatePicker, Divider, Flex, Select } from 'antd';
 import { PlusSquareOutlined } from '@ant-design/icons'
 import { PageContainer } from '@ant-design/pro-components'
-import { FORM_TITLE, FORM_DATE, FORM_DESCRIPTION, FORM_SHORTANSWER, FORM_SELECT, FORM_SELECTQUSITION, FORM_SELECTANSWER, FORM_TRUEFALSE } from '../../../constants'
+import { FORM_TITLE, FORM_DATE, FORM_DESCRIPTION, FORM_SHORTANSWER, FORM_SELECT, FORM_SELECTOPTION, FORM_SELECTQUSITION, FORM_SELECTANSWER, FORM_TRUEFALSE } from '../../../constants'
 import styled from 'styled-components'
 
 const StepContent = styled.div`
@@ -43,23 +43,31 @@ export default () => {
   const FormSelect = ({ index: number }) => {
     console.log(number);
 
-    const options = ['A', 'B', 'C', 'D']
+    const options = [
+      { label: 'A', value: 'A' },
+      { label: 'B', value: 'B' },
+      { label: 'C', value: 'C' },
+      { label: 'D', value: 'D' }
+    ]
     return (
       <>
         <Form.Item name={[FORM_SELECT, `${number}`, FORM_SELECTQUSITION]} label={`单选${number}`} >
           <Input />
         </Form.Item>
         <Flex>
-          {options.map((option, index) => (
+          {options.map((item, index) => (
             <Form.Item
-              name={[FORM_SELECT, `${number}`, FORM_SELECTANSWER, option]}
-              label={option}
+              name={[FORM_SELECT, `${number}`, FORM_SELECTOPTION, item.value]}
+              label={item.value}
               style={{ marginRight: index < options.length - 1 ? '10px' : undefined }}
             >
               <Input />
             </Form.Item>
           ))}
         </Flex>
+        <Form.Item name={[FORM_SELECT, `${number}`, FORM_SELECTANSWER]} label='答案'>
+          <Select optionLabelProp='label' options={options}/>
+        </Form.Item>
       </>
     )
   }
