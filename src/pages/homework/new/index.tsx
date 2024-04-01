@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState,useMemo } from 'react';
 import { InputNumber, Space, Tooltip, Button, message, Steps, Form, Input, DatePicker, Divider, Flex, Select } from 'antd';
 import { PlusSquareOutlined, EyeOutlined } from '@ant-design/icons'
 import { PageContainer } from '@ant-design/pro-components'
-import { FORM_STATUS, FORM_AUTHOR, FORM_TITLE, FORM_DATE, FORM_DESCRIPTION, FORM_SHORTANSWER, FORM_SELECT, FORM_SELECTOPTION, FORM_SELECTQUSITION, FORM_SELECTANSWER, FORM_TRUEFALSE } from '../../../constants'
+import { FORM_SELECT_SCORE, FORM_ANSWER_SCORE, FORM_STATUS, FORM_AUTHOR, FORM_TITLE, FORM_DATE, FORM_DESCRIPTION, FORM_SHORTANSWER, FORM_SELECT, FORM_SELECTOPTION, FORM_SELECTQUSITION, FORM_SELECTANSWER, FORM_TRUEFALSE } from '../../../constants'
 import styled from 'styled-components'
 
 const StepContent = styled.div`
@@ -40,6 +40,8 @@ export default () => {
   const [formContext, setFormContext] = useState({})
   const [selectNumber, setSelectNumber] = useState(1)
   const [answerNumber, setAnswerNumber] = useState(1)
+  // const [answerScore, setAnswerScore] = useState(0)
+  // const [selectScore, setSelectScore] = useState(0)
 
   const items = steps.map((item) => ({ key: item.title, title: item.title }));
 
@@ -86,7 +88,10 @@ export default () => {
     })
     // message.success('Processing complete!')
   }
-  console.log(formContext)
+ 
+  const answerScore = useMemo(()=>(form.getFieldValue(FORM_ANSWER_SCORE)),[form.getFieldValue(FORM_ANSWER_SCORE)])
+  const selectScore = useMemo(()=>(form.getFieldValue(FORM_SELECT_SCORE)),[form.getFieldValue(FORM_SELECT_SCORE)])
+  console.log(formContext, form.getFieldValue(FORM_SELECT_SCORE))
 
   return (
     <PageContainer>
@@ -151,12 +156,14 @@ export default () => {
               <Form.Item name={FORM_AUTHOR} label='发布人'>
                 <div>{'wyy'}</div>
               </Form.Item>
-              <Form.Item name='客观题分数' label='客观题分数'>
-                4 × <Form.Item name='客观题分数' noStyle><InputNumber /></Form.Item> = {100}分
+              <Form.Item name={FORM_SELECT_SCORE} label='客观题分数'>
+                {/* <InputNumber /> */}
+                {selectNumber} × <Form.Item name={FORM_SELECT_SCORE} noStyle><InputNumber /></Form.Item> = {selectNumber * selectScore}分
               </Form.Item>
-              <Form.Item name='主观题分数' label='客观题分数'>
-                4 × <Form.Item name='客观题分数' noStyle><InputNumber /></Form.Item> = {100}分
+              <Form.Item name={FORM_ANSWER_SCORE} label='主观题分数'>
+                {answerNumber} × <Form.Item name={FORM_ANSWER_SCORE} noStyle><InputNumber /></Form.Item> = {answerNumber * answerScore}分
               </Form.Item>
+              总分：{selectNumber * selectScore + answerNumber * answerScore }分
             </>
           }
         </Form>
