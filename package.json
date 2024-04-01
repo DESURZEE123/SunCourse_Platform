@@ -1,6 +1,6 @@
 {
   "private": true,
-  "author": "wyy <wangyiwang@myai.tech>",
+  "author": "DESU_wyy",
   "scripts": {
     "dev": "max dev",
     "build": "max build",
