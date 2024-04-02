@@ -1,8 +1,22 @@
-import React, { useState,useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { InputNumber, Space, Tooltip, Button, message, Steps, Form, Input, DatePicker, Divider, Flex, Select } from 'antd';
 import { PlusSquareOutlined, EyeOutlined } from '@ant-design/icons'
 import { PageContainer } from '@ant-design/pro-components'
-import { FORM_SELECT_SCORE, FORM_ANSWER_SCORE, FORM_STATUS, FORM_AUTHOR, FORM_TITLE, FORM_DATE, FORM_DESCRIPTION, FORM_SHORTANSWER, FORM_SELECT, FORM_SELECTOPTION, FORM_SELECTQUSITION, FORM_SELECTANSWER, FORM_TRUEFALSE } from '../../../constants'
+import {
+  FORM_SELECT_SCORE,
+  FORM_ANSWER_SCORE,
+  FORM_STATUS,
+  FORM_AUTHOR,
+  FORM_TITLE,
+  FORM_DATE,
+  FORM_DESCRIPTION,
+  FORM_SHORTANSWER,
+  FORM_SELECT,
+  FORM_SELECTOPTION,
+  FORM_SELECTQUSITION,
+  FORM_SELECTANSWER,
+  FORM_TRUEFALSE
+} from '../../../constants'
 import styled from 'styled-components'
 
 const StepContent = styled.div`
@@ -88,10 +102,16 @@ export default () => {
     })
     // message.success('Processing complete!')
   }
- 
-  const answerScore = useMemo(()=>(form.getFieldValue(FORM_ANSWER_SCORE)),[form.getFieldValue(FORM_ANSWER_SCORE)])
-  const selectScore = useMemo(()=>(form.getFieldValue(FORM_SELECT_SCORE)),[form.getFieldValue(FORM_SELECT_SCORE)])
+
+  const answerScore = useMemo(() => (form.getFieldValue(FORM_ANSWER_SCORE)), [form.getFieldValue(FORM_ANSWER_SCORE)])
+  const selectScore = useMemo(() => (form.getFieldValue(FORM_SELECT_SCORE)), [form.getFieldValue(FORM_SELECT_SCORE)])
   console.log(formContext, form.getFieldValue(FORM_SELECT_SCORE))
+
+  const onChange = (value) => {
+    console.log('changed', value);
+    form.setFieldValue(FORM_ANSWER_SCORE,value)
+
+  };
 
   return (
     <PageContainer>
@@ -99,7 +119,7 @@ export default () => {
       <StepContent>
         <Form form={form}>
           {current === 0 &&
-            <div>
+            <>
               <Form.Item name={FORM_TITLE} label="作业名称">
                 <Input />
               </Form.Item>
@@ -109,7 +129,7 @@ export default () => {
               <Form.Item name={FORM_DESCRIPTION} label="作业描述">
                 <Input.TextArea style={{ minHeight: '100px' }} />
               </Form.Item>
-            </div>
+            </>
           }
           {current === 1 &&
             <>
@@ -161,9 +181,12 @@ export default () => {
                 {selectNumber} × <Form.Item name={FORM_SELECT_SCORE} noStyle><InputNumber /></Form.Item> = {selectNumber * selectScore}分
               </Form.Item>
               <Form.Item name={FORM_ANSWER_SCORE} label='主观题分数'>
-                {answerNumber} × <Form.Item name={FORM_ANSWER_SCORE} noStyle><InputNumber /></Form.Item> = {answerNumber * answerScore}分
+                {/* {answerNumber} × <Form.Item name={FORM_ANSWER_SCORE} noStyle> */}
+                  <Input onChange={onChange}/>
+                  {/* </Form.Item> 
+                  = {answerNumber * answerScore}分 */}
               </Form.Item>
-              总分：{selectNumber * selectScore + answerNumber * answerScore }分
+              总分：{selectNumber * selectScore + answerNumber * answerScore}分
             </>
           }
         </Form>
