@@ -10,7 +10,9 @@ import {
   FORM_TITLE,
   FORM_DATE,
   FORM_DESCRIPTION,
+  FORM_SHORT,
   FORM_SHORTANSWER,
+  FORM_SHORTQUESTION,
   FORM_SELECT,
   FORM_SELECTOPTION,
   FORM_SELECTQUSITION,
@@ -54,8 +56,8 @@ export default () => {
   const [formContext, setFormContext] = useState({})
   const [selectNumber, setSelectNumber] = useState(1)
   const [answerNumber, setAnswerNumber] = useState(1)
-  // const [answerScore, setAnswerScore] = useState(0)
-  // const [selectScore, setSelectScore] = useState(0)
+  const [answerScore, setAnswerScore] = useState(0)
+  const [selectScore, setSelectScore] = useState(0)
 
   const items = steps.map((item) => ({ key: item.title, title: item.title }));
 
@@ -103,15 +105,7 @@ export default () => {
     // message.success('Processing complete!')
   }
 
-  const answerScore = useMemo(() => (form.getFieldValue(FORM_ANSWER_SCORE)), [form.getFieldValue(FORM_ANSWER_SCORE)])
-  const selectScore = useMemo(() => (form.getFieldValue(FORM_SELECT_SCORE)), [form.getFieldValue(FORM_SELECT_SCORE)])
-  console.log(formContext, form.getFieldValue(FORM_SELECT_SCORE))
-
-  const onChange = (value) => {
-    console.log('changed', value);
-    form.setFieldValue(FORM_ANSWER_SCORE,value)
-
-  };
+  console.log(formContext)
 
   return (
     <PageContainer>
@@ -129,8 +123,7 @@ export default () => {
               <Form.Item name={FORM_DESCRIPTION} label="作业描述">
                 <Input.TextArea style={{ minHeight: '100px' }} />
               </Form.Item>
-            </>
-          }
+            </>}
           {current === 1 &&
             <>
               <Flex justify={'space-between'} style={{ marginBottom: '10px' }}>
@@ -157,11 +150,11 @@ export default () => {
               </Flex>
               {Array.from({ length: answerNumber }, (_, index) => (
                 <>
-                  <Form.Item name={[FORM_SHORTANSWER, `${index + 1}`]} label={`简答题${index + 1}`}>
+                  <Form.Item name={[FORM_SHORT, `${index + 1}`,FORM_SHORTQUESTION]} label={`简答题${index + 1}`}>
                     <Input />
                   </Form.Item>
-                  <Form.Item name='sort' label='分值'>
-                    <InputNumber />
+                  <Form.Item name={[FORM_SHORT, `${index + 1}`, FORM_SHORTANSWER]} label={`答案${index + 1}`}>
+                    <Input />
                   </Form.Item>
                   <Divider />
                 </>
@@ -177,18 +170,13 @@ export default () => {
                 <div>{'wyy'}</div>
               </Form.Item>
               <Form.Item name={FORM_SELECT_SCORE} label='客观题分数'>
-                {/* <InputNumber /> */}
-                {selectNumber} × <Form.Item name={FORM_SELECT_SCORE} noStyle><InputNumber /></Form.Item> = {selectNumber * selectScore}分
+                {selectNumber} × <Form.Item name={FORM_SELECT_SCORE} noStyle><InputNumber onChange={(value) => { setSelectScore(value) }} /></Form.Item> = {selectNumber * selectScore}分
               </Form.Item>
               <Form.Item name={FORM_ANSWER_SCORE} label='主观题分数'>
-                {/* {answerNumber} × <Form.Item name={FORM_ANSWER_SCORE} noStyle> */}
-                  <Input onChange={onChange}/>
-                  {/* </Form.Item> 
-                  = {answerNumber * answerScore}分 */}
+                {answerNumber} × <Form.Item name={FORM_ANSWER_SCORE} noStyle><InputNumber onChange={(value) => { setAnswerScore(value) }} /> </Form.Item> = {answerNumber * answerScore}分
               </Form.Item>
               总分：{selectNumber * selectScore + answerNumber * answerScore}分
-            </>
-          }
+            </>}
         </Form>
 
       </StepContent>
