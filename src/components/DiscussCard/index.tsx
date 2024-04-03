@@ -1,11 +1,10 @@
-import { BarsOutlined, LikeOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons'
-import { Avatar, Button, Card, Input, Space } from 'antd'
 import { useEffect, useState, useRef } from 'react'
-import styled from 'styled-components'
+import { Avatar, Button, Card, Input, Space, message } from 'antd'
 import { history, useModel } from 'umi'
+import { BarsOutlined, LikeOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons'
 import { changeLike, getDiscussList, replayDiscuss } from '@/api/discuss'
 import { discussTrans } from '@/utils'
-import { message } from 'antd/lib'
+import styled from 'styled-components'
 
 const ReplayLike = styled.div`
   display: flex;

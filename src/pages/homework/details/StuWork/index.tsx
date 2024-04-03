@@ -19,9 +19,9 @@ export default () => {
   const dataSource = [
     {
       key: '1',
-      name: 'John',
-      age: 32,
-      address: 'New York'
+      name: '20',
+      age: 30,
+      address: '100'
     }
   ]
 
@@ -137,7 +137,7 @@ export default () => {
           <Form.Item>
             <Space>
               <Button type='primary' htmlType='submit'>
-                保存
+                重置
               </Button>
               <Button type='primary'>提交</Button>
             </Space>

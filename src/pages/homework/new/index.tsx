@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { InputNumber, Space, Tooltip, Button, message, Steps, Form, Input, DatePicker, Divider, Flex, Select } from 'antd';
 import { PlusSquareOutlined, EyeOutlined } from '@ant-design/icons'
+import { history } from 'umi'
 import { PageContainer } from '@ant-design/pro-components'
 import {
   FORM_SELECT_SCORE,
@@ -52,7 +53,7 @@ const steps = [
 
 export default () => {
   const [form] = Form.useForm()
-  const [current, setCurrent] = useState(3)
+  const [current, setCurrent] = useState(0)
   const [formContext, setFormContext] = useState({})
   const [selectNumber, setSelectNumber] = useState(1)
   const [answerNumber, setAnswerNumber] = useState(1)
@@ -102,7 +103,8 @@ export default () => {
     setFormContext((prevCount) => {
       return { ...prevCount, ...form.getFieldsValue(), author: 'wyy' }
     })
-    // message.success('Processing complete!')
+    message.success('作业发布成功')
+    history.push('/homework/my')
   }
 
   console.log(formContext)

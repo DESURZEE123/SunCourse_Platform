@@ -38,10 +38,10 @@ export default [
     icon: 'FileDoneOutlined',
     // access: 'canRoute',
     routes: [
-      { path: '/homework/my', name:'我的作业', component: './homework/my' },
+      { path: '/homework/my', name: '我的作业', component: './homework/my' },
       { path: '/homework/new', name: '发布作业', component: './homework/new' },
-      { path: '/homework/details/StuWork', component: './homework/details/StuWork' },
-      { path: '/homework/details/TeaPubWork', component: './homework/details/TeaPubWork' }
+      { path: '/homework/my/details/StuWork', name: '完成作业', hideInMenu: true, component: './homework/details/StuWork' },
+      { path: '/homework/my/details/TeaPubWork', name: '批改作业', hideInMenu: true, component: './homework/details/TeaPubWork' }
     ]
   },
   {

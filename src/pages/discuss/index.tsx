@@ -27,7 +27,6 @@ const Discuss = () => {
 
   return (
     <PageContainer>
-
       <Card>
         <Space style={{ marginBottom: '20px' }}>
           <span style={{ fontSize: '20px', fontWeight: 'bold' }} onClick={allDiscussion}>全部话题</span>
@@ -42,7 +41,6 @@ const Discuss = () => {
         })}
       </Card>
     </PageContainer>
-
   )
 }
 

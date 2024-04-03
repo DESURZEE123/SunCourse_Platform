@@ -1,4 +1,5 @@
 import { Table } from 'antd'
+import { PageContainer } from '@ant-design/pro-components'
 import styled from 'styled-components'
 
 const Info = styled.div``
@@ -42,10 +43,10 @@ export default () => {
     }
   ]
   return (
-    <>
+    <PageContainer>
       <Info>学生：20信管1王怡阳</Info>
       <Table dataSource={dataSource} columns={columns} pagination={false} />
       <QuestionTitle>一、简答题(共一题,100.0分)</QuestionTitle>
-    </>
+    </PageContainer>
   )
 }

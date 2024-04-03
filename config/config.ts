@@ -16,6 +16,7 @@ export default defineConfig({
   request: {},
   layout: {
     title: '平台设计',
+    layout: 'top'
   },
   routes,
   proxy,
