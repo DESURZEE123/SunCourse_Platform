@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Form, Image, Input, Flex, Avatar, Carousel, Dropdown, Modal, List, Card, Space } from 'antd'
+import { Button, Form, Image, Input, message, Avatar, Carousel, Dropdown, Modal, List, Card, Space, Select } from 'antd'
 import { history } from 'umi'
 
 const cover1 = require('@/assets/images/cover.png')
@@ -37,17 +37,37 @@ const data = [
     title: 'Title 3',
     name: '王怡阳',
     class: '20信管1'
+  },  
+  {
+    title: 'Title 3',
+    name: '王怡阳',
+    class: '20信管1'
+  },
+  {
+    title: 'Title 3',
+    name: '王怡阳',
+    class: '20信管1'
   }
 ];
 
-
-
-
+const layout = {
+  labelCol: { span: 6 },
+  wrapperCol: { span: 16 }
+}
 export default () => {
+  const [form] = Form.useForm()
   const [showModal, setShowModal] = useState(false)
+  const [showClassModal, setShowClassModal] = useState(false)
   const items = [
     {
       key: '1',
+      label: '个人信息',
+      onClick: () => {
+        setShowModal(true)
+      }
+    },
+    {
+      key: '2',
       label: '退出登录',
       onClick: () => {
         Modal.confirm({
@@ -58,13 +78,6 @@ export default () => {
           }
         })
       }
-    },
-    {
-      key: '2',
-      label: '个人信息',
-      onClick: () => {
-        setShowModal(true)
-      }
     }
   ]
   const onSearch = (value: string) => {
@@ -74,10 +87,21 @@ export default () => {
   const addCourse = () => {
     history.push('/home')
   }
+
+  const onFinish = async (values: any) => {
+    message.success('新建成功')
+
+    setShowClassModal(false)
+  }
+
+  const onReset = () => {
+    form.resetFields()
+    setShowClassModal(false)
+  }
   return (
     <>
       <div className='top-bar flex-container'>
-        <div>阳光课程平台</div>
+        <h2>阳光课程平台</h2>
         <Dropdown menu={{ items }} placement="bottom" arrow={{ pointAtCenter: true }}>
           <div>
             <Avatar src={cover1} style={{ margin: '0 10px' }} />王怡阳
@@ -85,13 +109,13 @@ export default () => {
         </Dropdown>
       </div>
       <CarouselAuto />
-      <div style={{ marginTop: '120px',padding:'0 20px' }}>
+      <div style={{ marginTop: '120px', padding: '0 60px' }}>
         <div className='flex-container'>
           <h1>我的课程</h1>
           <div>
             <Input.Search style={{ width: 200, marginRight: '40px' }} placeholder='搜索课程' onSearch={onSearch} />
             {/* 老师权利 */}
-            <Button type='primary' onClick={() => history.push('/login/course/create')}>创建课程</Button>
+            <Button type='primary' onClick={() => setShowClassModal(true)}>创建课程</Button>
           </div>
         </div>
         <List
@@ -107,6 +131,7 @@ export default () => {
                   {/* 需要判断课程是否属于自己本身 */}
                   {/* <Button type='primary' onClick={addCourse}>添加课程</Button> */}
                   <Button type='primary' onClick={addCourse}>进入课程</Button>
+                  {/* <Button type='primary' onClick={addCourse}>了解详情</Button> */}
                 </div>
               </Card>
             </List.Item>
@@ -115,21 +140,30 @@ export default () => {
       </div>
 
       <Modal title="个人信息" open={showModal} onOk={() => setShowModal(false)} onCancel={() => setShowModal(false)}>
-        <Form>
-          <Form.Item label="姓名">
-            <Input value='王怡阳' />
+        <h3>姓名：{'尾牙宴'}</h3>
+        <h3>学号：{'201801010101'}</h3>
+        <h3>班级：{'20信管1'}</h3>
+        <h3>学院：{'管理工程学院'}</h3>
+      </Modal>
+      <Modal closable={false} title="创建课程" open={showClassModal} footer={null}>
+        <Form form={form} {...layout} onFinish={onFinish}>
+          <Form.Item label="课程名称" name="courseName">
+            <Input />
           </Form.Item>
-          <Form.Item label="学号">
-            <Input value='201801010101' />
+          <Form.Item label="课程简介" name="courseDesc">
+            <Input.TextArea />
           </Form.Item>
-          <Form.Item label="学院">
-            <Input value='计算机学院' />
+          {/* 可选可不选，联表展示，选项包含学院及专业班级 */}
+          <Form.Item label="特定班级" name="courseClass">
+            <Select />
           </Form.Item>
-          <Form.Item label="专业">
-            <Input value='软件工程' />
-          </Form.Item>
-          <Form.Item label="班级">
-            <Input value='软件工程1801' />
+          <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+            <Button htmlType='button' onClick={onReset} style={{ marginRight: '10px' }}>
+              取消
+            </Button>
+            <Button type='primary' htmlType='submit'>
+              确定
+            </Button>
           </Form.Item>
         </Form>
       </Modal>

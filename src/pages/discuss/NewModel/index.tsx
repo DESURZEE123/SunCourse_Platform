@@ -37,7 +37,7 @@ export default () => {
       <Button type='link' style={{ marginRight: '30px' }} onClick={showModal}>
         新建话题
       </Button>
-      <Modal title='新建话题' open={open} footer={null}>
+      <Modal title='新建话题' closable={false} open={open} footer={null}>
         <Form form={form} {...layout} onFinish={onFinish}>
 
           <Form.Item name={TITLE} label='话题名称' rules={[{ required: true }]}>
