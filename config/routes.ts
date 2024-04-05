@@ -13,8 +13,12 @@
 export default [
   {
     path: '/',
-    redirect: '/home',
-    layout: false
+    layout: false,
+    routes: [
+      { path: '/', redirect: '/login',component: './login'},
+      { name: 'login', path: '/login', component: './login'},
+      { name: 'course', path: '/login/course', component: './login/course'},
+    ],
   },
   {
     name: '首页',
