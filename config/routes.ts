@@ -59,10 +59,19 @@ export default [
     ]
   },
   {
-    name: '权限演示',
-    path: '/access',
-    component: './access'
+    name: '权限管理',
+    path: '/users',
+    icon: 'UserOutlined',
+    // access: 'canRoute',
+    routes: [
+      { path: '/users/userGroup', name: '人员管理', component: './users/userGroup' }
+    ]
   },
+  // {
+  //   name: '权限管理',
+  //   path: '/access',
+  //   component: './access'
+  // },
   {
     path: '/*',
     layout: false,

@@ -1,15 +1,12 @@
+import { discussApi } from './detail/discussion.js';
+// const  getDiscussionDetail  = require('./detail/discussion.js');
 // const http = require('http');//用于搭建服务器
-const express = require('express')
-const mysql = require('mysql')
+import express from 'express';
+
+// const express = require('express')
+// const mysql = require('mysql')
 const app = express()
 
-const pool = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: '150029389wyy',
-  database: 'platform_schema',
-  connectionLimit: 10 // 连接池最大连接数
-})
 
 app.use(express.json());
 
@@ -24,112 +21,25 @@ app.all('*', function (req, res, next) {
 });
 
 // 获取讨论列表
-app.get('/discuss', (req, res) => {
-  pool.query('SELECT * FROM Discussion;', (err, rows) => {
-    if (err) {
-      console.error('Error querying database:', err)
-      res.status(500).send('Internal Server Error')
-    } else {
-      res.json(rows)
-    }
-  })
-})
+app.get('/discuss',discussApi.getDiscussList)
 
 // 获取讨论详情
-app.post('/discuss/detail/idDiscussion=:idDiscussion', (req, res) => {
-  pool.query('SELECT * FROM discussion WHERE belongId = ?;', [req.params.idDiscussion], (err, rows) => {
-    if (err) {
-      console.error('Error querying database:', err)
-      res.status(500).send('Internal Server Error')
-    } else {
-      res.json(rows)
-    }
-  })
-})
+app.post('/discuss/detail/idDiscussion=:idDiscussion', discussApi.getDiscussDetail);
 
 // 讨论点赞
-app.post('/discuss/like/idDiscussion=:idDiscussion&like=:like', (req, res) => {
-  const { idDiscussion, like } = req.params
-  pool.query('UPDATE discussion SET `like` = `like` + ? WHERE idDiscussion = ?;', [like, idDiscussion], (err, rows) => {
-    if (err) {
-      console.error('Error querying database:', err)
-      res.status(500).send('Internal Server Error')
-    } else {
-      res.json(rows)
-    }
-  })
-})
+app.post('/discuss/like/idDiscussion=:idDiscussion&like=:like', discussApi.changeLike)
 
 // 新建讨论
-app.post('/discuss/new', (req, res) => {
-  const { idDiscussion, idCourse, replayId, belongId, DisName, title, content } = req.body
-  const queryText = `
-  INSERT INTO discussion (
-    idDiscussion, idCourse, replayId, belongId, DisName, title, content
-  ) VALUES (
-    ?, ?, ?, ?, ?, ?, ?
-  )`;
-  const values = [idDiscussion, idCourse, replayId, belongId, DisName, title, content];
-  
-  pool.query(queryText, values, (err, rows) => {
-    if (err) {
-      console.error('Error querying database:', err)
-      res.status(500).send('Internal Server Error')
-    } else {
-      res.json(rows)
-    }
-  })
-})
+app.post('/discuss/new',discussApi.newDiscuss)
 
 // 回复
-app.post('/discuss/replay', (req, res) => {
-  const { idDiscussion, idCourse, replayId, belongId, DisName, title, content } = req.body
-  const queryText = `
-  INSERT INTO discussion (
-    idDiscussion, idCourse, replayId, belongId, DisName, title, content
-  ) VALUES (
-    ?, ?, ?, ?, ?, ?, ?
-  )`;
-  const values = [idDiscussion, idCourse, replayId, belongId, DisName, title, content];
-  
-  pool.query(queryText, values, (err, rows) => {
-    if (err) {
-      console.error('Error querying database:', err)
-      res.status(500).send('Internal Server Error')
-    } else {
-      res.status(200).send('回复成功')
-      // res.json(rows)
-    }
-  })
-})
+app.post('/discuss/replay', discussApi.replayDiscuss)
 
 // 查找讨论
-app.post('/discuss/id=:id', (req, res) => {
-  const { id } = req.params
-  pool.query(`SELECT * FROM discussion WHERE id = ? and replayId = 0;`, [id], (err, rows) => {
-    if (err) {
-      console.error('Error querying database:', err)
-      res.status(500).send('Internal Server Error')
-    } else {
-      res.json(rows)
-    }
-  })
-})
-
+app.post('/discuss/id=:id', discussApi.findDiscuss)
 
 // 查找讨论，有bug，应该查询出对应IdDiscuss，再去查找；否则会不显示回复数量
-app.post('/discuss/search/title=:title', (req, res) => {
-  const { title } = req.params
-  console.log(title);
-  pool.query(`SELECT * FROM discussion WHERE title LIKE ? and replayId = 0;`, [`%${title}%`], (err, rows) => {
-    if (err) {
-      console.error('Error querying database:', err)
-      res.status(500).send('Internal Server Error')
-    } else {
-      res.json(rows)
-    }
-  })
-})
+app.post('/discuss/search/title=:title',discussApi.SearchDiscuss )
 
 const port = 3000
 app.listen(port, () => {

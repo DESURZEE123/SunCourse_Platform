@@ -1,5 +1,9 @@
 import { get, post } from '@/common/api'
 
+// 登录以及注册
+/* 这里应该做token处理，暂时搁浅 */
+export const login = (parmas) => post('/api/user/login', parmas)
+
 // 获取讨论列表
 export const getDiscussList = () => get('/api/discuss')
 // 获取指定的讨论列表
