@@ -11,19 +11,22 @@ const pool = mysql.createPool({
 // 老师登录
 const loginTeacher = (req, res) => {
   const { teaId, password } = req.body
-  pool.query('SELECT * FROM Teacher WHERE teaId = ? and password = ?;', [teaId, password], (err, rows) => {
+  pool.query('SELECT * FROM Teacher WHERE teaId = ? and password = ?;', [parseInt(teaId), password], (err, rows) => {
     if (err) {
       console.error('Error querying database:', err)
       res.status(500).send('Internal Server Error')
     } else {
-      res.json(rows)
+      const data = { status: 200, msg: '登录成功' }
+      console.log(data,'~~~~~~~~~~~~~~~');
+      // res.status(200).json(data)
+      res.json(data)
     }
   })
 }
 // 学生登录
 const loginStudent = (req, res) => {
   const { stuId, password } = req.body
-  pool.query('SELECT * FROM Teacher WHERE stuId = ? and password = ?;', [teaId, password], (err, rows) => {
+  pool.query('SELECT * FROM Student WHERE stuId = ? and password = ?;', [parseInt(stuId), password], (err, rows) => {
     if (err) {
       console.error('Error querying database:', err)
       res.status(500).send('Internal Server Error')
@@ -44,11 +47,10 @@ const registerTeacher = (req, res) => {
     }
   })
 }
-
 // 学生注册
 const registerStudent = (req, res) => {
   const { stuId, password } = req.body
-  pool.query('SELECT * FROM Teacher WHERE stuId = ? and password = ?;', [teaId, password], (err, rows) => {
+  pool.query('SELECT * FROM Student WHERE stuId = ? and password = ?;', [teaId, password], (err, rows) => {
     if (err) {
       console.error('Error querying database:', err)
       res.status(500).send('Internal Server Error')
@@ -57,9 +59,11 @@ const registerStudent = (req, res) => {
     }
   })
 }
-export const loginApi = {
+const loginApi = {
   loginTeacher,
   loginStudent,
   registerTeacher,
   registerStudent
 }
+
+export { loginApi }

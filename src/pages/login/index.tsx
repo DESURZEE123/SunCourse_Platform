@@ -24,16 +24,16 @@ export default () => {
     //     history.push('/home')
     //   }
     // });
-    console.log("register" in values, values);
+    // console.log("register" in values, values);
 
     if ("login" in values) {
       const res = await login(values.login)
-      storage.setItem('userInfo1', values.login)
-      history.push('/login/course')
-
+      console.log(res);
+      
       if (res) {
         message.success('登录成功')
-        history.push('/login/course')
+        storage.setItem('userInfo1', values.login)
+        // history.push('/login/course')
       } else {
         message.error('账号或密码错误')
       }
@@ -43,6 +43,14 @@ export default () => {
       const res = await registerApi(values.register)
       if (res) {
         message.success('注册成功')
+        // Modal.confirm({
+        //   title: '退出登录',
+        //   content: '确认退出登录吗？',
+        //   onOk: () => {
+        //     history.push('/login')
+        //     storage.removeItem('userInfo1')
+        //   }
+        // })
         setRegister(false)
       } else {
         message.error('系统出小差了。。')
@@ -106,7 +114,7 @@ export default () => {
                 <Form.Item label="所属学院" name={["register", "department"]}>
                   <Select />
                 </Form.Item>
-                {isTeacher ?
+                {!isTeacher ?
                   <Form.Item label="所属班级" name={["register", "class"]}>
                     <Input placeholder='请输入班级' />
                   </Form.Item> : <></>}
