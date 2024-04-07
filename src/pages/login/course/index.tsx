@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Form, Image, Input, message, Avatar, Carousel, Dropdown, Modal, List, Card, Space, Select } from 'antd'
 import { history } from 'umi'
-
+import { storage } from '@/utils'
 const cover1 = require('@/assets/images/cover.png')
 const cover2 = require('@/assets/images/cover3.png')
 const cover3 = require('@/assets/images/cover4.png')
@@ -54,6 +54,7 @@ const layout = {
   labelCol: { span: 6 },
   wrapperCol: { span: 16 }
 }
+const user = storage.getItem('userInfo1')
 export default () => {
   const [form] = Form.useForm()
   const [showModal, setShowModal] = useState(false)
@@ -75,6 +76,7 @@ export default () => {
           content: '确认退出登录吗？',
           onOk: () => {
             history.push('/login')
+            storage.removeItem('userInfo1')
           }
         })
       }
@@ -115,7 +117,7 @@ export default () => {
           <div>
             <Input.Search style={{ width: 200, marginRight: '40px' }} placeholder='搜索课程' onSearch={onSearch} />
             {/* 老师权利 */}
-            <Button type='primary' onClick={() => setShowClassModal(true)}>创建课程</Button>
+            { user.isTeacher && (<Button type='primary' onClick={() => setShowClassModal(true)}>创建课程</Button>)}
           </div>
         </div>
         <List
