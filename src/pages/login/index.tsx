@@ -4,6 +4,7 @@ import { connect } from 'dva'
 import { history } from 'umi'
 // import { setCookie } from '@/utils/cookie'
 import { login, registerApi } from '@/api/login'
+import {storage} from '@/utils'
 
 const SchoolImage = require('@/assets/images/school.jpg')
 import styled from 'styled-components'
@@ -27,6 +28,8 @@ export default () => {
 
     if ("login" in values) {
       const res = await login(values.login)
+      storage.setItem('brand', values)
+
       if (res) {
         message.success('登录成功')
         history.push('/login/course')

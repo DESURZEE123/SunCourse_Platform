@@ -1,3 +1,5 @@
+export * as storage from './storage'
+
 export const discussTrans = (data = []) => {
   const getReplies = (id) => {
     return data
