@@ -1,4 +1,5 @@
 import { discussApi } from './detail/discussion.js';
+import { loginApi } from './detail/login.js';
 // const  getDiscussionDetail  = require('./detail/discussion.js');
 // const http = require('http');//用于搭建服务器
 import express from 'express';
@@ -19,6 +20,14 @@ app.all('*', function (req, res, next) {
   res.header("Content-Type", "application/json;charset=utf-8");
   next();
 });
+
+// 登录
+app.post('/api/user/login/teacher',loginApi.loginTeacher)
+app.post('/api/user/login/student',loginApi.loginStudent)
+
+// 注册
+app.post('/api/user/register/teacher',loginApi.registerTeacher)
+app.post('/api/user/register/student',loginApi.registerStudent)
 
 // 获取讨论列表
 app.get('/discuss',discussApi.getDiscussList)

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Checkbox, Image, Flex, Card, Select } from 'antd';
+import { Form, Input, Button, Checkbox, Image, Flex, Card, Select, message } from 'antd';
 import { connect } from 'dva'
 import { history } from 'umi'
 // import { setCookie } from '@/utils/cookie'
-import { login } from '@/api/discuss'
+import { login, registerApi } from '@/api/login'
 
 const SchoolImage = require('@/assets/images/school.jpg')
 import styled from 'styled-components'
@@ -23,10 +23,28 @@ export default () => {
     //     history.push('/home')
     //   }
     // });
-    console.log(values);
+    console.log("register" in values, values);
 
-    history.push('/login/course')
-
+    if ("login" in values) {
+      const res = await login(values.login)
+      if (res) {
+        message.success('登录成功')
+        history.push('/login/course')
+      } else {
+        message.error('账号或密码错误')
+      }
+    } 
+    
+    if("register" in values){
+      const res = await registerApi(values.register)
+      if (res) {
+        message.success('注册成功')
+        setRegister(false)
+        history.push('/login/course')
+      } else {
+        message.error('系统出小差了。。')
+      }
+    }
   };
 
   return (

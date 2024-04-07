@@ -8,7 +8,58 @@ const pool = mysql.createPool({
   connectionLimit: 10 // 连接池最大连接数
 })
 
+// 老师登录
+const loginTeacher = (req, res) => {
+  const { teaId, password } = req.body
+  pool.query('SELECT * FROM Teacher WHERE teaId = ? and password = ?;', [teaId, password], (err, rows) => {
+    if (err) {
+      console.error('Error querying database:', err)
+      res.status(500).send('Internal Server Error')
+    } else {
+      res.json(rows)
+    }
+  })
+}
+// 学生登录
+const loginStudent = (req, res) => {
+  const { stuId, password } = req.body
+  pool.query('SELECT * FROM Teacher WHERE stuId = ? and password = ?;', [teaId, password], (err, rows) => {
+    if (err) {
+      console.error('Error querying database:', err)
+      res.status(500).send('Internal Server Error')
+    } else {
+      res.json(rows)
+    }
+  })
+}
+// 老师注册
+const registerTeacher = (req, res) => {
+  const { stuId, password } = req.body
+  pool.query('SELECT * FROM Teacher WHERE stuId = ? and password = ?;', [teaId, password], (err, rows) => {
+    if (err) {
+      console.error('Error querying database:', err)
+      res.status(500).send('Internal Server Error')
+    } else {
+      res.json(rows)
+    }
+  })
+}
 
-const loginApi = {
-  
+// 学生注册
+const registerStudent = (req, res) => {
+  const { stuId, password } = req.body
+  pool.query('SELECT * FROM Teacher WHERE stuId = ? and password = ?;', [teaId, password], (err, rows) => {
+    if (err) {
+      console.error('Error querying database:', err)
+      res.status(500).send('Internal Server Error')
+    } else {
+      res.json(rows)
+    }
+  })
+}
+export const loginApi = {
+  loginTeacher,
+  loginStudent,
+  registerTeacher,
+  registerStudent
 }
