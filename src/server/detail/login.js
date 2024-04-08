@@ -77,7 +77,12 @@ const createCourse = (req, res) => {
       console.error('Error querying database:', err)
       res.status(500).send('Internal Server Error')
     } else {
-      res.json(rows)
+      // res.json(rows)
+      const data = { status: 200, msg: '新建成功' }
+      console.log(data, '~~~~~~~~~~~~~~~');
+      res.status(200).json(
+        data
+      )
     }
   })
 }

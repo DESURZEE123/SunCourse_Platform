@@ -108,7 +108,6 @@ export default () => {
   }
 
   const onFinish = async (values: any) => {
-    message.success('新建成功')
     const params = {
       courseId: Date.now() % 1000,
       teaId: parseInt(storage.getItem('userInfo1').teaId),
@@ -116,9 +115,12 @@ export default () => {
       ...values
     }
     const res = await createCourse(params)
-    console.log(params,res)
-
-    // setShowClassModal(false)
+    if (res) {
+      message.success('新建成功')
+    } else {
+      message.error('新建失败')
+    }
+    setShowClassModal(false)
   }
 
   const onReset = () => {
