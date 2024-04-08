@@ -11,3 +11,5 @@ export const registerApi = (parmas) => {
   if (parmas.isTeacher) post('/api/user/register/teacher', parmas)
   if (!parmas.isTeacher) post('/api/user/register/student', parmas)
 }
+// 创建课程
+export const createCourse = (parmas) => post('/api/user/course/create', parmas)

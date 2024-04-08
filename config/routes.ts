@@ -15,9 +15,9 @@ export default [
     path: '/',
     layout: false,
     routes: [
-      { path: '/', redirect: '/login',component: './login'},
-      { name: 'login', path: '/login', component: './login'},
-      { name: 'course', path: '/login/course', component: './login/course'},
+      { path: '/', redirect: '/login', component: './login' },
+      { name: 'login', path: '/login', component: './login' },
+      { name: 'course', path: '/login/course', component: './login/course' },
     ],
   },
   {
@@ -37,19 +37,18 @@ export default [
     // component: './material',
     routes: [
       { path: '/material/download', name: '资料下载', component: './material/download' },
-      { path: '/material/edit', name: '目录资料', component: './material/edit' },
+      { path: '/material/edit', name: '资料修改', access: 'isTeacher', component: './material/edit' },
     ]
   },
   {
     name: '课后作业',
     path: '/homework',
     icon: 'FileDoneOutlined',
-    // access: 'canRoute',
     routes: [
       { path: '/homework/my', name: '我的作业', component: './homework/my' },
-      { path: '/homework/new', name: '发布作业', component: './homework/new' },
+      { path: '/homework/new', name: '发布作业', access: 'isTeacher', component: './homework/new' },
       { path: '/homework/my/details/StuWork', name: '完成作业', hideInMenu: true, component: './homework/details/StuWork' },
-      { path: '/homework/my/details/TeaPubWork', name: '批改作业', hideInMenu: true, component: './homework/details/TeaPubWork' }
+      { path: '/homework/my/details/TeaPubWork', name: '批改作业', access: 'isTeacher', hideInMenu: true, component: './homework/details/TeaPubWork' }
     ]
   },
   {
@@ -66,7 +65,7 @@ export default [
     name: '权限管理',
     path: '/users',
     icon: 'UserOutlined',
-    // access: 'canRoute',
+    access: 'isAdmin',
     routes: [
       { path: '/users/userGroup', name: '人员管理', component: './users/userGroup' }
     ]

@@ -6,7 +6,7 @@ const { TreeNode } = Tree
 let tempKey = '1000'
 
 export default (props) => {
-  const { onHandleCancel = () => {}, onHandleOk = () => {}, data = {} } = props
+  const { onHandleCancel = () => { }, onHandleOk = () => { }, data = {} } = props
   const [form] = Form.useForm()
   const [changeValue, setChangeValue] = useState('')
   const [showValue, setShowValue] = useState(false)
@@ -83,7 +83,7 @@ export default (props) => {
   const [treeData, setTreeData] = useState(treeDataTemp)
 
   console.log(treeData);
-  
+
   const onAdd = (key) => {
     console.log('onAdd', key)
     const treeDataOld = JSON.parse(JSON.stringify(treeData))
@@ -97,15 +97,15 @@ export default (props) => {
           // eslint-disable-next-line @typescript-eslint/no-unused-expressions
           item.children
             ? item.children.push({
+              title: `默认值${tempKey}`,
+              key: `${tempKey}`
+            })
+            : (item.children = [
+              {
                 title: `默认值${tempKey}`,
                 key: `${tempKey}`
-              })
-            : (item.children = [
-                {
-                  title: `默认值${tempKey}`,
-                  key: `${tempKey}`
-                }
-              ])
+              }
+            ])
         } else {
           if (item.children) {
             addNode(key, item.children)
@@ -135,8 +135,8 @@ export default (props) => {
     }
   }
 
-  const onChange = (key,title) => {
-    console.log('onChange',key,title)
+  const onChange = (key, title) => {
+    console.log('onChange', key, title)
     const treeDataOld = JSON.parse(JSON.stringify(treeData))
     const treeDataNew = editNode(key, treeDataOld, title)
     setTreeData(treeDataNew)
@@ -169,8 +169,8 @@ export default (props) => {
     })
   }
 
-  const onFinish = ()=> {
-    onChange(showValueKey,form.getFieldValue('title'))
+  const onFinish = () => {
+    onChange(showValueKey, form.getFieldValue('title'))
     setShowValue(false)
     setChangeValue('')
     form.resetFields()
@@ -180,7 +180,7 @@ export default (props) => {
     return (
       <div style={{ display: 'flex', alignItems: 'center' }}>
         {/* <Input value={item.title} defaultValue={item.title} onChange={() => onChange(item.key)} onClick={()=> onChange(item.key)}/> */}
-        <Input style={{minWidth:'500px'}} value={item.title} defaultValue={item.title} onClick={()=>{setShowValue(true);setChangeValue(item.title);setShowValueKey(item.key)}}/>
+        <Input style={{ minWidth: '500px' }} value={item.title} defaultValue={item.title} onClick={() => { setShowValue(true); setChangeValue(item.title); setShowValueKey(item.key) }} />
         <span style={{ display: 'flex' }}>
           <PlusOutlined style={{ marginLeft: 10 }} onClick={() => onAdd(item.key)} />
           <Popconfirm
@@ -202,10 +202,10 @@ export default (props) => {
       <Tree className='draggable-tree' defaultExpandAll={true} titleRender={onTitleRender}>
         {treeData?.length && renderTreeNodes(treeData)}
       </Tree>
-      <Modal title="小杰内容" open={showValue} onOk={onFinish} onCancel={() => {setShowValue(false); setShowValueKey(''); form.resetFields()}}>
+      <Modal title="小杰内容" open={showValue} onOk={onFinish} onCancel={() => { setShowValue(false); setShowValueKey(''); form.resetFields() }}>
         <Form form={form} >
           <Form.Item label="标题名称" name="title">
-            <Input placeholder={'请输入更新标题'}/>
+            <Input placeholder={'请输入更新标题'} />
           </Form.Item>
           <Form.Item label='添加附件' name={"material"} >
             <Upload>

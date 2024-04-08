@@ -1,5 +1,5 @@
-import { Col, Row,Button,Tree } from 'antd'
-import { useModel,history } from 'umi'
+import { Col, Row, Button, Tree } from 'antd'
+import { useModel, history } from 'umi'
 import DiscussCard from '@/components/DiscussCard'
 import TreeDirectory from './TreeDirectory'
 import { storage } from '@/utils'
@@ -96,7 +96,7 @@ const HomePage = () => {
           <div>
             <CatalogText>
               <div>目录</div>
-              {user.isTeacher && <Button type='primary' onClick={()=>{ history.push('/material/edit')}}>编辑目录</Button>}
+              {user.isTeacher && <Button type='primary' onClick={() => { history.push('/material/edit') }}>编辑目录</Button>}
             </CatalogText>
             <Tree style={{ fontSize: '18px' }} defaultExpandAll={true} defaultExpandedKeys={['0-0-0']} onSelect={onSelect} treeData={treeData} />
           </div>

@@ -17,9 +17,11 @@ const loginTeacher = (req, res) => {
       res.status(500).send('Internal Server Error')
     } else {
       const data = { status: 200, msg: '登录成功' }
-      console.log(data,'~~~~~~~~~~~~~~~');
-      // res.status(200).json(data)
-      res.json(data)
+      console.log(data, '~~~~~~~~~~~~~~~');
+      res.status(200).json(
+        data
+      )
+      // res.json(rows)
     }
   })
 }
@@ -59,11 +61,33 @@ const registerStudent = (req, res) => {
     }
   })
 }
+// 创建课程
+const createCourse = (req, res) => {
+  const { courseId, name, teaId, classId, departId, content } = req.body
+  const queryText = `
+  INSERT INTO course (
+    courseId, name, teaId, classId, departId, content
+  ) VALUES (
+    ?, ?, ?, ?, ?, ?
+  )`;
+  const values = [courseId, name, teaId, classId, departId, content];
+
+  pool.query(queryText, values, (err, rows) => {
+    if (err) {
+      console.error('Error querying database:', err)
+      res.status(500).send('Internal Server Error')
+    } else {
+      res.json(rows)
+    }
+  })
+}
+
 const loginApi = {
   loginTeacher,
   loginStudent,
   registerTeacher,
-  registerStudent
+  registerStudent,
+  createCourse
 }
 
 export { loginApi }

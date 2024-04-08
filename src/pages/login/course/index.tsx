@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Button, Form, Image, Input, message, Avatar, Carousel, Dropdown, Modal, List, Card, Space, Select, Flex } from 'antd'
 import { history } from 'umi'
 import { storage } from '@/utils'
+import { createCourse } from '@/api/login'
+
 const cover1 = require('@/assets/images/cover.png')
 const cover2 = require('@/assets/images/cover3.png')
 const cover3 = require('@/assets/images/cover4.png')
@@ -71,13 +73,13 @@ export default () => {
       onClick: () => {
         Modal.confirm({
           title: '个人信息',
-          content: 
-          <>
-            <h3>姓名：{'尾牙宴'}</h3>
-            <h3>学号：{'201801010101'}</h3>
-            <h3>班级：{'20信管1'}</h3>
-            <h3>学院：{'管理工程学院'}</h3>
-          </>
+          content:
+            <>
+              <h3>姓名：{'尾牙宴'}</h3>
+              <h3>学号：{'201801010101'}</h3>
+              <h3>班级：{'20信管1'}</h3>
+              <h3>学院：{'管理工程学院'}</h3>
+            </>
         })
       }
     },
@@ -107,8 +109,16 @@ export default () => {
 
   const onFinish = async (values: any) => {
     message.success('新建成功')
+    const params = {
+      courseId: Date.now() % 1000,
+      teaId: parseInt(storage.getItem('userInfo1').teaId),
+      departId: 14,
+      ...values
+    }
+    const res = await createCourse(params)
+    console.log(params,res)
 
-    setShowClassModal(false)
+    // setShowClassModal(false)
   }
 
   const onReset = () => {
@@ -170,17 +180,17 @@ export default () => {
 
       <Modal closable={false} title="创建课程" open={showClassModal} footer={null}>
         <Form form={form} {...layout} onFinish={onFinish}>
-          <Form.Item label="课程名称" name="courseName">
+          <Form.Item label="课程名称" name="name">
             <Input />
           </Form.Item>
-          <Form.Item label="课程简介" name="courseDesc">
+          <Form.Item label="课程简介" name="content">
             <Input.TextArea />
           </Form.Item>
-          <Form.Item label="所属学院" name="courseDepart">
+          {/* <Form.Item label="所属学院" name="departId">
             <Select />
-          </Form.Item>
+          </Form.Item> */}
           {/* 可选可不选，联表展示，选项包含学院及专业班级 */}
-          <Form.Item label="特定班级" name="courseClass">
+          <Form.Item label="特定班级" name="classId">
             <Select />
           </Form.Item>
           <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>

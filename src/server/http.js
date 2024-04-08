@@ -29,6 +29,12 @@ app.post('/user/login/student', loginApi.loginStudent)
 app.post('/user/register/teacher', loginApi.registerTeacher)
 app.post('/user/register/student', loginApi.registerStudent)
 
+// 创建课程
+app.post('/user/course/create', loginApi.createCourse)
+
+
+
+
 // 获取讨论列表
 app.get('/discuss', discussApi.getDiscussList)
 

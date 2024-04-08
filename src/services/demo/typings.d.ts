@@ -47,6 +47,8 @@ declare namespace API {
   type UserGenderEnum = 'MALE' | 'FEMALE';
 
   interface UserInfo {
+    isTeacher?: boolean;
+    admin?: boolean; 
     id?: string;
     name?: string;
     /** nick */
