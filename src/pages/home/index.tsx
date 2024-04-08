@@ -2,6 +2,8 @@ import { Col, Row,Button,Tree } from 'antd'
 import { useModel,history } from 'umi'
 import DiscussCard from '@/components/DiscussCard'
 import TreeDirectory from './TreeDirectory'
+import { storage } from '@/utils'
+
 import styled from 'styled-components'
 
 const CatalogText = styled.div`
@@ -12,6 +14,8 @@ const CatalogText = styled.div`
   font-size: 20px;
   background:#f0f0f0;
 `
+const user = storage.getItem('userInfo1')
+
 const treeData = [
   {
     title: `${'战略管理'}`,
@@ -92,7 +96,7 @@ const HomePage = () => {
           <div>
             <CatalogText>
               <div>目录</div>
-            <Button type='primary' onClick={()=>{ history.push('/material/edit')}}>编辑目录</Button>
+              {user.isTeacher && <Button type='primary' onClick={()=>{ history.push('/material/edit')}}>编辑目录</Button>}
             </CatalogText>
             <Tree style={{ fontSize: '18px' }} defaultExpandAll={true} defaultExpandedKeys={['0-0-0']} onSelect={onSelect} treeData={treeData} />
           </div>
