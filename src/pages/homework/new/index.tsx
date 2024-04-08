@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { InputNumber, Space, Tooltip, Button, message, Steps, Form, Input, DatePicker, Divider, Flex, Select } from 'antd';
+import { InputNumber, Space, Tooltip, Button, message, Steps,Radio, Form, Input, DatePicker, Divider, Flex, Select } from 'antd';
 import { PlusSquareOutlined, EyeOutlined } from '@ant-design/icons'
 import { history } from 'umi'
 import { PageContainer } from '@ant-design/pro-components'
@@ -152,7 +152,7 @@ export default () => {
               </Flex>
               {Array.from({ length: answerNumber }, (_, index) => (
                 <>
-                  <Form.Item name={[FORM_SHORT, `${index + 1}`,FORM_SHORTQUESTION]} label={`简答题${index + 1}`}>
+                  <Form.Item name={[FORM_SHORT, `${index + 1}`, FORM_SHORTQUESTION]} label={`简答题${index + 1}`}>
                     <Input />
                   </Form.Item>
                   <Form.Item name={[FORM_SHORT, `${index + 1}`, FORM_SHORTANSWER]} label={`答案${index + 1}`}>
@@ -171,6 +171,12 @@ export default () => {
               <Form.Item name={FORM_AUTHOR} label='发布人'>
                 <div>{'wyy'}</div>
               </Form.Item>
+              {/* <Form.Item name={FORM_Way} label='是否作业互批'>
+                <Radio.Group >
+                  <Radio value={true}>是</Radio>
+                  <Radio value={false}>否</Radio>
+                </Radio.Group>
+              </Form.Item> */}
               <Form.Item name={FORM_SELECT_SCORE} label='客观题分数'>
                 {selectNumber} × <Form.Item name={FORM_SELECT_SCORE} noStyle><InputNumber onChange={(value) => { setSelectScore(value) }} /></Form.Item> = {selectNumber * selectScore}分
               </Form.Item>

@@ -1,61 +1,89 @@
-import { CloseOutlined, PlusOutlined } from '@ant-design/icons'
-import { Input, Popconfirm, Tree } from 'antd'
-import { useState } from 'react'
+import React, { useState } from 'react'
+import { CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
+import { Input, Popconfirm, Tree, Form, Modal, Upload, Button } from 'antd'
 
 const { TreeNode } = Tree
 let tempKey = '1000'
 
 export default (props) => {
   const { onHandleCancel = () => {}, onHandleOk = () => {}, data = {} } = props
+  const [form] = Form.useForm()
+  const [changeValue, setChangeValue] = useState('')
+  const [showValue, setShowValue] = useState(false)
+  const [showValueKey, setShowValueKey] = useState('')
 
   const treeDataTemp = [
     {
-      title: '0-0',
+      title: `${'战略管理'}`,
       key: '0-0',
       children: [
         {
-          title: '0-0-0',
+          title: '第一单元 战略管理导论',
           key: '0-0-0',
           children: [
             {
-              title: '0-0-0-0',
+              title: '1.1 教学课件-1.战略管理导论',
               key: '0-0-0-0'
             },
             {
-              title: '0-0-0-1',
+              title: '1.2 课后思考-1',
               key: '0-0-0-1'
             }
           ]
         },
         {
-          title: '0-0-2',
-          key: '0-0-2'
+          title: '第二单元 战略导航：使命、愿景与目标',
+          key: '0-0-1',
+          children: [
+            {
+              title: '2.1 教学课件-2.战略导航',
+              key: '0-0-1-0'
+            },
+            {
+              title: '2.2 课后思考-2',
+              key: '0-0-1-1'
+            }
+          ]
+        },
+        {
+          title: '第二单元 外部环境与分析',
+          key: '0-0-2',
+          children: [
+            {
+              title: '3.1 教学课件-3.外部环境分析',
+              key: '0-0-2-0'
+            },
+            {
+              title: '3.2 课后思考-3',
+              key: '0-0-2-1'
+            }
+          ]
+        },
+        {
+          title: '第四单元 内部环境与分析',
+          key: '0-0-3',
+          children: [
+            {
+              title: '4.1 教学课件-4.内部环境分析',
+              key: '0-0-3-0'
+            },
+            {
+              title: '4.2 课后思考-4',
+              key: '0-0-3-1'
+            },
+            {
+              title: '4.3 视频：波特五力模型',
+              key: '0-0-3-2'
+            }
+          ]
         }
       ]
-    },
-    {
-      title: '0-2',
-      key: '0-2'
     }
   ]
   const [treeData, setTreeData] = useState(treeDataTemp)
 
-  const onDragEnter = (info) => {
-    console.log(info)
-  }
-
-  function Ninja() {}
-  Ninja.prototype.swingSword = function () {
-    return true
-  }
-  const ninja1 = Ninja()
-  console.log(ninja1)
-
-  const ninja2 = new Ninja()
-  console.log(ninja2);
+  console.log(treeData);
   
-  console.log(ninja2 && ninja2.swingSword && ninja2.swingSword())
-
   const onAdd = (key) => {
     console.log('onAdd', key)
     const treeDataOld = JSON.parse(JSON.stringify(treeData))
@@ -107,10 +135,10 @@ export default (props) => {
     }
   }
 
-  const onChange = (e, key) => {
-    console.log('onChange', e, key)
+  const onChange = (key,title) => {
+    console.log('onChange',key,title)
     const treeDataOld = JSON.parse(JSON.stringify(treeData))
-    const treeDataNew = editNode(key, treeDataOld, e.target.value)
+    const treeDataNew = editNode(key, treeDataOld, title)
     setTreeData(treeDataNew)
 
     function editNode(key, data, val) {
@@ -128,7 +156,7 @@ export default (props) => {
   }
 
   const renderTreeNodes = (data) => {
-    console.log('renderTreeNodes', data)
+    // console.log('renderTreeNodes', data)
     return data.map((item) => {
       if (item.children) {
         return (
@@ -141,10 +169,18 @@ export default (props) => {
     })
   }
 
+  const onFinish = ()=> {
+    onChange(showValueKey,form.getFieldValue('title'))
+    setShowValue(false)
+    setChangeValue('')
+    form.resetFields()
+  }
+
   const onTitleRender = (item) => {
     return (
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <Input value={item.title} defaultValue={item.title} onChange={(e) => onChange(e, item.key)} />
+        {/* <Input value={item.title} defaultValue={item.title} onChange={() => onChange(item.key)} onClick={()=> onChange(item.key)}/> */}
+        <Input style={{minWidth:'500px'}} value={item.title} defaultValue={item.title} onClick={()=>{setShowValue(true);setChangeValue(item.title);setShowValueKey(item.key)}}/>
         <span style={{ display: 'flex' }}>
           <PlusOutlined style={{ marginLeft: 10 }} onClick={() => onAdd(item.key)} />
           <Popconfirm
@@ -163,9 +199,21 @@ export default (props) => {
   }
   return (
     <>
-      <Tree className='draggable-tree' defaultExpandAll={true} onDragEnter={onDragEnter} titleRender={onTitleRender}>
+      <Tree className='draggable-tree' defaultExpandAll={true} titleRender={onTitleRender}>
         {treeData?.length && renderTreeNodes(treeData)}
       </Tree>
+      <Modal title="小杰内容" open={showValue} onOk={onFinish} onCancel={() => {setShowValue(false); setShowValueKey(''); form.resetFields()}}>
+        <Form form={form} >
+          <Form.Item label="标题名称" name="title">
+            <Input placeholder={'请输入更新标题'}/>
+          </Form.Item>
+          <Form.Item label='添加附件' name={"material"} >
+            <Upload>
+              <Button icon={<UploadOutlined />}>上传资料</Button>
+            </Upload>
+          </Form.Item>
+        </Form>
+      </Modal>
     </>
   )
 }

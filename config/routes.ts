@@ -27,14 +27,18 @@ export default [
     // layout: false,  // 不使用layout配置
     routes: [
       { path: '/home', component: './home' },
-      { path: '/home/edit', component: './home/edit' }
+      // { path: '/home/edit', component: './home/edit' }
     ]
   },
   {
     name: '资料查询',
     path: '/material',
     icon: 'FolderOutlined',
-    component: './material'
+    // component: './material',
+    routes: [
+      { path: '/material/download', name: '资料下载', component: './material/download' },
+      { path: '/material/edit', name: '目录资料', component: './material/edit' },
+    ]
   },
   {
     name: '课后作业',
