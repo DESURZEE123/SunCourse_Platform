@@ -111,7 +111,7 @@ export default () => {
         </Dropdown>
       </div>
       <CarouselAuto />
-      <div style={{ marginTop: '120px', padding: '0 60px' }}>
+      <div style={{ padding: '0 60px' }}>
         <div className='flex-container'>
           <h1>我的课程</h1>
           <div>
