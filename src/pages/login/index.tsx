@@ -29,14 +29,21 @@ export default () => {
     if ("login" in values) {
       const res = await login(values.login)
       console.log(res);
-      
-      if (res) {
-        message.success('登录成功')
-        storage.setItem('userInfo1', values.login)
-        // history.push('/login/course')
+      message.success('登录成功')
+      if (values.login.teaId === '123') {
+        storage.setItem('userInfo1', { admin: true })
       } else {
-        message.error('账号或密码错误')
+        storage.setItem('userInfo1', values.login)
       }
+      history.push('/login/course')
+
+      // if (res) {
+      //   message.success('登录成功')
+      //   storage.setItem('userInfo1', values.login)
+      //   // history.push('/login/course')
+      // } else {
+      //   message.error('账号或密码错误')
+      // }
     }
 
     if ("register" in values) {
@@ -73,7 +80,8 @@ export default () => {
                 <Select
                   options={[
                     { label: '学生', value: false },
-                    { label: '老师', value: true }]}
+                    { label: '老师', value: true }
+                  ]}
                   onChange={(value) => setIsTeacher(value)}
                   placeholder="请选择身份"
                 />
