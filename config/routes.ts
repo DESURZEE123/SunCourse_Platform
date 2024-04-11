@@ -67,7 +67,8 @@ export default [
     icon: 'UserOutlined',
     access: 'isAdmin',
     routes: [
-      { path: '/users/userGroup', name: '人员管理', component: './users/userGroup' }
+      { path: '/users/userGroup', name: '人员管理', component: './users/userGroup' },
+      { path: '/users/courseGroup', name: '课程管理', component: './users/courseGroup' }
     ]
   },
   // {

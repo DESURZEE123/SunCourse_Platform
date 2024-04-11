@@ -1,47 +1,62 @@
-import { Button } from 'antd'
+import { Button, Popconfirm, message } from 'antd'
 
-export const getTableColumns = () => {
+export const getTableColumns = (ref) => {
+  console.log(ref);
+  
+  const valueEnum = {
+    1: 'Open',
+    2: 'Closed',
+    3: 'Processing',
+  }
+  const confirm = (e) => {
+
+    ref.current.reload()
+    message.success('删除成功')
+  };
+
   return [
     {
-      title: '文件名',
-      dataIndex: 'activityId',
-      width: 200,
-      fieldProps: {
-        placeholder: '请输入活动ID'
-      }
-    },
-    {
-      title: '上传者',
-      dataIndex: 'activityName',
+      title: '学号/教工号',
+      dataIndex: 'Id',
       width: 200,
       hideInSearch: true,
+    },
+    {
+      title: '身份',
+      dataIndex: 'Id',
+      width: 200,
+      valueType: 'select',
+      valueEnum: valueEnum,
+    },
+    {
+      title: '姓名',
+      dataIndex: 'name',
+      width: 200,
+      hideInSearch: true
+    },
+    {
+      title: '学院',
+      dataIndex: 'depart',
+      width: 200,
+      valueType: 'select',
+      valueEnum: valueEnum,
       fieldProps: {
-        placeholder: '请输入活动名称'
+        placeholder: '请选择学院',
       }
     },
     {
-      title: '创建日期',
-      dataIndex: 'activityTime',
-      valueType: 'dateRange',
-      width: 350,
-      hideInTable: true,
+      title: '班级',
+      dataIndex: 'className',
+      width: 200,
+      valueType: 'select',
+      valueEnum: valueEnum,
       fieldProps: {
-        placeholder: ['开始时间', '结束时间']
-      },
-      search: {
-        transform: (value) => {
-          return {
-            startTime: value[0],
-            endTime: value[1]
-          }
-        }
+        placeholder: '请选择班级'
       }
     },
-
     {
-      title: '创建日期',
-      dataIndex: 'activityTime',
-      valueType: 'dateRange',
+      title: '所选/所教课程',
+      dataIndex: 'course',
       hideInSearch: true,
       width: 350
     },
@@ -51,9 +66,14 @@ export const getTableColumns = () => {
       valueType: 'option',
       fixed: 'right',
       render: (_, record) => (
-        <Button type='link' danger>
-          查看详情
-        </Button>
+        <Popconfirm
+          description="确定要删除此条人员信息?"
+          onConfirm={confirm}
+        >
+          <Button type='link' danger>
+            删除
+          </Button>
+        </Popconfirm>
       )
     }
   ]
