@@ -68,6 +68,7 @@ export default [
     access: 'isAdmin',
     routes: [
       { path: '/users/userGroup', name: '人员管理', component: './users/userGroup' },
+      { path: '/users/classGroup', name: '学院管理', component: './users/classGroup' },
       { path: '/users/courseGroup', name: '课程管理', component: './users/courseGroup' }
     ]
   },

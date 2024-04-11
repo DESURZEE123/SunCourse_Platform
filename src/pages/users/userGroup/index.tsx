@@ -6,7 +6,6 @@ import { getTableColumns } from './tableConfig'
 var jsonData = require('./temp.json')
 
 export default () => {
-  const [current, setCurrent] = useState(1)
   const [page, setPage] = useState(1)
   const ref = useRef()
   const columns = getTableColumns(ref)
