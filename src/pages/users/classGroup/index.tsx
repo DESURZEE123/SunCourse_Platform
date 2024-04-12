@@ -7,40 +7,40 @@ const tableListDataSource =
     {
       "key": 0,
       "name": "管理工程学院",
-      "creator": "林东东",
       "status": 10,
       "createdAt": 1712903591723
     },
     {
       "key": 1,
       "name": "计算机学院",
-      "creator": "兼某某",
       "status": 11,
       "createdAt": 1712903559699
     },
     {
       "key": 2,
       "name": "金融学院",
-      "creator": "兼某某",
       "status": 1,
       "createdAt": 1712903597202
     },
     {
       "key": 3,
       "name": "人文学院",
-      "creator": "曲丽丽",
       "status": 5,
       "createdAt": 1712903586967
     },
     {
       "key": 4,
       "name": "土木学院",
-      "creator": "兼某某",
       "status": 7,
       "createdAt": 1712903546267
     }
   ]
 const columns = [
+  {
+    title: '学院号',
+    width: 120,
+    dataIndex: 'key'
+  },
   {
     title: '学院名称',
     width: 120,
@@ -68,12 +68,7 @@ const columns = [
         </Button>
       </Popconfirm>
     )
-  },
-  {
-    title: '操作',
-    width: 120,
-    dataIndex: 'creator'
-  },
+  }
 ];
 
 export default () => {
@@ -105,7 +100,7 @@ export default () => {
             创建学院
           </Button>,
           <Button key="primary" type="primary">
-            创建专业
+            创建专业班级
           </Button>
         ]}
       />

@@ -1,6 +1,5 @@
 import { ProTable } from '@ant-design/pro-components';
 import { Button, Popconfirm } from 'antd';
-import { expandedClass } from './expandedClass.tsx'
 
 const data = [
   {
@@ -22,10 +21,11 @@ const data = [
     "upgradeNum": "18"
   }
 ]
-export const expandedRowRender = () => {
+export const expandedClass = () => {
 
   const columns = [
-    { title: '专业号', dataIndex: 'key' },
+    { title: '班级号', dataIndex: 'key' },
+    { title: '年级', dataIndex: 'upgradeNum'},
     { title: '专业名称', dataIndex: 'name' },
     {
       title: '操作',
@@ -46,7 +46,6 @@ export const expandedRowRender = () => {
   ]
   return (
     <ProTable
-      expandable={{ expandedRowRender: expandedClass }}
       columns={columns}
       headerTitle={false}
       search={false}
