@@ -1,6 +1,6 @@
 import { ProTable, PageContainer } from '@ant-design/pro-components';
 import { Button, Popconfirm } from 'antd';
-import { expandedRowRender } from './expandedRowRender.tsx'
+import { ExpandedRowComponent } from './expandedRowRender.tsx'
 
 const tableListDataSource =
   [
@@ -90,7 +90,7 @@ export default () => {
         pagination={{
           showQuickJumper: true,
         }}
-        expandable={{ expandedRowRender }}
+        expandable={{  expandedRowRender: record => <ExpandedRowComponent />}}
         search={false}
         dateFormatter="string"
         headerTitle="学院/专业信息"

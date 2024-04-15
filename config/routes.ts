@@ -62,7 +62,7 @@ export default [
     ]
   },
   {
-    name: '权限管理',
+    name: '综合管理',
     path: '/users',
     icon: 'UserOutlined',
     access: 'isAdmin',
