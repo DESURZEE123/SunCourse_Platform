@@ -1,14 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Checkbox, Image, Flex, Card, Select, message } from 'antd';
+import { Form, Input, Button, Cascader, Image, Flex, Card, Select, message } from 'antd';
 import { connect } from 'dva'
 import { history } from 'umi'
 // import { setCookie } from '@/utils/cookie'
 import { login, registerApi } from '@/api/login'
 import { storage } from '@/utils'
-
 const SchoolImage = require('@/assets/images/school.jpg')
-import styled from 'styled-components'
 
+import './index.less'
+const options = [
+  {
+    value: 'zhejiang',
+    label: 'Zhejiang',
+    children: [
+      {
+        value: 'hangzhou',
+        label: 'Hangzhou',
+      },
+    ],
+  },
+  {
+    value: 'jiangsu',
+    label: 'Jiangsu',
+    children: [
+      {
+        value: 'nanjing',
+        label: 'Nanjing',
+        children: [
+          {
+            value: 'zhonghuamen',
+            label: 'Zhong Hua Men',
+          },
+        ],
+      },
+    ],
+  },
+];
 export default () => {
   // const Demo = ({ users, dispatch }) => {
   const [register, setRegister] = useState(false)
@@ -65,14 +92,20 @@ export default () => {
     }
   };
 
+  const onChange = (value: (string | number)[]) => {
+    console.log(value);
+  };
+
   return (
-    <div style={{ padding: '70px 70px', backgroundColor: '#ffffff' }}>
+    <div className="container">
       <Flex style={{ boxShadow: '25px 25px 15px #dedede' }}>
         <Image preview={false} src={SchoolImage}></Image>
         <Card style={{ minWidth: '500px' }}>
           <Flex justify={'space-between'}>
-            <h1 onClick={() => { setRegister(false) }}>登录</h1>
-            <h3 onClick={() => { setRegister(true), setIsTeacher(false) }}>没有账号？点击注册</h3>
+            {!register && <h1>登 录</h1>}
+            {register && <h1>注 册</h1>}
+            {!register && <h3 style={{ marginTop: '10px' }} onClick={() => { setRegister(true), setIsTeacher(false) }}>没有账号？点击注册</h3>}
+            {register && <h3 style={{ marginTop: '10px' }} onClick={() => { setRegister(false) }}>返回登录</h3>}
           </Flex>
           {!register ?
             (<Form name="login" onFinish={onFinish} >
@@ -122,10 +155,10 @@ export default () => {
                 <Form.Item label="所属学院" name={["register", "department"]}>
                   <Select />
                 </Form.Item>
-                {!isTeacher ?
+                {!isTeacher &&
                   <Form.Item label="所属班级" name={["register", "class"]}>
-                    <Input placeholder='请输入班级' />
-                  </Form.Item> : <></>}
+                    <Cascader options={options} onChange={onChange} placeholder="请选择班级" />
+                  </Form.Item>}
                 <Form.Item label="密码" name={["register", "password"]}>
                   <Input.Password />
                 </Form.Item>
@@ -141,10 +174,12 @@ export default () => {
         </Card>
 
       </Flex>
-      <h4>博主仓库 使用条款 帮助文档</h4>
+      <div className="bottom-fixed">
+        <Button type='link' onClick={() => { window.open("https://github.com/DESURZEE123/SunCourse_Platform", "_blank"); }}>仓库地址</Button>
+        <Button type='link'>使用条款</Button>
+        <Button type='link'>帮助文档</Button>
+      </div>
     </div>
-
-
   );
 };
 // const mapStateToProps = ({ users }) => {

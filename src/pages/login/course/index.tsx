@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Form, Image, Input, message, Avatar, Carousel, Dropdown, Modal, List, Card, Space, Select, Flex } from 'antd'
+import { Button, Form, Cascader, Image, Input, message, Avatar, Carousel, Dropdown, Modal, List, Card, Space, Select, Flex } from 'antd'
 import { history } from 'umi'
 import { storage } from '@/utils'
 import { createCourse } from '@/api/login'
@@ -147,8 +147,7 @@ export default () => {
             {user.isTeacher && (<Button type='primary' onClick={() => setShowClassModal(true)}>创建课程</Button>)}
           </div>
         </div>
-        <List
-          grid={{ gutter: 16, column: 4 }}
+        <List grid={{ gutter: 16, column: 4 }}
           dataSource={data}
           renderItem={({ title, name, class: className, courseId }) => (
             <List.Item>
@@ -188,12 +187,12 @@ export default () => {
           <Form.Item label="课程简介" name="content">
             <Input.TextArea />
           </Form.Item>
-          {/* <Form.Item label="所属学院" name="departId">
+          <Form.Item label="所属学院" name="departId">
             <Select />
-          </Form.Item> */}
+          </Form.Item>
           {/* 可选可不选，联表展示，选项包含学院及专业班级 */}
           <Form.Item label="特定班级" name="classId">
-            <Select />
+            <Cascader />
           </Form.Item>
           <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
             <Button htmlType='button' onClick={onReset} style={{ marginRight: '10px' }}>
