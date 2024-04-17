@@ -2,7 +2,9 @@ import HomeCard from '@/components/HomeCard'
 import { PageContainer } from '@ant-design/pro-components'
 import { history } from 'umi'
 import { Flex, Tabs } from 'antd'
+import { storage } from '@/utils'
 
+const user = storage.getItem('userInfo1')
 const HomeWork = () => {
   const onChange = (key: string) => {
     // console.log(key)
@@ -41,7 +43,7 @@ const HomeWork = () => {
   return (
     <PageContainer>
       <div>
-        <Tabs defaultActiveKey='1' items={items} onChange={onChange} />
+        <Tabs defaultActiveKey='1' items={user.isTeacher ? items: [items[0]]} onChange={onChange} />
       </div>
     </PageContainer>
   )
