@@ -2,18 +2,19 @@ import { useRef, useState } from 'react'
 import { ProTable, PageContainer } from '@ant-design/pro-components'
 import { Button } from 'antd'
 import { getTableColumns } from './tableConfig'
+import { getUserList } from '@/api/user'
 
 var jsonData = require('./temp.json')
 
 export default () => {
-  const [page, setPage] = useState(1)
   const ref = useRef()
+  const [isTeacher, setIsTeacher] = useState('false')
+  const [page, setPage] = useState(1)
   const columns = getTableColumns(ref)
 
-  // ref.current.reload()
-  const requestList = () => {
-    console.log(1111, '请求了');
-
+  const requestUserList = () => {
+    console.log(1111, isTeacher);
+    const res = getUserList({ isTeacher })
     const params = { pageSize: 10, current: 1 }
     return jsonData
     // const msg = await myQuery({
@@ -33,7 +34,7 @@ export default () => {
     <PageContainer>
       <ProTable
         actionRef={ref}
-        request={requestList}
+        request={requestUserList}
         rowKey={(record) => record.Id}
         search={{
           collapsed: false,
@@ -43,20 +44,12 @@ export default () => {
               type='primary'
               onClick={() => {
                 console.log(formProps.form.getFieldsValue());
+                const { isTeacher } = formProps.form.getFieldsValue()
+                setIsTeacher(isTeacher)
                 formProps?.form?.submit()
               }}
             >
               搜索
-            </Button>,
-            <Button
-              type='primary'
-              onClick={() => {
-                console.log(formProps.form.getFieldsValue());
-                formProps?.form?.submit()
-              }}
-            >
-              {/* 这里使用之前注册的接口 */}
-              添加
             </Button>
           ]
         }}

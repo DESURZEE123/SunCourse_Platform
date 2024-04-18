@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { ProTable } from '@ant-design/pro-components';
-import { Button, Popconfirm, Space, Drawer, Table, Pagination } from 'antd';
+import { Button, Popconfirm, Space, Drawer, Table } from 'antd';
+import { getMajorList } from '@/api/user'
+import ClassTable from './ClassTable'
 
 const data = [
   {
@@ -20,52 +22,23 @@ const data = [
   }
 ]
 
-const data2 = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-];
+export const ExpandedRowComponent = (departId) => {
+  console.log(departId);
 
-export const ExpandedRowComponent = () => {
   const [open, setOpen] = useState(false);
   const showDrawer = () => {
     setOpen(true);
   };
 
-  const onClose = () => {
-    setOpen(false);
-  };
+  const getDataList = async () => {
+    const res = await getMajorList(departId)
+  }
+
   const columns = [
     { title: '专业号', width: 200, dataIndex: 'key' },
     { title: '专业名称', width: 400, dataIndex: 'name' },
     {
       title: '操作',
-      // width: 100,
       valueType: 'option',
       fixed: 'right',
       render: (_, record) => (
@@ -81,49 +54,11 @@ export const ExpandedRowComponent = () => {
               删除
             </Button>
           </Popconfirm>
-
         </Space>
       )
     }
   ]
-  const ClassColumns = [
-    {
-      title: '班级号',
-      dataIndex: 'name',
-      key: 'name',
-      render: (text) => <a>{text}</a>,
-    },
-    {
-      title: '年级',
-      dataIndex: 'age',
-      key: 'age',
-    },
-    {
-      title: '班级名称',
-      dataIndex: 'address',
-      key: 'address',
-    },
-    {
-      title: '人数',
-      dataIndex: 'key',
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (_, record) => (
-        <Space size="middle">
-          <Popconfirm
-            description="确定要删除此条班级信息?"
-            onConfirm={confirm}
-          >
-            <Button type='link' danger>
-              删除
-            </Button>
-          </Popconfirm>
-        </Space>
-      ),
-    },
-  ];
+
 
   return (
     <>
@@ -135,10 +70,7 @@ export const ExpandedRowComponent = () => {
         dataSource={data}
         pagination={false}
       />
-      <Drawer title="详细专业班级信息" onClose={onClose} open={open} size={'large'}>
-        <Table columns={ClassColumns} dataSource={data2} pagination={false}/>
-      </Drawer>
+      <ClassTable open={open} setOpen={setOpen} />
     </>
-
   );
 };

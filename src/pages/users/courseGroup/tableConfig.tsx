@@ -1,23 +1,29 @@
 import { Button, Popconfirm, message } from 'antd'
+import { deleteCourse } from '@/api/login'
 
 export const getTableColumns = (ref) => {
   console.log(ref);
-  
+
   const valueEnum = {
     1: 'Open',
     2: 'Closed',
     3: 'Processing',
   }
-  const confirm = (e) => {
-
-    ref.current.reload()
-    message.success('删除成功')
+  const confirmDeleteCourse = async(courseId) => {
+    console.log(courseId);
+    const res = await deleteCourse({courseId})
+    if(res) {
+      ref.current.reload()
+      message.success('删除成功')
+    } else {
+      message.error('删除失败')
+    }
   };
 
   return [
     {
       title: '课程号',
-      dataIndex: 'Id',
+      dataIndex: 'courseId',
       width: 200,
       hideInSearch: true,
     },
@@ -43,10 +49,7 @@ export const getTableColumns = (ref) => {
       valueType: 'option',
       fixed: 'right',
       render: (_, record) => (
-        <Popconfirm
-          description="确定要删除此条人员信息?"
-          onConfirm={confirm}
-        >
+        <Popconfirm description="确定要删除此条课程信息?" onConfirm={() => confirmDeleteCourse(record.courseId)} >
           <Button type='link' danger>
             删除
           </Button>

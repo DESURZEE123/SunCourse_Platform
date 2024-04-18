@@ -1,17 +1,18 @@
 import { Button, Popconfirm, message } from 'antd'
+// 引入学院、班级、课程Id对应的映射关系
+import { deleteUser } from '@/api/user'
 
 export const getTableColumns = (ref) => {
-  console.log(ref);
-  
-  const valueEnum = {
-    1: 'Open',
-    2: 'Closed',
-    3: 'Processing',
-  }
-  const confirm = (e) => {
-
-    ref.current.reload()
-    message.success('删除成功')
+  // console.log(ref);
+  const confirmDeleteUser = async (Id,isTeacher) => {
+    console.log(Id,isTeacher);
+    const res = await deleteUser({Id,isTeacher})
+    if(res) {
+      ref.current.reload()
+      message.success('删除成功')
+    } else {
+      message.error('删除失败')
+    }
   };
 
   return [
@@ -23,10 +24,10 @@ export const getTableColumns = (ref) => {
     },
     {
       title: '身份',
-      dataIndex: 'Id',
+      dataIndex: 'isTeacher',
       width: 200,
       valueType: 'select',
-      valueEnum: valueEnum,
+      valueEnum: { true: '老师', false: '学生' },
     },
     {
       title: '姓名',
@@ -36,27 +37,26 @@ export const getTableColumns = (ref) => {
     },
     {
       title: '学院',
-      dataIndex: 'depart',
+      dataIndex: 'departId',
       width: 200,
       valueType: 'select',
-      valueEnum: valueEnum,
+      // valueEnum: valueEnum,
       fieldProps: {
         placeholder: '请选择学院',
       }
     },
     {
       title: '班级',
-      dataIndex: 'className',
+      dataIndex: 'classId',
       width: 200,
       valueType: 'select',
-      valueEnum: valueEnum,
-      fieldProps: {
-        placeholder: '请选择班级'
-      }
+      // valueEnum: valueEnum,
+      hideInSearch: true,
+      render: (_, record) => record?.classId ?? '-'
     },
     {
       title: '所选/所教课程',
-      dataIndex: 'course',
+      dataIndex: 'courseId',
       hideInSearch: true,
       width: 350
     },
@@ -66,10 +66,7 @@ export const getTableColumns = (ref) => {
       valueType: 'option',
       fixed: 'right',
       render: (_, record) => (
-        <Popconfirm
-          description="确定要删除此条人员信息?"
-          onConfirm={confirm}
-        >
+        <Popconfirm description="确定要删除此条人员信息?" onConfirm={() => confirmDeleteUser(record.Id, record.isTeacher)}>
           <Button type='link' danger>
             删除
           </Button>

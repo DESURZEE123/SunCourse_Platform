@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { ProTable, PageContainer } from '@ant-design/pro-components'
 import { Button } from 'antd'
+import { getCourseList } from '@/api/login'
 import { getTableColumns } from './tableConfig'
 
 var jsonData = require('./temp.json')
@@ -13,7 +14,7 @@ export default () => {
   // ref.current.reload()
   const requestList = () => {
     console.log(1111, '请求了');
-
+    const res = getCourseList()
     const params = { pageSize: 10, current: 1 }
     return jsonData
     // const msg = await myQuery({

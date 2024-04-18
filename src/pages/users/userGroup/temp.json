@@ -2,87 +2,91 @@
   "data":[
     {
       "Id":111,
+      "isTeacher":true,
       "name":"name",
-      "depart":"管理工程学院",
-      "className":"20信管1",
-      "course":"计算机网络"
+      "departId":"管理工程学院",
+      "classId":"20信管1",
+      "courseId":"计算机网络"
     },
     {
       "Id":1211,
+      "isTeacher":true,
       "name":"name",
-      "depart":"管理工程学院",
-      "className":"20信管1",
-      "course":"计算机网络"
+      "departId":"管理工程学院",
+      "classId":"20信管1",
+      "courseId":"计算机网络"
     },
     {
       "Id":1131,
+      "isTeacher":true,
       "name":"name",
-      "depart":"管理工程学院",
-      "className":"20信管1",
-      "course":"计算机网络"
+      "departId":"管理工程学院",
+      "classId":"20信管1",
+      "courseId":"计算机网络"
     },
     {
       "Id":1141,
+      "isTeacher":true,
       "name":"name",
-      "depart":"管理工程学院",
-      "className":"20信管1",
-      "course":"计算机网络"
+      "departId":"管理工程学院",
+      "classId":"20信管1",
+      "courseId":"计算机网络"
     },
     {
       "Id":1151,
       "name":"name",
-      "depart":"管理工程学院",
-      "className":"20信管1",
-      "course":"计算机网络"
+      "departId":"管理工程学院",
+      "classId":"20信管1",
+      "courseId":"计算机网络"
     },
     {
       "Id":1151,
       "name":"name",
-      "depart":"管理工程学院",
-      "className":"20信管1",
-      "course":"计算机网络"
+      "departId":"管理工程学院",
+      "classId":"20信管1",
+      "courseId":"计算机网络"
     },
     {
       "Id":1811,
       "name":"name",
-      "depart":"管理工程学院",
-      "className":"20信管1",
-      "course":"计算机网络"
+      "departId":"管理工程学院",
+      "classId":"20信管1",
+      "courseId":"计算机网络"
     },
     {
       "Id":6111,
       "name":"name",
-      "depart":"管理工程学院",
-      "className":"20信管1",
-      "course":"计算机网络"
+      "departId":"管理工程学院",
+      "classId":"20信管1",
+      "courseId":"计算机网络"
     },
     {
       "Id":11451,
       "name":"name",
-      "depart":"管理工程学院",
-      "className":"20信管1",
-      "course":"计算机网络"
+      "departId":"管理工程学院",
+      "classId":"20信管1",
+      "courseId":"计算机网络"
     },
     {
       "Id":1311,
       "name":"name",
-      "depart":"管理工程学院",
-      "className":"20信管1",
-      "course":"计算机网络"
+      "departId":"管理工程学院",
+      "classId":"20信管1",
+      "courseId":"计算机网络"
     },
     {
       "Id":1131,
       "name":"name",
-      "depart":"管理工程学院",
-      "className":"20信管1",
-      "course":"计算机网络"
+      "departId":"管理工程学院",
+      "classId":"20信管1",
+      "courseId":"计算机网络"
     },
     {
       "Id":1111,
       "name":"name",
-      "depart":"管理工程学院",
-      "className":"20信管1",
-      "course":"计算机网络"
+      "departId":"管理工程学院",
+      "classId":"20信管1",
+      "courseId":"计算机网络"
     }
   ],
   "message":true,
