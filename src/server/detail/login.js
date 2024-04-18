@@ -87,12 +87,25 @@ const createCourse = (req, res) => {
   })
 }
 
+// 删除课程
+const deleteCourse = (req, res) => {
+  const { courseId } = req.body
+  pool.query('DELETE FROM course WHERE courseId = ?;', [courseId], (err, rows) => {
+    if (err) {
+      console.error('Error querying database:', err)
+      res.status(500).send('Internal Server Error')
+    } else {
+      res.json(rows)
+    }
+  })
+}
 const loginApi = {
   loginTeacher,
   loginStudent,
   registerTeacher,
   registerStudent,
-  createCourse
+  createCourse,
+  deleteCourse
 }
 
 export { loginApi }

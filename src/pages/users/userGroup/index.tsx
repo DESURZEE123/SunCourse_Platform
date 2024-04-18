@@ -5,7 +5,28 @@ import { getTableColumns } from './tableConfig'
 import { getUserList } from '@/api/user'
 
 var jsonData = require('./temp.json')
-
+const StuData = {
+  "data": [
+      {
+          "stuId": 1111111,
+          "name": "学生2",
+          "class": "19信管1",
+          "password": "7777",
+          "classId": 151,
+          "depertId": 11
+      },
+      {
+          "stuId": 11152001,
+          "name": "王怡阳",
+          "class": "20信管1",
+          "password": "123456",
+          "classId": 15,
+          "depertId": 11
+      }
+  ],
+  "message": true,
+  "total": 2
+}
 export default () => {
   const ref = useRef()
   const [isTeacher, setIsTeacher] = useState('false')

@@ -1,13 +1,12 @@
 import { discussApi } from './detail/discussion.js';
 import { loginApi } from './detail/login.js';
-// const  getDiscussionDetail  = require('./detail/discussion.js');
+import { userApi } from './detail/user.js';
 // const http = require('http');//用于搭建服务器
 import express from 'express';
 
 // const express = require('express')
 // const mysql = require('mysql')
 const app = express()
-
 
 app.use(express.json());
 
@@ -31,8 +30,31 @@ app.post('/user/register/student', loginApi.registerStudent)
 
 // 创建课程
 app.post('/user/course/create', loginApi.createCourse)
+// 删除课程
+app.post('/user/course/delete', loginApi.deleteCourse)
 
-
+// 获取老师 全部数据
+app.post('/user/get/teacher', userApi.getTeacherList)
+// 获取学生 全部数据
+app.post('/user/get/student', userApi.getStudentList)
+// 删除老师
+app.post('/user/delete/teaId', userApi.deleteTeacher)
+// 删除学生
+app.post('/user/delete/stuId', userApi.deleteStudent)
+// // 获取学院 全部数据
+// app.get('/user/depart', userApi.getDepartList)
+// // 创建学院
+// app.post('/user/depart/create', userApi.addDepart)
+// // 删除学院
+// app.post('/user/depart/delete', userApi.deleteDepart)
+// // 获取专业
+// app.post('/user/major/departId=:departId', userApi.getMajorList)
+// // 创建专业班级
+// app.post('/user/major/create', userApi.addMajor)
+// // 删除专业
+// app.post('/user/major/delete', userApi.deleteMajor)
+// // 删除班级
+// app.post('/user/class/delete', userApi.deleteClass)
 
 
 // 获取讨论列表

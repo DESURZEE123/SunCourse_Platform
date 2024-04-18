@@ -4,14 +4,20 @@ import { deleteUser } from '@/api/user'
 
 export const getTableColumns = (ref) => {
   // console.log(ref);
-  const confirmDeleteUser = async (Id,isTeacher) => {
-    console.log(Id,isTeacher);
-    const res = await deleteUser({Id,isTeacher})
-    if(res) {
-      ref.current.reload()
-      message.success('删除成功')
-    } else {
+  const confirmDeleteUser = async (Id, isTeacher) => {
+    // console.log(Id, isTeacher);
+    try {
+      const res = await deleteUser({ Id, isTeacher });
+      console.log(res);
+      
+      if (res) {
+        ref.current.reload()
+        message.success('删除成功')
+      }
+      // 处理 res...
+    } catch (error) {
       message.error('删除失败')
+      console.error('Error deleting user:', error);
     }
   };
 
