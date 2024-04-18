@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react'
 import { ProTable, PageContainer } from '@ant-design/pro-components';
-import { Button, Popconfirm, message } from 'antd';
+import { Button, Popconfirm, message, Modal, Input, Form, Space } from 'antd';
 import { ExpandedRowComponent } from './expandedRowRender.tsx'
-import { deleteDepart } from '@/api/user'
+import { addDepart, deleteDepart, addMajor } from '@/api/user'
 
 const tableListDataSource =
   [
@@ -37,10 +37,26 @@ const tableListDataSource =
       "createdAt": 1712903546267
     }
   ]
-
-
 export default () => {
   const ref = useRef()
+  const [showDepartModal, setShowDepartModal] = useState(false)
+  const [showMajorModal, setShowMajorModal] = useState(false)
+  const [inputVlue, setInputValue] = useState('')
+
+  const addDepartment = async () => {
+    const res = await addDepart({ name: inputVlue })
+    if (res) {
+      setShowDepartModal(false)
+      setInputValue('')
+    }
+  }
+
+  const addMajorClass = async () => {
+    const res = await addMajor({ name: inputVlue })
+    if (res) {
+      setShowMajorModal(false)
+    }
+  }
 
   const confirmDeleteUser = async (departId) => {
     const res = await deleteDepart({ departId })
@@ -52,7 +68,6 @@ export default () => {
     }
   };
 
-  console.log(tableListDataSource);
 
   const columns = [
     {
@@ -109,7 +124,7 @@ export default () => {
         headerTitle="学院/专业信息"
         options={false}
         toolBarRender={() => [
-          <Button key="primary" type="primary">
+          <Button key="primary" type="primary" onClick={() => setShowDepartModal(true)}>
             创建学院
           </Button>,
           <Button key="primary" type="primary">
@@ -117,7 +132,13 @@ export default () => {
           </Button>
         ]}
       />
+      <Modal title="创建学院" open={showDepartModal} onOk={addDepartment} onCancel={() => { setShowDepartModal(false); setInputValue('') }}>
+        <Space>
+          学院名：<Input onChange={(e) => { setInputValue(e.target.value) }} placeholder={'请输入学院名'} />
+        </Space>
+      </Modal>
+      <Modal title="创建专业班级" open={showMajorModal} onOk={addMajorClass} onCancel={() => { setShowMajorModal(false) }}>
+      </Modal>
     </PageContainer>
-
   );
 };
