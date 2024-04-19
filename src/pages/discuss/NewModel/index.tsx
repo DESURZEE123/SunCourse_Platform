@@ -32,6 +32,16 @@ export default () => {
     form.resetFields()
     setOpen(false)
   }
+
+  const checkFileSize = (file) => {
+    const maxSize = 10 * 1024 * 1024;
+    if (file.size > maxSize) {
+      message.error('文件大小超过限制（10MB）');
+      return false; 
+    }
+    return true; 
+  };
+
   return (
     <>
       <Button type='link' style={{ marginRight: '30px' }} onClick={showModal}>
@@ -49,7 +59,7 @@ export default () => {
           </Form.Item>
 
           <Form.Item name={MATERIAL} label='添加附件'>
-            <Upload>
+            <Upload beforeUpload={checkFileSize}>
               <Button icon={<UploadOutlined />}>上传图片</Button>
             </Upload>
           </Form.Item>
