@@ -1,5 +1,4 @@
 import mysql from 'mysql'
-import express from 'express';
 
 const pool = mysql.createPool({
   host: 'localhost',
@@ -9,33 +8,33 @@ const pool = mysql.createPool({
   connectionLimit: 10 // 连接池最大连接数
 })
 
-// 老师登录
+// 老师信息
 const getTeacherList = (req, res) => {
   pool.query('SELECT * FROM Teacher;', (err, rows) => {
     if (err) {
-      console.error('Error querying database:', err)
       res.status(500).send('Internal Server Error')
     } else {
-      const data = { data: rows, message: true, total: rows.length}
+      const data = { data: rows, message: true, total: rows.length }
       res.status(200).json(data)
     }
   })
 }
-// 学生登录
+
+// 学生信息
 const getStudentList = (req, res) => {
   pool.query('SELECT * FROM Student;', (err, rows) => {
     if (err) {
       console.error('Error querying database:', err)
       res.status(500).send('Internal Server Error')
     } else {
-      const data = { data: rows, message: true, total: rows.length}
+      const data = { data: rows, message: true, total: rows.length }
       res.status(200).json(data)
     }
   })
 }
 // 删除老师
 const deleteTeacher = (req, res) => {
-  const { Id } = req.body
+  const { Id } = req.query
   pool.query('UPDATE course SET teaId = NULL WHERE teaId = ?;', [Id], (err, rows) => {
     if (err) {
       console.error('Error querying database:', err)
@@ -47,14 +46,15 @@ const deleteTeacher = (req, res) => {
           res.status(500).send('Internal Server Error')
         } else {
           const data = { status: 200, msg: '删除成功' }
-          res.status(200).json( data)
-        }})
+          res.status(200).json(data)
+        }
+      })
     }
   })
 }
 // 删除学生
 const deleteStudent = (req, res) => {
-  const { Id } = req.body;
+  const { Id } = req.query
   pool.query('DELETE FROM Student WHERE stuId = ?;', [Id], (err, rows) => {
     if (err) {
       console.error('Error querying database:', err);

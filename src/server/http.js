@@ -4,7 +4,6 @@ import { userApi } from './detail/user.js';
 // const http = require('http');//用于搭建服务器
 import express from 'express';
 
-// const express = require('express')
 // const mysql = require('mysql')
 const app = express()
 
@@ -34,9 +33,9 @@ app.post('/user/course/create', loginApi.createCourse)
 app.post('/user/course/delete', loginApi.deleteCourse)
 
 // 获取老师 全部数据
-app.post('/user/get/teacher', userApi.getTeacherList)
+app.get('/user/get/teacher', userApi.getTeacherList)
 // 获取学生 全部数据
-app.post('/user/get/student', userApi.getStudentList)
+app.get('/user/get/student', userApi.getStudentList)
 // 删除老师
 app.post('/user/delete/teaId', userApi.deleteTeacher)
 // 删除学生

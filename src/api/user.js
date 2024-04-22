@@ -1,14 +1,18 @@
+import { request } from 'umi';
 import { get, post } from '@/common/api'
 
 // 获取 学生/老师 全部数据
-export const getUserList = (parmas) => {
-  if (parmas.isTeacher === 'true') post('/api/user/get/teacher')
-  if (parmas.isTeacher === 'false') post('/api/user/get/student')
+export const getUserList = async (params) => {
+  return request(params.isTeacher ? '/api/user/get/teacher' : '/api/user/get/student', {
+    method: 'get',
+  })
 }
 // 删除 学生/老师
-export const deleteUser = (parmas) => {
-  if (parmas.isTeacher) post(`/api/user/delete/teaId`, parmas)
-  if (!parmas.isTeacher) post(`/api/user/delete/stuId`, parmas)
+export const deleteUser = async (params) => {
+  return request(params.isTeacher ? '/api/user/delete/teaId' : '/api/user/delete/stuId', {
+    method: 'post',
+    params
+  })
 }
 
 // 获取 学院 全部数据

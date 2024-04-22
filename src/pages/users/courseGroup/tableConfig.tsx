@@ -2,7 +2,7 @@ import { Button, Popconfirm, message } from 'antd'
 import { deleteCourse } from '@/api/login'
 
 export const getTableColumns = (ref) => {
-  console.log(ref);
+  // console.log(ref);
 
   const valueEnum = {
     1: 'Open',
