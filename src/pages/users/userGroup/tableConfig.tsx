@@ -2,29 +2,22 @@ import { Button, Popconfirm, message } from 'antd'
 // 引入学院、班级、课程Id对应的映射关系
 import { deleteUser } from '@/api/user'
 
-export const getTableColumns = (ref) => {
-  // console.log(ref);
-  const confirmDeleteUser = async (Id, isTeacher) => {
-    // console.log(Id, isTeacher);
-    try {
-      const res = await deleteUser({ Id, isTeacher });
-      console.log(res);
-      
-      if (res) {
-        ref.current.reload()
-        message.success('删除成功')
-      }
-      // 处理 res...
-    } catch (error) {
+export const getTableColumns = ({ ref, isTeacher }) => {
+
+  const confirmDeleteUser = async (Id) => {
+    const res = await deleteUser(Id)
+    if (res) {
+      ref.current.reload()
+      message.success('删除成功')
+    } else {
       message.error('删除失败')
-      console.error('Error deleting user:', error);
     }
   };
 
   return [
     {
-      title: '学号/教工号',
-      dataIndex: 'Id',
+      title: isTeacher ? '教工号' : '学号',
+      dataIndex: isTeacher ? 'teaId' : 'stuId',
       width: 200,
       hideInSearch: true,
     },
@@ -34,6 +27,7 @@ export const getTableColumns = (ref) => {
       width: 200,
       valueType: 'select',
       valueEnum: { true: '老师', false: '学生' },
+      render: (_, record) => record.teaId ? '老师' : '学生'
     },
     {
       title: '姓名',
@@ -72,7 +66,13 @@ export const getTableColumns = (ref) => {
       valueType: 'option',
       fixed: 'right',
       render: (_, record) => (
-        <Popconfirm description="确定要删除此条人员信息?" onConfirm={() => confirmDeleteUser(record.Id, record.isTeacher)}>
+        <Popconfirm description="确定要删除此条人员信息?"
+          onConfirm={() => {
+            const Id = record?.teaId || record?.stuId
+            let isTeacher = false
+            if (record?.teaId) isTeacher = true
+            confirmDeleteUser({ Id, isTeacher })
+          }}>
           <Button type='link' danger>
             删除
           </Button>
