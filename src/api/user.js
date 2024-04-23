@@ -26,10 +26,20 @@ export const getDepartList = async () => {
 // 创建 学院
 export const addDepart = (parmas) => post('/api/user/depart/create', parmas)
 // 删除 学院 
-export const deleteDepart = (parmas) => post('/api/user/depart/delete', parmas)
+export const deleteDepart = async (params) => {
+  return request(`/api/user/depart/delete`, {
+    method: 'post',
+    params
+  })
+}
 
 // 获取 专业
-export const getMajorList = (parmas) => post(`/api/user/major/departId=${parmas.departId}`, parmas)
+export const getMajorList = async (params) => {
+  return request(`/api/user/major/departId=${params.departId}`, {
+    method: 'post',
+    params
+  })
+}
 // 创建 专业班级
 export const addMajor = (parmas) => post('/api/user/major/create', parmas)
 // 删除 专业
@@ -57,7 +67,6 @@ export const getCourseList = async () => {
 }
 // 删除课程
 export const deleteCourse = async (params) => {
-  console.log(params);
   return request('/api/user/course/delete', {
     method: 'post',
     params

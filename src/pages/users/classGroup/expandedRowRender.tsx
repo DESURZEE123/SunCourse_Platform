@@ -1,41 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ProTable } from '@ant-design/pro-components';
 import { Button, Popconfirm, Space, Drawer, Table } from 'antd';
-import { getMajorList } from '@/api/user'
+import { getMajorList, getClassList } from '@/api/user'
 import ClassTable from './ClassTable'
 
-const data = [
-  {
-    "key": 0,
-    "name": "信管",
-    "upgradeNum": "20"
-  },
-  {
-    "key": 1,
-    "name": "大数据",
-    "upgradeNum": "19"
-  },
-  {
-    "key": 2,
-    "name": "物流工程",
-    "upgradeNum": "18"
-  }
-]
-
 export const ExpandedRowComponent = (departId) => {
-  console.log(departId);
+  const [data, setData] = useState([])
+  const [classData, setClassData] = useState([])
+  const [open, setOpen] = useState(false)
 
-  const [open, setOpen] = useState(false);
-  const showDrawer = () => {
-    setOpen(true);
+  const showDrawer = async (majId) => {
+    const res = await getClassList()
+    if (res) {
+      const filterData = res.filter(item => item.majId === majId)
+      setClassData(filterData)
+      setOpen(true);
+    }
   };
 
   const getDataList = async () => {
     const res = await getMajorList(departId)
+    setData(res)
   }
 
+  useEffect(() => {
+    getDataList()
+  }, [departId])
+
   const columns = [
-    { title: '专业号', width: 200, dataIndex: 'key' },
+    { title: '专业号', width: 200, dataIndex: 'majId' },
     { title: '专业名称', width: 400, dataIndex: 'name' },
     {
       title: '操作',
@@ -43,7 +36,7 @@ export const ExpandedRowComponent = (departId) => {
       fixed: 'right',
       render: (_, record) => (
         <Space>
-          <Button type='primary' onClick={showDrawer}>
+          <Button type='primary' onClick={() => { showDrawer(record?.majId) }}>
             详情
           </Button>
           <Popconfirm
@@ -59,7 +52,6 @@ export const ExpandedRowComponent = (departId) => {
     }
   ]
 
-
   return (
     <>
       <ProTable
@@ -70,7 +62,7 @@ export const ExpandedRowComponent = (departId) => {
         dataSource={data}
         pagination={false}
       />
-      <ClassTable open={open} setOpen={setOpen} />
+      <ClassTable classData={classData} open={open} setOpen={setOpen} />
     </>
   );
 };

@@ -4,8 +4,6 @@ import { Button } from 'antd'
 import { getCourseList } from '@/api/user'
 import { getTableColumns } from './tableConfig'
 
-var jsonData = require('./temp.json')
-
 export default () => {
   const [page, setPage] = useState(1)
   const ref = useRef()
@@ -42,7 +40,7 @@ export default () => {
             <Button
               type='primary'
               onClick={() => {
-                console.log(formProps.form.getFieldsValue());
+                // console.log(formProps.form.getFieldsValue());
                 formProps?.form?.submit()
               }}
             >

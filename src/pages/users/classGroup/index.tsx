@@ -2,41 +2,8 @@ import { useRef, useState } from 'react'
 import { ProTable, PageContainer } from '@ant-design/pro-components';
 import { Button, Popconfirm, message, Modal, Input, Form, Space } from 'antd';
 import { ExpandedRowComponent } from './expandedRowRender.tsx'
-import { addDepart, deleteDepart, addMajor } from '@/api/user'
+import { addDepart, deleteDepart, addMajor, getDepartList } from '@/api/user'
 
-const tableListDataSource =
-  [
-    {
-      "departId": 0,
-      "name": "管理工程学院",
-      "status": 10,
-      "createdAt": 1712903591723
-    },
-    {
-      "departId": 1,
-      "name": "计算机学院",
-      "status": 11,
-      "createdAt": 1712903559699
-    },
-    {
-      "departId": 2,
-      "name": "金融学院",
-      "status": 1,
-      "createdAt": 1712903597202
-    },
-    {
-      "departId": 3,
-      "name": "人文学院",
-      "status": 5,
-      "createdAt": 1712903586967
-    },
-    {
-      "departId": 4,
-      "name": "土木学院",
-      "status": 7,
-      "createdAt": 1712903546267
-    }
-  ]
 export default () => {
   const ref = useRef()
   const [showDepartModal, setShowDepartModal] = useState(false)
@@ -68,7 +35,10 @@ export default () => {
     }
   };
 
-
+  const requestDepartList = async () => {
+    const res = await getDepartList()
+    return res
+  }
   const columns = [
     {
       title: '学院号',
@@ -79,13 +49,6 @@ export default () => {
       title: '学院名称',
       width: 120,
       dataIndex: 'name'
-    },
-    {
-      title: '专业数',
-      width: 120,
-      dataIndex: 'status',
-      render: (_, record) => record.status
-
     },
     {
       title: '操作',
@@ -106,14 +69,7 @@ export default () => {
       <ProTable
         actionRef={ref}
         columns={columns}
-        request={(params, sorter, filter) => {
-          // 表单搜索项会从 params 传入，传递给后端接口。
-          console.log(params, sorter, filter);
-          return Promise.resolve({
-            data: tableListDataSource,
-            success: true,
-          });
-        }}
+        request={requestDepartList}
         rowKey="departId"
         pagination={{
           showQuickJumper: true,

@@ -14,7 +14,7 @@ export default () => {
       request('/api/user/class', { method: 'GET' }),
     ])
       .then(([departData, courseData, classData]) => {
-        setDepartMapList(createMap(departData, 'departId', 'name'));
+        setDepartMapList(createMap(departData.data, 'departId', 'name'));
         setCourseMapList(createMap(courseData.data, 'courseId', 'name'));
         setClassMapList(createMap(classData, 'classId', 'name'));
       })

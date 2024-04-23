@@ -1,66 +1,27 @@
 import React, { useState } from 'react';
 import { Button, Popconfirm, Drawer, Table } from 'antd';
 
-const data2 = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-];
-
 export default (props) => {
-  const { open, setOpen } = props
+  const { open, setOpen, classData } = props
   const onClose = () => {
     setOpen(false);
   };
   const ClassColumns = [
     {
       title: '班级号',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'classId',
       render: (text) => <a>{text}</a>,
     },
     {
       title: '年级',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'grand',
     },
     {
       title: '班级名称',
-      dataIndex: 'address',
-      key: 'address',
-    },
-    {
-      title: '人数',
-      dataIndex: 'key',
+      dataIndex: 'name',
     },
     {
       title: 'Action',
-      key: 'action',
       render: (_, record) => (
         <Popconfirm
           description="确定要删除此条班级信息?"
@@ -74,8 +35,8 @@ export default (props) => {
     },
   ];
   return (
-    <Drawer title="详细专业班级信息" onClose={onClose} open={open} size={'large'}>
-      <Table columns={ClassColumns} dataSource={data2} pagination={false} />
+    <Drawer title="专业班级详情" onClose={onClose} open={open} size={'large'}>
+      <Table columns={ClassColumns} dataSource={classData} pagination={false} />
     </Drawer>
   )
 }

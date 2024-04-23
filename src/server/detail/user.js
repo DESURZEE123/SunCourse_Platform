@@ -75,11 +75,25 @@ const getDepartList = (req, res) => {
       console.error('Error querying database:', err);
       res.status(500).send('Internal Server Error');
     } else {
-      res.json(rows)
+      const data = { data: rows, message: true, total: rows.length }
+      res.status(200).json(data)
     }
   });
 };
 
+// 删除学院
+const deleteDepart = (req, res) => {
+  const { departId } = req.query
+  pool.query('DELETE FROM Department WHERE departId = ?;', [departId], (err, rows) => {
+    if (err) {
+      console.error('Error querying database:', err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      const data = { status: 200, msg: '删除成功' };
+      res.status(200).json(data);
+    }
+  });
+};
 
 // 获取 课程
 const getCourseList = (req, res) => {
@@ -120,18 +134,31 @@ const getClassList = (req, res) => {
   });
 };
 
+// 获取 专业
+const getMajorList = (req, res) => {
+  const { departId } = req.query
+  pool.query('SELECT * FROM Major WHERE departId = ?;', [departId], (err, rows) => {
+    if (err) {
+      console.error('Error querying database:', err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      res.json(rows)
+    }
+  });
+}
+
 const userApi = {
   getTeacherList,
   getStudentList,
   getDepartList,
   getCourseList,
   getClassList,
+  getMajorList,
   deleteTeacher,
   deleteStudent,
   deleteCourse,
+  deleteDepart,
   // addDepart,
-  // deleteDepart,
-  // getMajorList,
   // addMajor,
   // deleteMajor,
   // deleteClass,

@@ -47,7 +47,7 @@ app.get('/user/depart', userApi.getDepartList)
 // // 删除学院
 // app.post('/user/depart/delete', userApi.deleteDepart)
 // // 获取专业
-// app.post('/user/major/departId=:departId', userApi.getMajorList)
+app.post('/user/major/departId=:departId', userApi.getMajorList)
 // // 创建专业班级
 // app.post('/user/major/create', userApi.addMajor)
 // // 删除专业
