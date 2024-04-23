@@ -1,16 +1,11 @@
 import { Button, Popconfirm, message } from 'antd'
-import { deleteCourse } from '@/api/login'
+import { useModel } from 'umi'
+import { deleteCourse } from '@/api/user'
 
 export const getTableColumns = (ref) => {
-  // console.log(ref);
+  const { departMapList } = useModel('course')
 
-  const valueEnum = {
-    1: 'Open',
-    2: 'Closed',
-    3: 'Processing',
-  }
   const confirmDeleteCourse = async(courseId) => {
-    console.log(courseId);
     const res = await deleteCourse({courseId})
     if(res) {
       ref.current.reload()
@@ -35,13 +30,14 @@ export const getTableColumns = (ref) => {
     },
     {
       title: '学院',
-      dataIndex: 'depart',
+      dataIndex: 'departId',
       width: 200,
       valueType: 'select',
-      valueEnum: valueEnum,
+      valueEnum: departMapList,
       fieldProps: {
         placeholder: '请选择学院',
-      }
+      },
+      render: (_, record) => departMapList.get(record.departId) ?? '-'
     },
     {
       title: '操作',

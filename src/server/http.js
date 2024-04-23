@@ -30,7 +30,7 @@ app.post('/user/register/student', loginApi.registerStudent)
 // 创建课程
 app.post('/user/course/create', loginApi.createCourse)
 // 删除课程
-app.post('/user/course/delete', loginApi.deleteCourse)
+// app.post('/user/course/delete', loginApi.deleteCourse)
 
 // 获取老师 全部数据
 app.get('/user/get/teacher', userApi.getTeacherList)
@@ -40,7 +40,7 @@ app.get('/user/get/student', userApi.getStudentList)
 app.post('/user/delete/teaId', userApi.deleteTeacher)
 // 删除学生
 app.post('/user/delete/stuId', userApi.deleteStudent)
-// // 获取学院 全部数据
+// 获取学院 全部数据
 app.get('/user/depart', userApi.getDepartList)
 // // 创建学院
 // app.post('/user/depart/create', userApi.addDepart)
@@ -56,6 +56,8 @@ app.get('/user/depart', userApi.getDepartList)
 app.get('/user/class', userApi.getClassList)
 // // 删除班级
 // app.post('/user/class/delete', userApi.deleteClass)
+// 删除课程
+app.post('/user/course/delete', userApi.deleteCourse)
 // 获取课程
 app.get('/user/course', userApi.getCourseList)
 

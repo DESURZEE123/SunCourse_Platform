@@ -15,7 +15,7 @@ export default () => {
     ])
       .then(([departData, courseData, classData]) => {
         setDepartMapList(createMap(departData, 'departId', 'name'));
-        setCourseMapList(createMap(courseData, 'courseId', 'name'));
+        setCourseMapList(createMap(courseData.data, 'courseId', 'name'));
         setClassMapList(createMap(classData, 'classId', 'name'));
       })
       .catch((error) => {

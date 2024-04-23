@@ -42,11 +42,24 @@ export const getClassList = async () => {
   })
 }
 // 删除 班级
-export const deleteClass = (parmas) => post('/api/user/class/delete', parmas)
+export const deleteClass = async (params) => {
+  return request('/api/user/class/delete', {
+    method: 'post',
+    params
+  })
+}
 
 // 获取 课程
 export const getCourseList = async () => {
   return request('/api/user/course', {
     method: 'get',
+  })
+}
+// 删除课程
+export const deleteCourse = async (params) => {
+  console.log(params);
+  return request('/api/user/course/delete', {
+    method: 'post',
+    params
   })
 }

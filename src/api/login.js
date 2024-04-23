@@ -1,3 +1,4 @@
+import { request } from 'umi';
 import { get, post } from '@/common/api'
 
 // 登录以及注册
@@ -14,8 +15,9 @@ export const registerApi = (parmas) => {
 // 创建课程
 export const createCourse = (parmas) => post('/api/user/course/create', parmas)
 
-// 删除课程
-export const deleteCourse = (parmas) => post('/api/user/course/delete', parmas)
-
 // 获取全部课程
-export const getCourseList = () => get('/api/user/course')
+export const getCourseList = async () => {
+  return request('/api/get/user/course', {
+    method: 'get',
+  })
+}

@@ -88,12 +88,27 @@ const getCourseList = (req, res) => {
       console.error('Error querying database:', err);
       res.status(500).send('Internal Server Error');
     } else {
-      res.json(rows)
+      const data = { data: rows, message: true, total: rows.length }
+      res.status(200).json(data)
     }
   });
 };
 
-// 获取班级
+// 删除 课程
+const deleteCourse = (req, res) => {
+  const { courseId } = req.query
+  pool.query('DELETE FROM Course WHERE courseId = ?;', [courseId], (err, rows) => {
+    if (err) {
+      console.error('Error querying database:', err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      const data = { status: 200, msg: '删除成功' };
+      res.status(200).json(data);
+    }
+  });
+};
+
+// 获取 班级
 const getClassList = (req, res) => {
   pool.query('SELECT * FROM Class;', (err, rows) => {
     if (err) {
@@ -108,17 +123,18 @@ const getClassList = (req, res) => {
 const userApi = {
   getTeacherList,
   getStudentList,
+  getDepartList,
+  getCourseList,
+  getClassList,
   deleteTeacher,
   deleteStudent,
-  getDepartList,
+  deleteCourse,
   // addDepart,
   // deleteDepart,
   // getMajorList,
   // addMajor,
   // deleteMajor,
   // deleteClass,
-  getCourseList,
-  getClassList
 }
 
 export { userApi }
