@@ -1,5 +1,6 @@
 export * as storage from './storage'
 
+// 讨论的数据处理
 export const discussTrans = (data = []) => {
   const getReplies = (id) => {
     return data

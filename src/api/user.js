@@ -7,6 +7,7 @@ export const getUserList = async (params) => {
     method: 'get',
   })
 }
+
 // 删除 学生/老师
 export const deleteUser = async (params) => {
   return request(params.isTeacher ? '/api/user/delete/teaId' : '/api/user/delete/stuId', {
@@ -16,7 +17,12 @@ export const deleteUser = async (params) => {
 }
 
 // 获取 学院 全部数据
-export const getDepartList = () => get('/api/user/depart')
+export const getDepartList = async () => {
+  return request('/api/user/depart', {
+    method: 'get',
+  })
+}
+
 // 创建 学院
 export const addDepart = (parmas) => post('/api/user/depart/create', parmas)
 // 删除 学院 

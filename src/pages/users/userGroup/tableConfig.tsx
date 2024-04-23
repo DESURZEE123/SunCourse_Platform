@@ -1,8 +1,9 @@
 import { Button, Popconfirm, message } from 'antd'
-// 引入学院、班级、课程Id对应的映射关系
+import { useModel } from 'umi'
 import { deleteUser } from '@/api/user'
 
 export const getTableColumns = ({ ref, isTeacher }) => {
+  const { departMapList } = useModel('course')
 
   const confirmDeleteUser = async (Id) => {
     const res = await deleteUser(Id)
@@ -40,10 +41,11 @@ export const getTableColumns = ({ ref, isTeacher }) => {
       dataIndex: 'departId',
       width: 200,
       valueType: 'select',
-      // valueEnum: valueEnum,
+      valueEnum: departMapList,
       fieldProps: {
         placeholder: '请选择学院',
-      }
+      },
+      render: (_, record) => departMapList.get(record.departId) ?? '-'
     },
     {
       title: '班级',

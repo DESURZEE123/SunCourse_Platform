@@ -65,13 +65,25 @@ const deleteStudent = (req, res) => {
     }
   });
 };
+// 获取 学院 全部数据
+const getDepartList = (req, res) => {
+  pool.query('SELECT * FROM Department;', (err, rows) => {
+    if (err) {
+      console.error('Error querying database:', err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      res.json(rows)
+    }
+  });
+};
+
 
 const userApi = {
   getTeacherList,
   getStudentList,
   deleteTeacher,
   deleteStudent,
-  // getDepartList,
+  getDepartList,
   // addDepart,
   // deleteDepart,
   // getMajorList,
