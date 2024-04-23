@@ -3,7 +3,7 @@ import { useModel } from 'umi'
 import { deleteUser } from '@/api/user'
 
 export const getTableColumns = ({ ref, isTeacher }) => {
-  const { departMapList } = useModel('course')
+  const { departMapList, courseMapList, classMapList } = useModel('course')
 
   const confirmDeleteUser = async (Id) => {
     const res = await deleteUser(Id)
@@ -54,13 +54,22 @@ export const getTableColumns = ({ ref, isTeacher }) => {
       valueType: 'select',
       // valueEnum: valueEnum,
       hideInSearch: true,
-      render: (_, record) => record?.classId ?? '-'
+      render: (_, record) => classMapList.get(record?.classId) ?? '-'
     },
     {
       title: '所选/所教课程',
       dataIndex: 'courseId',
       hideInSearch: true,
-      width: 350
+      width: 350,
+      render: (_, record) => {
+        const courseIdList = JSON.parse(record.courseId)
+        if (!courseIdList) return '-'
+        courseIdList.map((item, index) => {
+          courseIdList[index] = courseMapList.get(item) ?? '-'
+          return courseIdList[index]
+        })
+        return courseIdList.join('，')
+      }
     },
     {
       title: '操作',

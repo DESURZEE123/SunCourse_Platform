@@ -35,6 +35,18 @@ export const addMajor = (parmas) => post('/api/user/major/create', parmas)
 // 删除 专业
 export const deleteMajor = (parmas) => post('/api/user/major/delete', parmas)
 
+// 获取 班级
+export const getClassList = async () => {
+  return request('/api/user/class', {
+    method: 'get',
+  })
+}
 // 删除 班级
 export const deleteClass = (parmas) => post('/api/user/class/delete', parmas)
 
+// 获取 课程
+export const getCourseList = async () => {
+  return request('/api/user/course', {
+    method: 'get',
+  })
+}

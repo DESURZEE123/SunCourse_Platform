@@ -32,6 +32,7 @@ const getStudentList = (req, res) => {
     }
   })
 }
+
 // 删除老师
 const deleteTeacher = (req, res) => {
   const { Id } = req.query
@@ -52,6 +53,7 @@ const deleteTeacher = (req, res) => {
     }
   })
 }
+
 // 删除学生
 const deleteStudent = (req, res) => {
   const { Id } = req.query
@@ -65,6 +67,7 @@ const deleteStudent = (req, res) => {
     }
   });
 };
+
 // 获取 学院 全部数据
 const getDepartList = (req, res) => {
   pool.query('SELECT * FROM Department;', (err, rows) => {
@@ -78,6 +81,30 @@ const getDepartList = (req, res) => {
 };
 
 
+// 获取 课程
+const getCourseList = (req, res) => {
+  pool.query('SELECT * FROM Course;', (err, rows) => {
+    if (err) {
+      console.error('Error querying database:', err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      res.json(rows)
+    }
+  });
+};
+
+// 获取班级
+const getClassList = (req, res) => {
+  pool.query('SELECT * FROM Class;', (err, rows) => {
+    if (err) {
+      console.error('Error querying database:', err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      res.json(rows)
+    }
+  });
+};
+
 const userApi = {
   getTeacherList,
   getStudentList,
@@ -90,6 +117,8 @@ const userApi = {
   // addMajor,
   // deleteMajor,
   // deleteClass,
+  getCourseList,
+  getClassList
 }
 
 export { userApi }

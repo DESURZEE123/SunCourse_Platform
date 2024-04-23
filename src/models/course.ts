@@ -1,20 +1,27 @@
 import { useEffect, useState } from 'react'
 import { request } from 'umi'
+import { createMap } from '@/utils'
 
 export default () => {
   const [departMapList, setDepartMapList] = useState([])
+  const [courseMapList, setCourseMapList] = useState([])
+  const [classMapList, setClassMapList] = useState([])
+
   useEffect(() => {
-    request('/api/user/depart', { method: 'GET' })
-      .then((data) => {
-        const departMap = new Map()
-        data.forEach((item) => {
-          departMap.set(item.departId, item.name)
-        })
-        setDepartMapList(departMap)
+    Promise.all([
+      request('/api/user/depart', { method: 'GET' }),
+      request('/api/user/course', { method: 'GET' }),
+      request('/api/user/class', { method: 'GET' }),
+    ])
+      .then(([departData, courseData, classData]) => {
+        setDepartMapList(createMap(departData, 'departId', 'name'));
+        setCourseMapList(createMap(courseData, 'courseId', 'name'));
+        setClassMapList(createMap(classData, 'classId', 'name'));
       })
       .catch((error) => {
         console.error('Error:', error)
       })
   }, [])
-  return { departMapList }
+
+  return { departMapList, courseMapList, classMapList }
 }

@@ -52,9 +52,12 @@ app.get('/user/depart', userApi.getDepartList)
 // app.post('/user/major/create', userApi.addMajor)
 // // 删除专业
 // app.post('/user/major/delete', userApi.deleteMajor)
+// 获取班级
+app.get('/user/class', userApi.getClassList)
 // // 删除班级
 // app.post('/user/class/delete', userApi.deleteClass)
-
+// 获取课程
+app.get('/user/course', userApi.getCourseList)
 
 // 获取讨论列表
 app.get('/discuss', discussApi.getDiscussList)

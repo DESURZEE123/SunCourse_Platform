@@ -16,3 +16,12 @@ export const discussTrans = (data = []) => {
   })
   return qsListWithAs
 }
+
+// 专业课程学院映射
+export const createMap = (data, keyField, valueField) => {
+  const map = new Map();
+  data.forEach(item => {
+    map.set(item[keyField], item[valueField]);
+  });
+  return map;
+}
