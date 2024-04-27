@@ -1,16 +1,20 @@
 import { request } from 'umi';
 import { get, post } from '@/common/api'
 
-// 登录以及注册
-/* 这里应该做token处理，暂时搁浅 */
-export const login = (parmas) => {
-  if (parmas.isTeacher) post('/api/user/login/teacher', parmas)
-  if (!parmas.isTeacher) post('/api/user/login/student', parmas)
-}
 // 登录
-export const registerApi = (parmas) => {
-  if (parmas.isTeacher) post('/api/user/register/teacher', parmas)
-  if (!parmas.isTeacher) post('/api/user/register/student', parmas)
+/* 这里应该做token处理，暂时搁浅 */
+export const login = async (params) => {
+  return request(params.isTeacher ? '/api/user/login/teacher' : '/api/user/login/student', {
+    method: 'post',
+    params
+  })
+}
+// 注册
+export const registerApi = async (params) => {
+  return request(params.isTeacher ? '/api/user/register/teacher' : '/api/user/register/student', {
+    method: 'post',
+    params
+  })
 }
 // 创建课程
 export const createCourse = (parmas) => post('/api/user/course/create', parmas)

@@ -1,100 +1,77 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Cascader, Image, Flex, Card, Select, message } from 'antd';
-import { connect } from 'dva'
-import { history } from 'umi'
+import { Form, Input, Button, Cascader, Image, Flex, Card, Select, message, Modal } from 'antd';
+import { history, useModel } from 'umi'
 // import { setCookie } from '@/utils/cookie'
 import { login, registerApi } from '@/api/login'
-import { storage } from '@/utils'
+import { getMajorList, getClassList } from '@/api/user'
+import { storage, ClassOptionTrans } from '@/utils'
 const SchoolImage = require('@/assets/images/school.jpg')
 
 import './index.less'
-const options = [
-  {
-    value: 'zhejiang',
-    label: 'Zhejiang',
-    children: [
-      {
-        value: 'hangzhou',
-        label: 'Hangzhou',
-      },
-    ],
-  },
-  {
-    value: 'jiangsu',
-    label: 'Jiangsu',
-    children: [
-      {
-        value: 'nanjing',
-        label: 'Nanjing',
-        children: [
-          {
-            value: 'zhonghuamen',
-            label: 'Zhong Hua Men',
-          },
-        ],
-      },
-    ],
-  },
-];
 export default () => {
-  // const Demo = ({ users, dispatch }) => {
-  const [register, setRegister] = useState(false)
+  const { departMapList, classMapList } = useModel('course')
+  const [form] = Form.useForm()
+  const [register, setRegister] = useState(true)
   const [isTeacher, setIsTeacher] = useState(false)
+  const [classOptions, setClassOptions] = useState([])
+
+  useEffect(() => {
+    storage.removeItem('userInfo1')
+    form.resetFields()
+  }, [])
 
   // 提交登录
   const onFinish = async (values: any) => {
-    // 提交给dva 中的effects：Action 处理器
-    // new Promise((resolve, reject) => {
-    //   dispatch({ type: 'users/fetch', payload: { resolve, reject, userInfo: values } });
-    // }).then((data) => {
-    //   if (data === 'SUCCESS') { //跳转首页
-    //     history.push('/home')
-    //   }
-    // });
-    // console.log("register" in values, values);
-
     if ("login" in values) {
-      const res = await login(values.login)
-      console.log(res);
-      message.success('登录成功')
-      if (values.login.teaId === '123') {
-        storage.setItem('userInfo1', { admin: true })
-      } else {
+      const { status } = await login(values.login)
+      if (status === 200) {
+        message.success('登录成功')
         storage.setItem('userInfo1', values.login)
+        // history.push('/login/course')
+      } else if (values.login.teaId === '123') {
+        storage.setItem('userInfo1', { admin: true })
+        history.push('/home')
+      } else if (status === 404) {
+        message.error('账号或密码错误')
       }
-      history.push('/login/course')
-
-      // if (res) {
-      //   message.success('登录成功')
-      //   storage.setItem('userInfo1', values.login)
-      //   // history.push('/login/course')
-      // } else {
-      //   message.error('账号或密码错误')
-      // }
     }
-
     if ("register" in values) {
-      const res = await registerApi(values.register)
+      const { departId, class: classOptions } = values.register;
+      const params = !isTeacher ? {
+        Id: Date.now() % 10000,
+        departId: parseInt(departId),
+        classValue: classMapList.get(parseInt(classOptions[1])),
+        classId: parseInt(classOptions[1]),
+        ...values.register
+      } :
+        {
+          Id: Date.now() % 10000,
+          departId: parseInt(departId),
+          ...values.register
+        }
+      const res = await registerApi(params)
       if (res) {
         message.success('注册成功')
-        // Modal.confirm({
-        //   title: '退出登录',
-        //   content: '确认退出登录吗？',
-        //   onOk: () => {
-        //     history.push('/login')
-        //     storage.removeItem('userInfo1')
-        //   }
-        // })
-        setRegister(false)
+        Modal.confirm({
+          title: '注册成功',
+          content: `您的账号为：${res.Id}`,
+          onOk: () => {
+            setRegister(false)
+            form.resetFields()
+          }
+        })
       } else {
         message.error('系统出小差了。。')
       }
     }
   };
 
-  const onChange = (value: (string | number)[]) => {
-    console.log(value);
-  };
+  const selectDepart = async (departId) => {
+    const majorData = await getMajorList({ departId })
+    const classData = await getClassList()
+    const options = ClassOptionTrans(majorData, classData, departId)
+    setClassOptions(options)
+  }
 
   return (
     <div className="container">
@@ -108,7 +85,7 @@ export default () => {
             {register && <h3 style={{ marginTop: '10px' }} onClick={() => { setRegister(false) }}>返回登录</h3>}
           </Flex>
           {!register ?
-            (<Form name="login" onFinish={onFinish} >
+            (<Form name="login" onFinish={onFinish} form={form} >
               <Form.Item label="身份" name={["login", "isTeacher"]}>
                 <Select
                   options={[
@@ -152,12 +129,12 @@ export default () => {
                 <Form.Item label="姓名" name={["register", "name"]}>
                   <Input placeholder='请输入姓名' />
                 </Form.Item>
-                <Form.Item label="所属学院" name={["register", "department"]}>
-                  <Select />
+                <Form.Item label="所属学院" name={["register", "departId"]}>
+                  <Select options={Array.from(departMapList, ([value, label]) => ({ value, label }))} onChange={selectDepart} />
                 </Form.Item>
                 {!isTeacher &&
                   <Form.Item label="所属班级" name={["register", "class"]}>
-                    <Cascader options={options} onChange={onChange} placeholder="请选择班级" />
+                    <Cascader options={classOptions} placeholder="请选择班级" />
                   </Form.Item>}
                 <Form.Item label="密码" name={["register", "password"]}>
                   <Input.Password />
@@ -170,7 +147,6 @@ export default () => {
               </Form>
             )
           }
-
         </Card>
 
       </Flex>
@@ -182,7 +158,3 @@ export default () => {
     </div>
   );
 };
-// const mapStateToProps = ({ users }) => {
-//   return { users, }
-// }
-// export default connect(mapStateToProps)(Demo)
