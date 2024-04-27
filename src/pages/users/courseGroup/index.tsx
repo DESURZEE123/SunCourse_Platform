@@ -8,30 +8,19 @@ export default () => {
   const [page, setPage] = useState(1)
   const ref = useRef()
   const columns = getTableColumns(ref)
+  const [data, setData] = useState([])
 
-  // ref.current.reload()
-  const requestList = async() => {
-    const res = await getCourseList()
-    const params = { pageSize: 10, current: 1 }
-    return res
-    // const msg = await myQuery({
-    //   page: params.current,
-    //   pageSize: params.pageSize,
-    // });
-    // return {
-    //   data: msg.result,
-    //   // success 请返回 true，
-    //   // 不然 table 会停止解析数据，即使有数据
-    //   success: boolean,
-    //   // 不传会使用 data 的长度，如果是分页一定要传
-    //   total: number,
-    // };
-  }
   return (
     <PageContainer>
       <ProTable
         actionRef={ref}
-        request={requestList}
+        request={async () => {
+          const res = await getCourseList()
+          const params = { pageSize: 10, current: 1 }
+          setData(res.data)
+          return res
+        }}
+        dataSource={data}
         rowKey={(record) => record.Id}
         search={{
           collapsed: false,
@@ -39,9 +28,11 @@ export default () => {
           optionRender: (_, formProps) => [
             <Button
               type='primary'
-              onClick={() => {
-                // console.log(formProps.form.getFieldsValue());
-                formProps?.form?.submit()
+              onClick={async () => {
+                const { departId } = formProps.form.getFieldsValue()
+                const res = await getCourseList()
+                const filterData = departId ? res.data.filter(item => item.departId === departId) : res.data
+                setData(filterData)
               }}
             >
               搜索
