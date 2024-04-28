@@ -60,6 +60,10 @@ app.post('/user/major/departId=:departId', userApi.getMajorList)
 app.get('/user/class', userApi.getClassList)
 // // 删除班级
 // app.post('/user/class/delete', userApi.deleteClass)
+// 搜索课程
+app.post('/user/course/search', userApi.searchCourse)
+// 学生添加课程
+app.post('/user/course/add', userApi.addCourse)
 // 删除课程
 app.post('/user/course/delete', userApi.deleteCourse)
 // 获取课程

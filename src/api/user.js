@@ -65,6 +65,23 @@ export const getCourseList = async () => {
     method: 'get',
   })
 }
+
+// 搜索 课程
+export const searchCourse = async (params) => {
+  return request('/api/user/course/search', {
+    method: 'post',
+    params
+  })
+}
+
+// 学生添加课程
+export const addCourse = async (params) => {
+  return request('/api/user/course/add', {
+    method: 'post',
+    params
+  })
+}
+
 // 删除课程
 export const deleteCourse = async (params) => {
   return request('/api/user/course/delete', {

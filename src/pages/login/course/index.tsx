@@ -1,8 +1,9 @@
-import React, { useCallback, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Form, Cascader, Image, Input, message, Avatar, Carousel, Dropdown, Modal, List, Card, Space, Select, Flex } from 'antd'
 import { history, useModel } from 'umi'
 import { storage } from '@/utils'
-import { createCourse, getUserInfoDetail } from '@/api/login'
+import { createCourse } from '@/api/login'
+import { getCourseList, addCourse, searchCourse } from '@/api/user'
 
 const cover1 = require('@/assets/images/cover.png')
 const cover2 = require('@/assets/images/cover3.png')
@@ -24,39 +25,6 @@ const CarouselAuto = () => {
   )
 }
 
-const data = [
-  {
-    title: '计算机科学',
-    name: '王怡阳',
-    class: '20信管1',
-    courseId: 1
-  },
-  {
-    title: 'Title 2',
-    name: '王怡阳',
-    class: '20信管1',
-    courseId: 2
-  },
-  {
-    title: 'Title 3',
-    name: '王怡阳',
-    class: '20信管1',
-    courseId: 3
-  },
-  {
-    title: 'Title 3',
-    name: '王怡阳',
-    class: '20信管1',
-    courseId: 4
-  },
-  {
-    title: 'Title 3',
-    name: '王怡阳',
-    class: '20信管1',
-    courseId: 5
-  }
-];
-
 const layout = {
   labelCol: { span: 6 },
   wrapperCol: { span: 16 }
@@ -64,11 +32,15 @@ const layout = {
 const user = storage.getItem('userInfo1')
 export default () => {
   const [form] = Form.useForm()
-  const { departMapList } = useModel('course')
+  const { departMapList, classMapList, teacherMapList } = useModel('course')
   const { userInitInfo } = useModel('user')
   const [showClassModal, setShowClassModal] = useState(false)
   const [showDetailModal, setShowDeatilModal] = useState(false)
-  const { name, departId, Id, class: classValue, courseId } = userInitInfo
+  const [allCourse, setAllCourse] = useState(false)
+  const [courseData, setCourseData] = useState([])
+  const [courseDetail, setCourseDetail] = useState({})
+  const { name, departId, Id, class: classValue, courseId: courseIds } = userInitInfo
+  const courseIdList = JSON.parse(courseIds)
 
   const items = [
     {
@@ -103,14 +75,27 @@ export default () => {
     }
   ]
 
-  const onSearch = (value: string) => {
+  const onSearch = async (value: string) => {
     console.log(value);
+    const res = await searchCourse({ searchValue: value })
+    if (res) {
+      setCourseData(res)
+    } else {
+      message.error('未找到相关课程')
+    }
   }
 
-  const getCourse = (courseId) => {
-    storage.setItem('courseId', courseId)
-    history.push('/home')
+  const getCourse = async () => {
+    const res = await getCourseList();
+    if (res) {
+      const courseData = allCourse ? res.data : res.data.filter(item => courseIdList.includes(item.courseId));
+      setCourseData(courseData)
+    }
   }
+
+  useEffect(() => {
+    getCourse()
+  }, [allCourse])
 
   const onFinish = async (values: any) => {
     const params = {
@@ -145,44 +130,63 @@ export default () => {
       <CarouselAuto />
       <div style={{ padding: '0 60px' }}>
         <div className='flex-container'>
-          <h1>我的课程</h1>
+          {!allCourse ? <h1>我的课程</h1> : <h1>全部课程</h1>}
           <div>
-          {/* <Button type='primary' onClick={() => setShowClassModal(true)}>全部课程</Button> */}
-            <Input.Search style={{ width: 200, marginRight: '40px' }} placeholder='搜索课程' onSearch={onSearch} />
+            <Button type='primary' onClick={() => setAllCourse(!allCourse)}>{allCourse ? '我的课程' : '全部课程'}</Button>
+            <Input.Search style={{ width: 200, margin: '0 40px' }} placeholder='搜索课程' onSearch={onSearch} />
             {/* 老师权利 */}
             {user.isTeacher && (<Button type='primary' onClick={() => setShowClassModal(true)}>创建课程</Button>)}
           </div>
         </div>
         <List grid={{ gutter: 16, column: 4 }}
-          dataSource={data}
-          renderItem={({ title, name, class: className, courseId }) => (
+          dataSource={courseData}
+          renderItem={({ name, classId, departId, courseId, teaId }) => (
             <List.Item>
               <Card
                 cover={<img src={class_cover}
                   style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-                  onClick={() => { setShowDeatilModal(true) }}
+                  onClick={async () => {
+                    setShowDeatilModal(true)
+                    const data = courseData.filter(item => item.courseId === courseId)[0]
+                    setCourseDetail(data)
+                  }}
                 />}>
-                <h3>{title}</h3>
-                <div>{name}</div>
+                <h3>{name}</h3>
+                <div>{teacherMapList.get(teaId)}</div>
+                <div>{departMapList.get(departId)}</div>
                 <div className='flex-container'>
-                  <div>{className}</div>
-                  {/* 需要判断课程是否属于自己本身 */}
-                  <Button type='primary'
-                    onClick={() => {
-                      Modal.confirm({
-                        content: '确认添加该课程吗？',
-                        onOk: () => {
-                          message.success('添加成功')
-                        }
-                      })
-                    }}>
-                    添加课程</Button>
-                  <Button type='primary' onClick={() => { getCourse(courseId) }}>进入课程</Button>
+                  <div>{classMapList.get(classId)}</div>
+                  {courseIdList.includes(courseId) && (
+                    <Button type='primary' onClick={() => {
+                      storage.setItem('courseId', courseId)
+                      history.push('/home')
+                    }}>进入课程</Button>
+                  )}
+                  {!courseIdList.includes(courseId) && (
+                    <Button type='primary'
+                      onClick={() => {
+                        Modal.confirm({
+                          content: '确认添加该课程吗？',
+                          onOk: () => {
+                            courseIdList.push(courseId)
+                            const courseIdsList = JSON.stringify(courseIdList)
+                            addCourse({ courseIdsList, Id }).then((res) => {
+                              if (res) {
+                                message.success('添加成功');
+                                setTimeout(() => {
+                                  location.reload();
+                                }, 1300)
+                              }
+                            })
+                          }
+                        })
+                      }}>
+                      添加课程</Button>
+                  )}
                 </div>
               </Card>
             </List.Item>
-          )}
-        />
+          )} />
       </div>
 
       <Modal closable={false} title="创建课程" open={showClassModal} footer={null}>
@@ -210,13 +214,13 @@ export default () => {
           </Form.Item>
         </Form>
       </Modal>
-      <Modal title="课程详情" open={showDetailModal} onOk={() => setShowDeatilModal(false)} onCancel={() => setShowDeatilModal(false)}>
+      <Modal title={courseDetail.name} open={showDetailModal} onOk={() => setShowDeatilModal(false)} onCancel={() => setShowDeatilModal(false)}>
         <Flex>
           <Image preview={false} src={class_cover} style={{ minWidth: '250px' }}></Image>
           <div style={{ marginLeft: '20px' }}>
-            <h3>主讲老师：{'尾牙宴'}</h3>
-            <h3>所属学院：{'管理工程学院'}</h3>
-            <h3>课程简介：{'这门课程xxxdccdscewdfc鹅夫人v规定人头比光度法不通过地方vcccccccccx'}</h3>
+            <h3>主讲老师：{teacherMapList.get(courseDetail.teaId)}</h3>
+            <h3>所属学院：{departMapList.get(courseDetail.departId)}</h3>
+            <h3>课程简介：{courseDetail?.content || '暂无简介'}</h3>
           </div>
         </Flex>
       </Modal>
