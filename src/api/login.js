@@ -24,13 +24,3 @@ export const getUserInfoDetail = async (params) => {
     params
   })
 }
-
-// 创建课程
-export const createCourse = (parmas) => post('/api/user/course/create', parmas)
-
-// 获取全部课程
-export const getCourseList = async () => {
-  return request('/api/get/user/course', {
-    method: 'get',
-  })
-}

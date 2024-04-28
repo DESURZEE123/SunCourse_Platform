@@ -93,44 +93,7 @@ const getStudentInfo = (req, res) => {
     }
   })
 }
-// 创建课程
-const createCourse = (req, res) => {
-  const { courseId, name, teaId, classId, departId, content } = req.query
-  const queryText = `
-  INSERT INTO course (
-    courseId, name, teaId, classId, departId, content
-  ) VALUES (
-    ?, ?, ?, ?, ?, ?
-  )`;
-  const values = [courseId, name, teaId, classId, departId, content];
 
-  pool.query(queryText, values, (err, rows) => {
-    if (err) {
-      console.error('Error querying database:', err)
-      res.status(500).send('Internal Server Error')
-    } else {
-      // res.json(rows)
-      const data = { status: 200, msg: '新建成功' }
-      console.log(data, '~~~~~~~~~~~~~~~');
-      res.status(200).json(
-        data
-      )
-    }
-  })
-}
-
-// 删除课程
-const deleteCourse = (req, res) => {
-  const { courseId } = req.body
-  pool.query('DELETE FROM course WHERE courseId = ?;', [courseId], (err, rows) => {
-    if (err) {
-      console.error('Error querying database:', err)
-      res.status(500).send('Internal Server Error')
-    } else {
-      res.json(rows)
-    }
-  })
-}
 const loginApi = {
   loginTeacher,
   loginStudent,
@@ -138,8 +101,6 @@ const loginApi = {
   registerStudent,
   getTeacherInfo,
   getStudentInfo,
-  createCourse,
-  deleteCourse
 }
 
 export { loginApi }

@@ -82,6 +82,14 @@ export const addCourse = async (params) => {
   })
 }
 
+// 创建课程
+export const createCourse = async (params) => {
+  return request('/api/user/course/create', {
+    method: 'post',
+    params
+  })
+}
+
 // 删除课程
 export const deleteCourse = async (params) => {
   return request('/api/user/course/delete', {

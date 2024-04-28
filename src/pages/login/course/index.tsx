@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Form, Cascader, Image, Input, message, Avatar, Carousel, Dropdown, Modal, List, Card, Space, Select, Flex } from 'antd'
 import { history, useModel } from 'umi'
-import { storage } from '@/utils'
-import { createCourse } from '@/api/login'
-import { getCourseList, addCourse, searchCourse } from '@/api/user'
+import { storage, ClassOptionTrans } from '@/utils'
+import { getCourseList, addCourse, searchCourse, getMajorList, getClassList, createCourse } from '@/api/user'
 
 const cover1 = require('@/assets/images/cover.png')
 const cover2 = require('@/assets/images/cover3.png')
@@ -39,6 +38,7 @@ export default () => {
   const [allCourse, setAllCourse] = useState(false)
   const [courseData, setCourseData] = useState([])
   const [courseDetail, setCourseDetail] = useState({})
+  const [classOptions, setClassOptions] = useState([])
   const { name, departId, Id, class: classValue, courseId: courseIds } = userInitInfo
   const courseIdList = JSON.parse(courseIds)
 
@@ -74,6 +74,9 @@ export default () => {
       }
     }
   ]
+  // useEffect(() => {
+  //   location.reload()
+  // }, [user])
 
   const onSearch = async (value: string) => {
     console.log(value);
@@ -97,11 +100,21 @@ export default () => {
     getCourse()
   }, [allCourse])
 
+  const selectDepart = async (departId) => {
+    const majorData = await getMajorList({ departId })
+    const classData = await getClassList()
+    const options = ClassOptionTrans(majorData, classData, departId)
+    setClassOptions(options)
+  }
+
   const onFinish = async (values: any) => {
+    const courseId = Date.now() % 1000
+    courseIdList.push(courseId)
     const params = {
-      courseId: Date.now() % 1000,
+      courseId,
       teaId: parseInt(storage.getItem('userInfo1').teaId),
-      departId: 14,
+      classId: values?.classId?.[1] || null,
+      courseIdsList: JSON.stringify(courseIdList),
       ...values
     }
     const res = await createCourse(params)
@@ -133,7 +146,7 @@ export default () => {
           {!allCourse ? <h1>我的课程</h1> : <h1>全部课程</h1>}
           <div>
             <Button type='primary' onClick={() => setAllCourse(!allCourse)}>{allCourse ? '我的课程' : '全部课程'}</Button>
-            <Input.Search style={{ width: 200, margin: '0 40px' }} placeholder='搜索课程' onSearch={onSearch} />
+            <Input.Search style={{ width: 200, margin: '0 30px' }} placeholder='搜索课程' onSearch={onSearch} />
             {/* 老师权利 */}
             {user.isTeacher && (<Button type='primary' onClick={() => setShowClassModal(true)}>创建课程</Button>)}
           </div>
@@ -162,7 +175,7 @@ export default () => {
                       history.push('/home')
                     }}>进入课程</Button>
                   )}
-                  {!courseIdList.includes(courseId) && (
+                  {!courseIdList.includes(courseId) && !user.isTeacher && (
                     <Button type='primary'
                       onClick={() => {
                         Modal.confirm({
@@ -197,12 +210,13 @@ export default () => {
           <Form.Item label="课程简介" name="content">
             <Input.TextArea />
           </Form.Item>
-          <Form.Item label="所属学院" name="departId">
-            <Select />
+          <Form.Item label="所属学院" name={"departId"}>
+            <Select options={Array.from(departMapList, ([value, label]) => ({ value, label }))} onChange={selectDepart} />
           </Form.Item>
           {/* 可选可不选，联表展示，选项包含学院及专业班级 */}
-          <Form.Item label="特定班级" name="classId">
-            <Cascader />
+
+          <Form.Item label="指定班级" name={"classId"}>
+            <Cascader options={classOptions} placeholder="请选择班级" />
           </Form.Item>
           <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
             <Button htmlType='button' onClick={onReset} style={{ marginRight: '10px' }}>

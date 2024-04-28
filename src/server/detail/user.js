@@ -135,6 +135,36 @@ const addCourse = (req, res) => {
   });
 };
 
+// 创建课程
+const createCourse = (req, res) => {
+  const { courseId, name, teaId, classId, departId, content, courseIdsList } = req.query
+  const queryText = `
+  INSERT INTO course (
+    courseId, name, teaId, classId, departId, content
+  ) VALUES (
+    ?, ?, ?, ?, ?, ?
+  )`;
+  const values = [courseId, name, teaId, classId, departId, content];
+
+  pool.query(queryText, values, (err, rows) => {
+    if (err) {
+      console.error('Error querying database:', err)
+      res.status(500).send('Internal Server Error')
+    } else {
+      pool.query('UPDATE Teacher SET courseId = ? WHERE teaId = ?;', [courseIdsList, teaId], (err, rows) => {
+        if (err) {
+          console.error('Error querying database:', err)
+          res.status(500).send('Internal Server Error')
+        } else {
+          const data = { status: 200, msg: '新建成功' }
+          res.status(200).json(data)
+        }
+      })
+    }
+  })
+}
+
+
 // 删除 课程
 const deleteCourse = (req, res) => {
   const { courseId } = req.query
@@ -187,6 +217,7 @@ const userApi = {
   deleteDepart,
   addCourse,
   searchCourse,
+  createCourse,
   // addDepart,
   // addMajor,
   // deleteMajor,
