@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Button, Form, Cascader, Image, Input, message, Avatar, Carousel, Dropdown, Modal, List, Card, Space, Select, Flex } from 'antd'
-import { history } from 'umi'
+import { history, useModel } from 'umi'
 import { storage } from '@/utils'
-import { createCourse } from '@/api/login'
+import { createCourse, getUserInfoDetail } from '@/api/login'
 
 const cover1 = require('@/assets/images/cover.png')
 const cover2 = require('@/assets/images/cover3.png')
@@ -64,21 +64,25 @@ const layout = {
 const user = storage.getItem('userInfo1')
 export default () => {
   const [form] = Form.useForm()
+  const { departMapList } = useModel('course')
+  const { userInitInfo } = useModel('user')
   const [showClassModal, setShowClassModal] = useState(false)
   const [showDetailModal, setShowDeatilModal] = useState(false)
+  const { name, departId, Id, class: classValue, courseId } = userInitInfo
+
   const items = [
     {
       key: '1',
       label: '个人信息',
-      onClick: () => {
+      onClick: async () => {
         Modal.confirm({
           title: '个人信息',
           content:
             <>
-              <h3>姓名：{'尾牙宴'}</h3>
-              <h3>学号：{'201801010101'}</h3>
-              <h3>班级：{'20信管1'}</h3>
-              <h3>学院：{'管理工程学院'}</h3>
+              <h3>姓名：{name}</h3>
+              <h3>账号：{Id}</h3>
+              {!user.isTeacher && <h3>班级：{classValue}</h3>}
+              <h3>学院：{departMapList.get(departId)}</h3>
             </>
         })
       }
@@ -98,6 +102,7 @@ export default () => {
       }
     }
   ]
+
   const onSearch = (value: string) => {
     console.log(value);
   }
@@ -133,7 +138,7 @@ export default () => {
         <h2>阳光课程平台</h2>
         <Dropdown menu={{ items }} placement="bottom" arrow={{ pointAtCenter: true }}>
           <div>
-            <Avatar src={cover1} style={{ margin: '0 10px' }} />王怡阳
+            <Avatar src={cover1} style={{ margin: '0 10px' }} />{name}
           </div>
         </Dropdown>
       </div>
@@ -142,6 +147,7 @@ export default () => {
         <div className='flex-container'>
           <h1>我的课程</h1>
           <div>
+          {/* <Button type='primary' onClick={() => setShowClassModal(true)}>全部课程</Button> */}
             <Input.Search style={{ width: 200, marginRight: '40px' }} placeholder='搜索课程' onSearch={onSearch} />
             {/* 老师权利 */}
             {user.isTeacher && (<Button type='primary' onClick={() => setShowClassModal(true)}>创建课程</Button>)}

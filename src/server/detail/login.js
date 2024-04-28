@@ -67,6 +67,32 @@ const registerStudent = (req, res) => {
     }
   })
 }
+// 获取教师个人信息
+const getTeacherInfo = (req, res) => {
+  const { Id } = req.query
+  pool.query('SELECT * FROM Teacher WHERE teaId = ?;', [Id], (err, rows) => {
+    if (err) {
+      console.error('Error querying database:', err)
+      res.status(500).send('Internal Server Error')
+    } else {
+      const data = { status: 200, data: { ...rows[0], Id: rows[0].teaId } };
+      res.status(200).json(data);
+    }
+  })
+}
+// 获取学生个人信息
+const getStudentInfo = (req, res) => {
+  const { Id } = req.query
+  pool.query('SELECT * FROM Student WHERE stuId = ?;', [Id], (err, rows) => {
+    if (err) {
+      console.error('Error querying database:', err)
+      res.status(500).send('Internal Server Error')
+    } else {
+      const data = { status: 200, data: { ...rows[0], Id: rows[0].stuId } };
+      res.status(200).json(data);
+    }
+  })
+}
 // 创建课程
 const createCourse = (req, res) => {
   const { courseId, name, teaId, classId, departId, content } = req.query
@@ -110,6 +136,8 @@ const loginApi = {
   loginStudent,
   registerTeacher,
   registerStudent,
+  getTeacherInfo,
+  getStudentInfo,
   createCourse,
   deleteCourse
 }

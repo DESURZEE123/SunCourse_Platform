@@ -11,12 +11,11 @@ import './index.less'
 export default () => {
   const { departMapList, classMapList } = useModel('course')
   const [form] = Form.useForm()
-  const [register, setRegister] = useState(true)
+  const [register, setRegister] = useState(false)
   const [isTeacher, setIsTeacher] = useState(false)
   const [classOptions, setClassOptions] = useState([])
 
   useEffect(() => {
-    storage.removeItem('userInfo1')
     form.resetFields()
   }, [])
 
@@ -27,7 +26,7 @@ export default () => {
       if (status === 200) {
         message.success('登录成功')
         storage.setItem('userInfo1', values.login)
-        // history.push('/login/course')
+        history.push('/login/course')
       } else if (values.login.teaId === '123') {
         storage.setItem('userInfo1', { admin: true })
         history.push('/home')

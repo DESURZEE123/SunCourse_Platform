@@ -16,6 +16,15 @@ export const registerApi = async (params) => {
     params
   })
 }
+
+// 获取个人信息
+export const getUserInfoDetail = async (params) => {
+  return request(params.isTeacher ? '/api/user/detail/teacher' : '/api/user/detail/student', {
+    method: 'post',
+    params
+  })
+}
+
 // 创建课程
 export const createCourse = (parmas) => post('/api/user/course/create', parmas)
 
