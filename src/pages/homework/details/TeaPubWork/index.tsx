@@ -63,7 +63,7 @@ export default () => {
       [id]: e.target.value,
     }));
   };
-  console.log(selectedValues);
+  console.log(short);
 
   // const onChange = (selectId, e) => {
   //   form.setFieldsValue({ [`radio${selectId}`]: e.target.value });
@@ -93,8 +93,17 @@ export default () => {
           </>
         ))}
       </Card>
-
       <QuestionTitle>二、简答题(共{short?.length}题，每题{dataSource[0]?.short / short?.length}分)</QuestionTitle>
+      <Card>
+        {short.map((item) => (
+          <>
+            {item.id}.{item.question}
+            {/* <Form.Item key={item.id} name={`short${item.id}`}> */}
+              <Input.TextArea value={item.answer}/>
+            {/* </Form.Item> */}
+          </>
+        ))}
+      </Card>
     </PageContainer>
   )
 }
