@@ -88,7 +88,10 @@ app.post('/discuss/id=:id', discussApi.findDiscuss)
 // 查找讨论，有bug，应该查询出对应IdDiscuss，再去查找；否则会不显示回复数量
 app.post('/discuss/search/title=:title', discussApi.SearchDiscuss)
 
-
+// 教师获取作业列表
+app.post('/homework/get', homeworkApi.getHomeworkList)
+// 教师获取作业详情（含答案）
+app.post('/homework/detail', homeworkApi.getHomeworkDetail)
 // 教师创建作业
 app.post('/homework/create', homeworkApi.createHomework)
 

@@ -1,9 +1,17 @@
 import { request } from 'umi';
 
-// 获取作业列表
+// 教师获取作业列表
 export const getHomeworkList = async (params) => {
   return request('/api/homework/get', {
-    method: 'get',
+    method: 'post',
+    params
+  })
+}
+
+// 教师获取作业详情（含答案）
+export const getHomeworkDetail = async (params) => {
+  return request('/api/homework/detail', {
+    method: 'post',
     params
   })
 }

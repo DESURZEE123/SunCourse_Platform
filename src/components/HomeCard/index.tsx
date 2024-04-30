@@ -36,21 +36,24 @@ const ScoreText = styled.span`
   font-size: 18px;
   font-weight: bold;
 `
-export default ({ goDetail }) => {
+export default ({ goDetail, detail }) => {
+  // console.log(detail);
+  const { homework_id, title, date_start, date_end, status, score } = detail
+
   return (
     <Container>
       <div style={{ padding: '15px' }}>
-        <Title>应用案例-xxxxxxxxxxxxxx</Title>
-        <TimeText>开始时间：2023-10-31 10:51</TimeText>
-        <TimeText>截止时间：2023-12-31 10:51</TimeText>
+        <Title>{title}</Title>
+        <TimeText>开始时间：{date_start}</TimeText>
+        <TimeText>截止时间：{date_end}</TimeText>
         <div style={{ marginBottom: '8px' }}>
           <span>作业状态：</span>
-          <span style={{ color: '#555', fontWeight: 'bold' }}>已完成</span>
+          <span style={{ color: '#555', fontWeight: 'bold' }}>已发布</span>
         </div>
       </div>
       <Score>
-        <ScoreText>100分</ScoreText>
-        <Button type='primary' onClick={goDetail}>
+        {status !== 0 && <ScoreText>{score}分</ScoreText>}
+        <Button type='primary' onClick={()=> goDetail(homework_id)}>
           查看
         </Button>
       </Score>
