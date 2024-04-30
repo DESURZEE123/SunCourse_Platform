@@ -1,6 +1,7 @@
 import { discussApi } from './detail/discussion.js';
 import { loginApi } from './detail/login.js';
 import { userApi } from './detail/user.js';
+import { homeworkApi } from './detail/homework.js';
 // const http = require('http');//用于搭建服务器
 import express from 'express';
 
@@ -86,6 +87,10 @@ app.post('/discuss/id=:id', discussApi.findDiscuss)
 
 // 查找讨论，有bug，应该查询出对应IdDiscuss，再去查找；否则会不显示回复数量
 app.post('/discuss/search/title=:title', discussApi.SearchDiscuss)
+
+
+// 教师创建作业
+app.post('/homework/create', homeworkApi.createHomework)
 
 const port = 3000
 app.listen(port, () => {

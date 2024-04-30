@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react';
-import { InputNumber, Space, Tooltip, Button, message, Steps,Radio, Form, Input, DatePicker, Divider, Flex, Select } from 'antd';
+import { InputNumber, Space, Tooltip, Button, message, Steps, Radio, Form, Input, DatePicker, Divider, Flex, Select } from 'antd';
 import { PlusSquareOutlined, EyeOutlined } from '@ant-design/icons'
 import { history } from 'umi'
+import { storage } from '@/utils'
 import { PageContainer } from '@ant-design/pro-components'
 import {
   FORM_SELECT_SCORE,
@@ -21,6 +22,7 @@ import {
   FORM_TRUEFALSE
 } from '../../../constants'
 import styled from 'styled-components'
+import { createHomework } from '@/api/homework'
 
 const StepContent = styled.div`
   min-height: 260px;
@@ -51,6 +53,8 @@ const steps = [
   },
 ];
 
+const user = storage.getItem('userInfo1')
+const selectedCourse = storage.getItem('courseId')
 export default () => {
   const [form] = Form.useForm()
   const [current, setCurrent] = useState(0)
@@ -100,15 +104,36 @@ export default () => {
   }
 
   const onFinish = () => {
-    setFormContext((prevCount) => {
-      return { ...prevCount, ...form.getFieldsValue(), author: 'wyy' }
+    setFormContext(async (prevCount) => {
+      const { select, short } = prevCount
+      const selectList = Object.keys(select).map(key => ({
+        selectId: Date.now() % 10000,
+        ...select[key]
+      }))
+      const shortList = Object.keys(short).map(key => ({
+        shortId: Date.now() % 100000,
+        ...short[key]
+      }));
+
+      const params = {
+        ...prevCount,
+        ...form.getFieldsValue(),
+        id: Date.now() % 1000,
+        teaId: user.teaId,
+        courseId: selectedCourse,
+        select: selectList,
+        short: shortList
+      }
+      const res = await createHomework(params)
+      if (res.status === 200) {
+        message.success('作业发布成功')
+        history.push('/homework/my')
+      } else {
+        message.error('作业发布失败')
+      }
+      return params
     })
-    message.success('作业发布成功')
-    history.push('/homework/my')
   }
-
-  console.log(formContext)
-
   return (
     <PageContainer>
       <Steps current={current} items={items} />
@@ -130,7 +155,7 @@ export default () => {
             <>
               <Flex justify={'space-between'} style={{ marginBottom: '10px' }}>
                 <Space>
-                  <h3 style={{ fontWeight: 'bold' }}>设置简答题</h3>
+                  <h3 style={{ fontWeight: 'bold' }}>设置选择题</h3>
                   <Tooltip title="选项数为2时，题型为判断题">
                     <EyeOutlined />
                   </Tooltip>

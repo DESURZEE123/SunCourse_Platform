@@ -79,7 +79,6 @@ export default () => {
   // }, [user])
 
   const onSearch = async (value: string) => {
-    console.log(value);
     const res = await searchCourse({ searchValue: value })
     if (res) {
       setCourseData(res)
@@ -213,8 +212,6 @@ export default () => {
           <Form.Item label="所属学院" name={"departId"}>
             <Select options={Array.from(departMapList, ([value, label]) => ({ value, label }))} onChange={selectDepart} />
           </Form.Item>
-          {/* 可选可不选，联表展示，选项包含学院及专业班级 */}
-
           <Form.Item label="指定班级" name={"classId"}>
             <Cascader options={classOptions} placeholder="请选择班级" />
           </Form.Item>
