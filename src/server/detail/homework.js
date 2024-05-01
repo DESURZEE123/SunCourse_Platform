@@ -30,8 +30,6 @@ const getHomeworkDetail = (req, res) => {
       console.error('Error querying database:', err)
       res.status(500).send('Internal Server Error')
     } else {
-      // const data = { data: rows, message: true, total: rows.length }
-      // res.status(200).json(data)
       pool.query('SELECT * FROM homework_selectquestion WHERE homework_id = ?;', [homework_id], (err, rows2) => {
         if (err) {
           console.error('Error querying database:', err)
@@ -79,7 +77,25 @@ const getHomeworkDetailStudent = (req, res) => {
     }
   })
 }
-
+// 学生提交作业
+const submitHomework = (req, res) => {
+  const { homework_id, stuId, courseId, select, short, isFinish, isMark } = req.query
+  const AnswerSql =
+    `INSERT INTO homework_answer 
+      (homework_id, stuId, courseId, selectAnswer, shortAnswer, isFinish, isMark) 
+      VALUES (?, ?, ?, ?, ?, ?, ?);
+    `
+  const AnswerValues = [homework_id, stuId, courseId, select, short, isFinish, isMark]
+  pool.query(AnswerSql, AnswerValues, (err, rows) => {
+    if (err) {
+      console.error('Error querying database:', err)
+      res.status(500).send('Internal Server Error')
+    } else {
+      const data = { status: 200, msg: '提交成功'}
+      res.status(200).json(data)
+    }
+  })
+}
 
 // 教师创建作业
 const createHomework = (req, res) => {
@@ -147,6 +163,7 @@ const homeworkApi = {
   getHomeworkList,
   getHomeworkDetail,
   getHomeworkDetailStudent,
+  submitHomework,
   createHomework
 }
 

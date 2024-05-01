@@ -25,6 +25,14 @@ export const getHomeworkDetailStudent = async (params) => {
   })
 }
 
+// 学生提交作业
+export const submitHomework = async (params) => {
+  return request('/api/homework/submit', {
+    method: 'post',
+    params
+  })
+}
+
 // 教师创建作业
 export const createHomework = async (params) => {
   return request('/api/homework/create', {

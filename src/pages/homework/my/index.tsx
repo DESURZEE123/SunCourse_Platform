@@ -56,6 +56,14 @@ const HomeWork = () => {
         <Flex style={{ flexWrap: 'wrap' }}>
           {/* <HomeCard goDetail={() => { history.push('/homework/my/details/TeaPubWork') }} /> */}
         </Flex>
+    },
+    {
+      key: '3',
+      label: '已批作业',
+      children:
+        <Flex style={{ flexWrap: 'wrap' }}>
+          {/* <HomeCard goDetail={() => { history.push('/homework/my/details/TeaPubWork') }} /> */}
+        </Flex>
     }
   ]
 

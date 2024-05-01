@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Form, Image, Input, Radio, Flex, Watermark } from 'antd'
+import { Button, Form, Image, Input, Radio, Flex, Watermark, message } from 'antd'
 import { PageContainer } from '@ant-design/pro-components'
 import { useModel, history } from 'umi'
 import { storage } from '@/utils'
-import { getHomeworkDetailStudent } from '@/api/homework'
+import { getHomeworkDetailStudent, submitHomework } from '@/api/homework'
 
 import styled from 'styled-components'
 
@@ -16,6 +16,7 @@ const QuestionTitle = styled.div`
 `
 
 const user = storage.getItem('userInfo1')
+const courseId = storage.getItem('courseId')
 export default () => {
   const [form] = Form.useForm()
   const [dataSource, setDataSource] = useState([])
@@ -41,8 +42,24 @@ export default () => {
     getHomeworkQuestion()
   }, [])
 
-  const onFinish = (values: any) => {
+  const onFinish = async (values: any) => {
     console.log(values)
+    const selectAnswer = select.map((item) => ({ id: item.id, answer: values[`select${item.id}`] }))
+    const shortAnswer = short.map((item) => ({ id: item.id, answer: values[`short${item.id}`] }))
+    const params = {
+      homework_id,
+      stuId: user.stuId,
+      courseId,
+      select: JSON.stringify(selectAnswer),
+      short: JSON.stringify(shortAnswer),
+      isFinish: 1,
+      isMark: 0 // 0 未批改 1 已批改
+    }
+    const res = await submitHomework(params)
+    if (res.status === 200) {
+      message.success('提交成功')
+      history.push('/homework/my')
+    }
   }
   return (
     <PageContainer>

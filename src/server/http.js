@@ -94,6 +94,8 @@ app.post('/homework/get', homeworkApi.getHomeworkList)
 app.post('/homework/detail', homeworkApi.getHomeworkDetail)
 // 学生获取作业详情（不含答案）
 app.post('/homework/detail/student', homeworkApi.getHomeworkDetailStudent)
+// 学生提交作业
+app.post('/homework/submit', homeworkApi.submitHomework)
 // 教师创建作业
 app.post('/homework/create', homeworkApi.createHomework)
 
