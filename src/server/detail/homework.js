@@ -10,8 +10,8 @@ const pool = mysql.createPool({
 
 // 教师获取作业列表
 const getHomeworkList = (req, res) => {
-  const { teaId } = req.query
-  pool.query('SELECT * FROM Homework_Detail WHERE teaId = ?;', [teaId], (err, rows) => {
+  const { courseId } = req.query
+  pool.query('SELECT * FROM Homework_Detail WHERE courseId = ?;', [courseId], (err, rows) => {
     if (err) {
       console.error('Error querying database:', err)
       res.status(500).send('Internal Server Error')
@@ -51,6 +51,35 @@ const getHomeworkDetail = (req, res) => {
     }
   })
 }
+
+// 学生获取作业详情（不含答案）
+const getHomeworkDetailStudent = (req, res) => {
+  const { homework_id } = req.query
+  pool.query('SELECT * FROM Homework_Detail WHERE homework_id = ?;', [homework_id], (err, rows1) => {
+    if (err) {
+      console.error('Error querying database:', err)
+      res.status(500).send('Internal Server Error')
+    } else {
+      pool.query('SELECT id, question, option_A, option_B, option_C, option_D FROM homework_selectquestion WHERE homework_id = ?;', [homework_id], (err, rows2) => {
+        if (err) {
+          console.error('Error querying database:', err)
+          res.status(500).send('Internal Server Error')
+        } else {
+          pool.query('SELECT id, question FROM homework_shortquestion WHERE homework_id = ?;', [homework_id], (err, rows3) => {
+            if (err) {
+              console.error('Error querying database:', err)
+              res.status(500).send('Internal Server Error')
+            } else {
+              const data = { data: rows1[0], select: rows2, short: rows3 }
+              res.status(200).json(data)
+            }
+          })
+        }
+      })
+    }
+  })
+}
+
 
 // 教师创建作业
 const createHomework = (req, res) => {
@@ -117,6 +146,7 @@ const createHomework = (req, res) => {
 const homeworkApi = {
   getHomeworkList,
   getHomeworkDetail,
+  getHomeworkDetailStudent,
   createHomework
 }
 

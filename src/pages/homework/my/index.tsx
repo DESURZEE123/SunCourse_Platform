@@ -7,14 +7,15 @@ import { storage } from '@/utils'
 import { getHomeworkList } from '@/api/homework'
 
 const user = storage.getItem('userInfo1')
+const courseId = storage.getItem('courseId')
 const HomeWork = () => {
   const [homeWorkList, setHomeWorkList] = useState([])
 
   const getHomeWorkData = async () => {
-    if (user.isTeacher) {
-      const res = await getHomeworkList({ teaId: user.teaId })
-      setHomeWorkList(res.data)
-    }
+    // if (user.isTeacher) {
+    const res = await getHomeworkList({ courseId })
+    setHomeWorkList(res.data)
+    // }
   }
 
   useEffect(() => {
@@ -26,12 +27,17 @@ const HomeWork = () => {
   }
 
   const goDetail = (homework_id) => {
-    // history.push('/pages/commonLink/list/edit?id=' + id)
-    // history.push('/homework/details/StuWork')
-    history.push({
-      pathname: '/homework/my/details/TeaPubWork',
-      search: `?id=${homework_id}`
-    })
+    if (user.isTeacher) {
+      history.push({
+        pathname: '/homework/my/details/TeaPubWork',
+        search: `?id=${homework_id}`
+      })
+    } else {
+      history.push({
+        pathname: '/homework/my/details/StuWork',
+        search: `?id=${homework_id}`
+      })
+    }
   }
 
   const items = [
@@ -41,11 +47,6 @@ const HomeWork = () => {
       children:
         <Flex style={{ flexWrap: 'wrap' }}>
           {homeWorkList.map(item => <HomeCard goDetail={goDetail} detail={item} />)}
-
-          {/* <HomeCard goDetail={() => { history.push('/homework/my/details/StuWork') }} />
-          <HomeCard goDetail={() => { history.push('/homework/my/details/StuWork') }} />
-          <HomeCard goDetail={() => { history.push('/homework/my/details/StuWork') }} />
-          <HomeCard goDetail={() => { history.push('/homework/my/details/StuWork') }} /> */}
         </Flex>
     },
     {
