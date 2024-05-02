@@ -37,14 +37,14 @@ const ScoreText = styled.span`
   font-weight: bold;
 `
 export default ({ goDetail, detail }) => {
-  const { homework_id, title, date_start, date_end, status, score, isMark, isFinish, stuId } = detail
+  const { homework_id, title, date_start, date_end, status, score, isMark, isFinish, stuId, scoretotal } = detail
 
   return (
     <Container>
       <div style={{ padding: '15px' }}>
         <Title>{title}</Title>
         {stuId && <Title>学号：{stuId}</Title>}
-        {isMark !== 0 && (
+        {status === 0 && (
           <>
             <TimeText>开始时间：{date_start}</TimeText>
             <TimeText>截止时间：{date_end}</TimeText>
@@ -55,7 +55,7 @@ export default ({ goDetail, detail }) => {
         </div>
       </div>
       <Score>
-        {/* {status !== 0 && <ScoreText>{score}分</ScoreText>} */}
+        {status !== 0 && <ScoreText>{scoretotal}分</ScoreText>}
         {isMark === 0 && <ScoreText>未批改</ScoreText>}
         <Button type='primary' onClick={() => goDetail({ homework_id, isMark, stuId })}>
           查看

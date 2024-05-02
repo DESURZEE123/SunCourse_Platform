@@ -109,7 +109,7 @@ const HomeWork = () => {
   return (
     <PageContainer>
       <div>
-        <Tabs defaultActiveKey='1' items={user.isTeacher ? items : [items[0], items[3]]} onChange={onChange} />
+        <Tabs defaultActiveKey='1' items={user.isTeacher ? [items[0], items[1], items[2]] : [items[0], items[3]]} onChange={onChange} />
       </div>
     </PageContainer>
   )
