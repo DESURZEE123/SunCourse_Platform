@@ -25,9 +25,9 @@ export default () => {
   const [selectAnswerOption, setSelectAnswerOption] = useState([])
   const [short, setShort] = useState([])
   const params = history.location.search.split('?');
-  const homework_id = Number(params[1].split('=')[1]);
-  const isMark = Number(params[2].split('=')[1]);
-  const markStuId = Number(params[3].split('=')[1]);
+  const homework_id = Number(params?.[1].split('=')[1]);
+  const isMark = Number(params?.[2].split('=')[1]);
+  const markStuId = Number(params?.[3].split('=')[1]);
 
   const getHomeworkQuestion = async () => {
     const res = await getHomeworkDetailStudent({ homework_id })
@@ -42,9 +42,10 @@ export default () => {
     setSelect(select)
     setShort(short)
   }
+  console.log(MarkHomeworkDetail);
 
   const MarkHomework = async () => {
-    const res = await getHomeworStudentFinish({ courseId, isMark: 0, isFinish: 1 })
+    const res = await getHomeworStudentFinish({ courseId, isMark, isFinish: 1 })
     const data = res.data.filter((item) => item.stuId === markStuId)
     setMarkHomeworkDetail(data)
   }
@@ -66,7 +67,7 @@ export default () => {
 
   // 学生答案回显 && 选择自动批改
   useEffect(() => {
-    if (isMark === 0 && MarkHomeworkDetail.length !== 0) {
+    if (isMark && MarkHomeworkDetail.length !== 0) {
       const selectAnswer = JSON.parse(MarkHomeworkDetail[0].selectAnswer);
       const shortAnswer = JSON.parse(MarkHomeworkDetail[0].shortAnswer);
 
@@ -85,6 +86,13 @@ export default () => {
       shortAnswer.forEach(item => {
         formValues[`short${item.id}`] = item.answer;
       });
+
+      if (isMark === 1) {
+        const markShort = JSON.parse(MarkHomeworkDetail[0].markShort);
+        markShort.forEach(item => {
+          formValues[`mark_short${item.id}`] = item.value;
+        });
+      }
 
       form.setFieldsValue(formValues);
     }
@@ -143,7 +151,7 @@ export default () => {
       isMark: 1 // 0 未批改 1 已批改
     }
     const res = await markHomework(params)
-    
+
     if (res.status === 200) {
       message.success('批改完成')
       history.push('/homework/my')
@@ -166,6 +174,7 @@ export default () => {
       dataIndex: 'total',
     }
   ]
+
   return (
     <PageContainer>
       <Watermark content={user.stuId} font={{ fontSize: '10' }} gap={[110, 100]}>
@@ -211,14 +220,15 @@ export default () => {
           </div>
           <Form.Item>
             <Flex justify="center" style={{ margin: '10px 0' }}>
-              {isMark === 0 ? <Button type='primary' onClick={() => finishMark()}>批改完成</Button> :
-                (<>
-                  <Button type='primary' onClick={() => form.resetFields()} style={{ marginRight: '20px' }}>
-                    重置
-                  </Button>
-                  <Button type='primary' htmlType='submit'>提交</Button>
-                </>
-                )}
+              {isMark === 0 && <Button type='primary' onClick={() => finishMark()}>批改完成</Button>}
+              {!isMark && (<>
+                <Button type='primary' onClick={() => form.resetFields()} style={{ marginRight: '20px' }}>
+                  重置
+                </Button>
+                <Button type='primary' htmlType='submit'>提交</Button>
+              </>
+              )}
+              {isMark === 1 && <Button type='primary' onClick={() => history.push('/homework/my')}>返回</Button>}
             </Flex>
           </Form.Item>
         </Form>

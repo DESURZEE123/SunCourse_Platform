@@ -22,8 +22,6 @@ const HomeWork = () => {
     setNotMarkedHomeWorkList(isNotMarked.data)
     const isMarked = await getHomeworStudentFinish({ courseId, isMark: 1, isFinish: 1 })
     setIsMarkedHomeWorkList(isMarked.data)
-    console.log(isMarked);
-    
   }
 
   useEffect(() => {
@@ -40,6 +38,11 @@ const HomeWork = () => {
         history.push({
           pathname: '/homework/my/details/StuWork',
           search: `?id=${homework_id}?isMark=0?stuId=${stuId}`
+        })
+      } else if (isMark === 1) {
+        history.push({
+          pathname: '/homework/my/details/StuWork',
+          search: `?id=${homework_id}?isMark=1?stuId=${stuId}`
         })
       } else {
         history.push({
