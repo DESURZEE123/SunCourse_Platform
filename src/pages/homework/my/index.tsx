@@ -18,10 +18,16 @@ const HomeWork = () => {
     const res = await getHomeworkList({ courseId })
     setHomeWorkList(res.data)
     // }
-    const isNotMarked = await getHomeworStudentFinish({ courseId, isMark: 0, isFinish: 1 })
-    setNotMarkedHomeWorkList(isNotMarked.data)
-    const isMarked = await getHomeworStudentFinish({ courseId, isMark: 1, isFinish: 1 })
-    setIsMarkedHomeWorkList(isMarked.data)
+    if (user.isTeacher) {
+      const isNotMarked = await getHomeworStudentFinish({ courseId, isMark: 0, isFinish: 1 })
+      setNotMarkedHomeWorkList(isNotMarked.data)
+      const isMarked = await getHomeworStudentFinish({ courseId, isMark: 1, isFinish: 1 })
+      setIsMarkedHomeWorkList(isMarked.data)
+    } else {
+      const isMarked = await getHomeworStudentFinish({ courseId, isMark: 1, isFinish: 1 })
+      setIsMarkedHomeWorkList(isMarked.data)
+    }
+
   }
 
   useEffect(() => {
@@ -50,10 +56,15 @@ const HomeWork = () => {
           search: `?id=${homework_id}`
         })
       }
+    } else if (isMark === 1) {
+      history.push({
+        pathname: '/homework/my/details/StuWork',
+        search: `?id=${homework_id}?isMark=1?stuId=${stuId}`
+      })
     } else {
       history.push({
         pathname: '/homework/my/details/StuWork',
-        search: `?id=${homework_id}`
+        search: `?id=${homework_id}?isMark=3?stuId=${user.stuId}`
       })
     }
   }
@@ -82,6 +93,14 @@ const HomeWork = () => {
         <Flex style={{ flexWrap: 'wrap' }}>
           {isMarkedHomeWorkList.map(item => <HomeCard goDetail={goDetail} detail={item} />)}
         </Flex>
+    },
+    {
+      key: '4',
+      label: '已完成作业',
+      children:
+        <Flex style={{ flexWrap: 'wrap' }}>
+          {isMarkedHomeWorkList.map(item => <HomeCard goDetail={goDetail} detail={item} />)}
+        </Flex>
     }
   ]
 
@@ -90,7 +109,7 @@ const HomeWork = () => {
   return (
     <PageContainer>
       <div>
-        <Tabs defaultActiveKey='1' items={user.isTeacher ? items : [items[0]]} onChange={onChange} />
+        <Tabs defaultActiveKey='1' items={user.isTeacher ? items : [items[0], items[3]]} onChange={onChange} />
       </div>
     </PageContainer>
   )

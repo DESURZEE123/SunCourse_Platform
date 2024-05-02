@@ -67,7 +67,7 @@ export default () => {
 
   // 学生答案回显 && 选择自动批改
   useEffect(() => {
-    if (isMark && MarkHomeworkDetail.length !== 0) {
+    if ((isMark === 1 || isMark === 0) && MarkHomeworkDetail.length !== 0) {
       const selectAnswer = JSON.parse(MarkHomeworkDetail[0].selectAnswer);
       const shortAnswer = JSON.parse(MarkHomeworkDetail[0].shortAnswer);
 
@@ -221,7 +221,7 @@ export default () => {
           <Form.Item>
             <Flex justify="center" style={{ margin: '10px 0' }}>
               {isMark === 0 && <Button type='primary' onClick={() => finishMark()}>批改完成</Button>}
-              {!isMark && (<>
+              {isMark === 3 && (<>
                 <Button type='primary' onClick={() => form.resetFields()} style={{ marginRight: '20px' }}>
                   重置
                 </Button>
