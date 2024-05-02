@@ -53,22 +53,16 @@ export default () => {
     }
   ]
 
-  const initialState = select.reduce((acc, item) => ({ ...acc, [item.id]: item.answer }), {});
-  const [selectedValues, setSelectedValues] = useState(initialState);
-  const onChange = (id) => (e) => {
-    console.log(e.target.value);
+  // const initialState = select.reduce((acc, item) => ({ ...acc, [item.id]: item.answer }), {});
+  // const [selectedValues, setSelectedValues] = useState(initialState);
+  // const onChange = (id) => (e) => {
+  //   console.log(e.target.value);
 
-    setSelectedValues(prevValues => ({
-      ...prevValues,
-      [id]: e.target.value,
-    }));
-  };
-  console.log(short);
-
-  // const onChange = (selectId, e) => {
-  //   form.setFieldsValue({ [`radio${selectId}`]: e.target.value });
+  //   setSelectedValues(prevValues => ({
+  //     ...prevValues,
+  //     [id]: e.target.value,
+  //   }));
   // };
-
   return (
     <PageContainer>
       <Info>出题人：{teacherMapList.get(parseInt(user.teaId))}</Info>

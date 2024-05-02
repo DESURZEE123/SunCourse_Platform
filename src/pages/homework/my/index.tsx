@@ -4,18 +4,26 @@ import { PageContainer } from '@ant-design/pro-components'
 import { history } from 'umi'
 import { Flex, Tabs } from 'antd'
 import { storage } from '@/utils'
-import { getHomeworkList } from '@/api/homework'
+import { getHomeworkList, getHomeworStudentFinish } from '@/api/homework'
 
 const user = storage.getItem('userInfo1')
 const courseId = storage.getItem('courseId')
 const HomeWork = () => {
   const [homeWorkList, setHomeWorkList] = useState([])
+  const [notMarkedHomeWorkList, setNotMarkedHomeWorkList] = useState([])
+  const [isMarkedHomeWorkList, setIsMarkedHomeWorkList] = useState([])
 
   const getHomeWorkData = async () => {
     // if (user.isTeacher) {
     const res = await getHomeworkList({ courseId })
     setHomeWorkList(res.data)
     // }
+    const isNotMarked = await getHomeworStudentFinish({ courseId, isMark: 0, isFinish: 1 })
+    setNotMarkedHomeWorkList(isNotMarked.data)
+    const isMarked = await getHomeworStudentFinish({ courseId, isMark: 1, isFinish: 1 })
+    setIsMarkedHomeWorkList(isMarked.data)
+    console.log(isMarked);
+    
   }
 
   useEffect(() => {
@@ -26,12 +34,19 @@ const HomeWork = () => {
     // console.log(key)
   }
 
-  const goDetail = (homework_id) => {
+  const goDetail = ({ homework_id, isMark, stuId }) => {
     if (user.isTeacher) {
-      history.push({
-        pathname: '/homework/my/details/TeaPubWork',
-        search: `?id=${homework_id}`
-      })
+      if (isMark === 0) {
+        history.push({
+          pathname: '/homework/my/details/StuWork',
+          search: `?id=${homework_id}?isMark=0?stuId=${stuId}`
+        })
+      } else {
+        history.push({
+          pathname: '/homework/my/details/TeaPubWork',
+          search: `?id=${homework_id}`
+        })
+      }
     } else {
       history.push({
         pathname: '/homework/my/details/StuWork',
@@ -54,7 +69,7 @@ const HomeWork = () => {
       label: '待批作业',
       children:
         <Flex style={{ flexWrap: 'wrap' }}>
-          {/* <HomeCard goDetail={() => { history.push('/homework/my/details/TeaPubWork') }} /> */}
+          {notMarkedHomeWorkList.map(item => <HomeCard goDetail={goDetail} detail={item} />)}
         </Flex>
     },
     {
@@ -62,7 +77,7 @@ const HomeWork = () => {
       label: '已批作业',
       children:
         <Flex style={{ flexWrap: 'wrap' }}>
-          {/* <HomeCard goDetail={() => { history.push('/homework/my/details/TeaPubWork') }} /> */}
+          {isMarkedHomeWorkList.map(item => <HomeCard goDetail={goDetail} detail={item} />)}
         </Flex>
     }
   ]

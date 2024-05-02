@@ -17,6 +17,22 @@ export const getHomeworkDetail = async (params) => {
   })
 }
 
+// 教师获取学生作业详情
+export const getHomeworStudentFinish = async (params) => {
+  return request('/api/homework/detail/student/finish', {
+    method: 'post',
+    params
+  })
+}
+
+// 教师批改作业
+export const markHomework = async (params) => {
+  return request('/api/homework/mark', {
+    method: 'post',
+    params
+  })
+}
+
 // 学生获取作业详情（不含答案）
 export const getHomeworkDetailStudent = async (params) => {
   return request('/api/homework/detail/student', {

@@ -92,6 +92,10 @@ app.post('/discuss/search/title=:title', discussApi.SearchDiscuss)
 app.post('/homework/get', homeworkApi.getHomeworkList)
 // 教师获取作业详情（含答案）
 app.post('/homework/detail', homeworkApi.getHomeworkDetail)
+// 教师获取学生作业详情
+app.post('/homework/detail/student/finish', homeworkApi.getHomeworStudentFinish)
+// 教师批改作业
+app.post('/homework/mark', homeworkApi.markHomework)
 // 学生获取作业详情（不含答案）
 app.post('/homework/detail/student', homeworkApi.getHomeworkDetailStudent)
 // 学生提交作业

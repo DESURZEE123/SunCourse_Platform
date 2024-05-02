@@ -50,6 +50,40 @@ const getHomeworkDetail = (req, res) => {
   })
 }
 
+// 教师获取学生作业详情
+const getHomeworStudentFinish = (req, res) => {
+  const { courseId, isFinish, isMark } = req.query
+  pool.query('SELECT * FROM Homework_Answer WHERE courseId =? and isFinish =? and isMark =?;', [courseId, isFinish, isMark], (err, rows1) => {
+    if (err) {
+      console.error('Error querying database:', err)
+      res.status(500).send('Internal Server Error')
+    } else {
+      const data = { data: rows1, status: 200, msg: '查询成功' }
+      res.status(200).json(data)
+    }
+  })
+}
+
+// 教师批改作业
+const markHomework = (req, res) => {
+  const { homework_id, stuId, markSelect, markShort, scoretotal, courseId, isFinish, isMark } = req.query
+  const AnswerSql =
+    `UPDATE homework_answer 
+      SET  markSelect = ?,  markShort= ?, isFinish = ?, isMark = ?, scoretotal = ? 
+      WHERE homework_id = ? and stuId = ? and courseId = ?;
+    `
+  const AnswerValues = [markSelect, markShort, isFinish, isMark, scoretotal, homework_id, stuId, courseId]
+  pool.query(AnswerSql, AnswerValues, (err, rows) => {
+    if (err) {
+      console.error('Error querying database:', err)
+      res.status(500).send('Internal Server Error')
+    } else {
+      const data = { status: 200, msg: '批改成功' }
+      res.status(200).json(data)
+    }
+  })
+}
+
 // 学生获取作业详情（不含答案）
 const getHomeworkDetailStudent = (req, res) => {
   const { homework_id } = req.query
@@ -77,6 +111,7 @@ const getHomeworkDetailStudent = (req, res) => {
     }
   })
 }
+
 // 学生提交作业
 const submitHomework = (req, res) => {
   const { homework_id, stuId, courseId, select, short, isFinish, isMark } = req.query
@@ -91,7 +126,7 @@ const submitHomework = (req, res) => {
       console.error('Error querying database:', err)
       res.status(500).send('Internal Server Error')
     } else {
-      const data = { status: 200, msg: '提交成功'}
+      const data = { status: 200, msg: '提交成功' }
       res.status(200).json(data)
     }
   })
@@ -162,6 +197,8 @@ const createHomework = (req, res) => {
 const homeworkApi = {
   getHomeworkList,
   getHomeworkDetail,
+  getHomeworStudentFinish,
+  markHomework,
   getHomeworkDetailStudent,
   submitHomework,
   createHomework

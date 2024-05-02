@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Form, Image, Input, Radio, Flex, Watermark, message } from 'antd'
+import { Button, Form, Image, Input, Radio, Flex, Watermark, message, Table, InputNumber } from 'antd'
 import { PageContainer } from '@ant-design/pro-components'
 import { useModel, history } from 'umi'
 import { storage } from '@/utils'
-import { getHomeworkDetailStudent, submitHomework } from '@/api/homework'
+import { getHomeworkDetail, getHomeworkDetailStudent, submitHomework, getHomeworStudentFinish, markHomework } from '@/api/homework'
 
 import styled from 'styled-components'
 
@@ -20,9 +20,14 @@ const courseId = storage.getItem('courseId')
 export default () => {
   const [form] = Form.useForm()
   const [dataSource, setDataSource] = useState([])
+  const [MarkHomeworkDetail, setMarkHomeworkDetail] = useState([])
   const [select, setSelect] = useState([])
+  const [selectAnswerOption, setSelectAnswerOption] = useState([])
   const [short, setShort] = useState([])
-  const homework_id = history.location.search.split('=')[1] as unknown as number
+  const params = history.location.search.split('?');
+  const homework_id = Number(params[1].split('=')[1]);
+  const isMark = Number(params[2].split('=')[1]);
+  const markStuId = Number(params[3].split('=')[1]);
 
   const getHomeworkQuestion = async () => {
     const res = await getHomeworkDetailStudent({ homework_id })
@@ -32,15 +37,59 @@ export default () => {
       short: data.short_score * short.length,
       total: data.select_score * select.length + data.short_score * short.length
     }]
-    console.log(res);
+    // console.log(res);
     setDataSource(dataSources)
     setSelect(select)
     setShort(short)
   }
 
+  const MarkHomework = async () => {
+    const res = await getHomeworStudentFinish({ courseId, isMark: 0, isFinish: 1 })
+    const data = res.data.filter((item) => item.stuId === markStuId)
+    setMarkHomeworkDetail(data)
+  }
+
+  const getHomeworkAnswer = async () => {
+    const res = await getHomeworkDetail({ homework_id })
+    const { select } = res
+    setSelectAnswerOption(select.map((item) => ({ answer: item.answer })))
+  }
+
+  useEffect(() => {
+    getHomeworkAnswer()
+    MarkHomework()
+  }, [isMark])
+
   useEffect(() => {
     getHomeworkQuestion()
   }, [])
+
+  // 学生答案回显 && 选择自动批改
+  useEffect(() => {
+    if (isMark === 0 && MarkHomeworkDetail.length !== 0) {
+      const selectAnswer = JSON.parse(MarkHomeworkDetail[0].selectAnswer);
+      const shortAnswer = JSON.parse(MarkHomeworkDetail[0].shortAnswer);
+
+      const formValues = {};
+
+      selectAnswer.forEach(item => {
+        formValues[`select${item.id}`] = item.answer;
+        const selectedOption = selectAnswerOption;
+        if (selectedOption === item.answer) {
+          formValues[`mark_select${item.id}`] = dataSource[0]?.select / select?.length;
+        } else {
+          formValues[`mark_select${item.id}`] = 0;
+        }
+      });
+
+      shortAnswer.forEach(item => {
+        formValues[`short${item.id}`] = item.answer;
+      });
+
+      form.setFieldsValue(formValues);
+    }
+
+  }, [MarkHomeworkDetail, dataSource, select, selectAnswerOption]);
 
   const onFinish = async (values: any) => {
     console.log(values)
@@ -53,7 +102,7 @@ export default () => {
       select: JSON.stringify(selectAnswer),
       short: JSON.stringify(shortAnswer),
       isFinish: 1,
-      isMark: 0 // 0 未批改 1 已批改
+      isMark: 1 // 0 未批改 1 已批改
     }
     const res = await submitHomework(params)
     if (res.status === 200) {
@@ -61,6 +110,62 @@ export default () => {
       history.push('/homework/my')
     }
   }
+
+  const finishMark = async () => {
+    const allValues = form.getFieldsValue();
+
+    const markShortValues = Object.keys(allValues)
+      .filter(key => key.startsWith('mark_short'))
+      .map(key => ({
+        id: key.replace('mark_short', ''),
+        value: allValues[key]
+      }));
+
+    const markSelectValues = Object.keys(allValues)
+      .filter(key => key.startsWith('mark_select'))
+      .map(key => ({
+        id: key.replace('mark_select', ''),
+        value: allValues[key]
+      }));
+
+    const markShortTotal = markShortValues.reduce((total, item) => total + item.value, 0);
+    const markSelectTotal = markSelectValues.reduce((total, item) => total + item.value, 0);
+    const scoretotal = markShortTotal + markSelectTotal;
+
+    const params = {
+      homework_id,
+      stuId: markStuId,
+      markSelect: JSON.stringify(markSelectValues),
+      markShort: JSON.stringify(markShortValues),
+      scoretotal,
+      courseId,
+      isFinish: 1,
+      isMark: 1 // 0 未批改 1 已批改
+    }
+    const res = await markHomework(params)
+    
+    if (res.status === 200) {
+      message.success('批改完成')
+      history.push('/homework/my')
+    } else {
+      message.error('批改失败')
+    }
+  }
+
+  const columns = [
+    {
+      title: '单选题',
+      dataIndex: 'select',
+    },
+    {
+      title: '简答题',
+      dataIndex: 'short',
+    },
+    {
+      title: '总分',
+      dataIndex: 'total',
+    }
+  ]
   return (
     <PageContainer>
       <Watermark content={user.stuId} font={{ fontSize: '10' }} gap={[110, 100]}>
@@ -80,6 +185,9 @@ export default () => {
                     <Radio value={item.option_D}>{item.option_D}</Radio>
                   </Radio.Group>
                 </Form.Item>
+                <Form.Item name={`mark_select${item.id}`} label={'分数：'}>
+                  <InputNumber />
+                </Form.Item>
               </div>
             ))}
           </div>
@@ -94,20 +202,27 @@ export default () => {
                   <Form.Item name={`short${item.id}`}>
                     <Input.TextArea />
                   </Form.Item>
+                  <Form.Item name={`mark_short${item.id}`} label={'分数：'}>
+                    <InputNumber />
+                  </Form.Item>
                 </div>
               ))}
             </div>
           </div>
           <Form.Item>
             <Flex justify="center" style={{ margin: '10px 0' }}>
-              <Button type='primary' onClick={() => form.resetFields()} style={{ marginRight: '20px' }}>
-                重置
-              </Button>
-              <Button type='primary' htmlType='submit'>提交</Button>
+              {isMark === 0 ? <Button type='primary' onClick={() => finishMark()}>批改完成</Button> :
+                (<>
+                  <Button type='primary' onClick={() => form.resetFields()} style={{ marginRight: '20px' }}>
+                    重置
+                  </Button>
+                  <Button type='primary' htmlType='submit'>提交</Button>
+                </>
+                )}
             </Flex>
           </Form.Item>
         </Form>
       </Watermark >
-    </PageContainer>
+    </PageContainer >
   )
 }

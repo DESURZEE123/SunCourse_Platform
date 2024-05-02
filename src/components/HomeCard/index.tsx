@@ -37,23 +37,27 @@ const ScoreText = styled.span`
   font-weight: bold;
 `
 export default ({ goDetail, detail }) => {
-  // console.log(detail);
-  const { homework_id, title, date_start, date_end, status, score } = detail
+  const { homework_id, title, date_start, date_end, status, score, isMark, isFinish, stuId } = detail
 
   return (
     <Container>
       <div style={{ padding: '15px' }}>
         <Title>{title}</Title>
-        <TimeText>开始时间：{date_start}</TimeText>
-        <TimeText>截止时间：{date_end}</TimeText>
+        {stuId && <Title>学号：{stuId}</Title>}
+        {isMark !== 0 && (
+          <>
+            <TimeText>开始时间：{date_start}</TimeText>
+            <TimeText>截止时间：{date_end}</TimeText>
+          </>
+        )}
         <div style={{ marginBottom: '8px' }}>
-          <span>作业状态：</span>
-          <span style={{ color: '#555', fontWeight: 'bold' }}>已发布</span>
+          <span style={{ color: '#555', fontWeight: 'bold' }}>{isMark === 0 && '作业状态：未批改'}</span>
         </div>
       </div>
       <Score>
-        {status !== 0 && <ScoreText>{score}分</ScoreText>}
-        <Button type='primary' onClick={()=> goDetail(homework_id)}>
+        {/* {status !== 0 && <ScoreText>{score}分</ScoreText>} */}
+        {isMark === 0 && <ScoreText>未批改</ScoreText>}
+        <Button type='primary' onClick={() => goDetail({ homework_id, isMark, stuId })}>
           查看
         </Button>
       </Score>
