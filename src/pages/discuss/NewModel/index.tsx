@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import { v4 as uuidv4 } from 'uuid'
-import { UploadOutlined } from '@ant-design/icons'
-import { Button, Form, Input, Modal, Upload, message } from 'antd'
+import UploadImage from '@/components/UploadImage'
+import { Button, Form, Input, Modal, message } from 'antd'
 import { newDiscuss } from '@/api/discuss'
 import { TITLE, CONTENT, MATERIAL } from '@/constants'
 
@@ -19,6 +18,8 @@ export default () => {
   }
 
   const onFinish = async (values: any) => {
+    console.log('Success:', values);
+
     const idDiscussion = Date.now()
     const belongId = idDiscussion
     const data = { ...values, idDiscussion, belongId, idCourse: 1, replayId: 0, DisName: 'wyy' }
@@ -32,15 +33,6 @@ export default () => {
     form.resetFields()
     setOpen(false)
   }
-
-  const checkFileSize = (file) => {
-    const maxSize = 10 * 1024 * 1024;
-    if (file.size > maxSize) {
-      message.error('文件大小超过限制（10MB）');
-      return false; 
-    }
-    return true; 
-  };
 
   return (
     <>
@@ -57,13 +49,7 @@ export default () => {
           <Form.Item name={CONTENT} label='描述'>
             <Input.TextArea />
           </Form.Item>
-
-          <Form.Item name={MATERIAL} label='添加附件'>
-            <Upload beforeUpload={checkFileSize}>
-              <Button icon={<UploadOutlined />}>上传图片</Button>
-            </Upload>
-          </Form.Item>
-
+          <UploadImage />
           <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
             <Button htmlType='button' onClick={onReset} style={{ marginRight: '10px' }}>
               取消
