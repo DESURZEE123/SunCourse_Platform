@@ -97,7 +97,7 @@ const getHomeworkDetailStudent = (req, res) => {
           console.error('Error querying database:', err)
           res.status(500).send('Internal Server Error')
         } else {
-          pool.query('SELECT id, question FROM homework_shortquestion WHERE homework_id = ?;', [homework_id], (err, rows3) => {
+          pool.query('SELECT id, question, file FROM homework_shortquestion WHERE homework_id = ?;', [homework_id], (err, rows3) => {
             if (err) {
               console.error('Error querying database:', err)
               res.status(500).send('Internal Server Error')
@@ -147,7 +147,7 @@ const createHomework = (req, res) => {
     `
   const shortQuestion =
     `INSERT INTO homework_shortquestion
-    (shortId, homework_id, question, answer) 
+    (shortId, homework_id, question, answer, file) 
     VALUES ?;
   `
   const selectTrans = select.map(item => JSON.parse(item));
@@ -166,7 +166,8 @@ const createHomework = (req, res) => {
     item.shortId,
     id,
     item.shortQuestion,
-    item.shortAnswer
+    item.shortAnswer,
+    item.file
   ]);
   pool.query(homeworkDetail, [id, title, date[0], date[1], description, teaId, courseId, select_score, short_score, status], (err, rows) => {
     if (err) {

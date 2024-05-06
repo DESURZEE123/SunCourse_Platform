@@ -59,15 +59,13 @@ export default () => {
       </Button>
       <Modal title='新建话题' closable={false} open={open} footer={null}>
         <Form form={form} {...layout} onFinish={onFinish}>
-
           <Form.Item name={TITLE} label='话题名称' rules={[{ required: true }]}>
             <Input />
           </Form.Item>
-
           <Form.Item name={CONTENT} label='描述'>
             <Input.TextArea />
           </Form.Item>
-          <UploadImage fileName={'discuss'} />
+          <UploadImage fileName={'discuss'} labelName={'添加图片'}/>
           <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
             <Button htmlType='button' onClick={onReset} style={{ marginRight: '10px' }}>
               取消

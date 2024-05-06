@@ -52,17 +52,6 @@ export default () => {
       dataIndex: 'total',
     }
   ]
-
-  // const initialState = select.reduce((acc, item) => ({ ...acc, [item.id]: item.answer }), {});
-  // const [selectedValues, setSelectedValues] = useState(initialState);
-  // const onChange = (id) => (e) => {
-  //   console.log(e.target.value);
-
-  //   setSelectedValues(prevValues => ({
-  //     ...prevValues,
-  //     [id]: e.target.value,
-  //   }));
-  // };
   return (
     <PageContainer>
       <Info>出题人：{teacherMapList.get(parseInt(user.teaId))}</Info>
@@ -72,11 +61,8 @@ export default () => {
         {select.map((item, index) => (
           <>
             {index + 1}.{item.question}
-            {/* <Form.Item key={item.id} name={`radio${index + 1}`}> */}
-            {/* <Radio.Group onChange={(e) => onChange(index + 1, e)} value={form.getFieldValue(`radio${index + 1}`)}> */}
-            {/* <Radio.Group onChange={onChange(item.id)} value={selectedValues[item.id]}> */}
             <div>
-              <Radio.Group value={item.answer}>
+              <Radio.Group value={item[`option_${item.answer}`]}>
                 <Radio value={item.option_A}>{item.option_A}</Radio>
                 <Radio value={item.option_B}>{item.option_B}</Radio>
                 <Radio value={item.option_C}>{item.option_C}</Radio>
@@ -89,12 +75,11 @@ export default () => {
       </Card>
       <QuestionTitle>二、简答题(共{short?.length}题，每题{dataSource[0]?.short / short?.length}分)</QuestionTitle>
       <Card>
-        {short.map((item) => (
+        {short.map((item, index) => (
           <>
-            {item.id}.{item.question}
-            {/* <Form.Item key={item.id} name={`short${item.id}`}> */}
-              <Input.TextArea value={item.answer}/>
-            {/* </Form.Item> */}
+            <div>{index + 1}.{item.question}</div>
+            {item?.file && <Image src={item?.file} />}
+            <Input.TextArea value={item.answer} />
           </>
         ))}
       </Card>

@@ -104,8 +104,6 @@ const HomeWork = () => {
     }
   ]
 
-
-
   return (
     <PageContainer>
       <div>

@@ -9,7 +9,7 @@ const client = new OSS({
   accessKeySecret: '',
 });
 
-export default ({ fileName }) => {
+export default ({ fileName, labelName, name }) => {
   const checkFileSize = (file) => {
     // const maxSize = 10 * 1024 * 1024;
     // if (file.size > maxSize) {
@@ -67,11 +67,11 @@ export default ({ fileName }) => {
   };
 
   return (
-    <Form.Item name={'material'} label='添加附件'>
+    <Form.Item name={name || 'material'} label={labelName}>
       <Upload {...uploadProps}>
         <div>
           <PlusOutlined />
-          <div style={{ marginTop: 8 }}>上传图片</div>
+          <div style={{ marginTop: 8 }}>上传</div>
         </div>
       </Upload>
     </Form.Item>

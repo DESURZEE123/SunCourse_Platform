@@ -137,15 +137,15 @@ const addCourse = (req, res) => {
 
 // 创建课程
 const createCourse = (req, res) => {
-  const { courseId, name, teaId, classId, departId, content, courseIdsList } = req.query
+  const { courseId, name, teaId, classId, departId, content, courseIdsList, material } = req.query
   const queryText = `
   INSERT INTO course (
-    courseId, name, teaId, classId, departId, content
+    courseId, name, teaId, classId, departId, content, file
   ) VALUES (
-    ?, ?, ?, ?, ?, ?
+    ?, ?, ?, ?, ?, ?, ?
   )`;
-  const values = [courseId, name, teaId, classId, departId, content];
-
+  const values = [courseId, name, teaId, classId, departId, content, material];
+console.log(material);
   pool.query(queryText, values, (err, rows) => {
     if (err) {
       console.error('Error querying database:', err)

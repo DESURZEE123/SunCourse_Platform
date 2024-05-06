@@ -4,6 +4,7 @@ import { PlusSquareOutlined, EyeOutlined } from '@ant-design/icons'
 import { history } from 'umi'
 import { storage } from '@/utils'
 import { PageContainer } from '@ant-design/pro-components'
+import UploadImage from '@/components/UploadImage'
 import {
   FORM_SELECT_SCORE,
   FORM_ANSWER_SCORE,
@@ -110,10 +111,24 @@ export default () => {
         selectId: Date.now() % 10000,
         ...select[key]
       }))
-      const shortList = Object.keys(short).map(key => ({
-        shortId: Date.now() % 100000,
-        ...short[key]
-      }));
+      // const shortList = Object.keys(short).map(key => ({
+      //   shortId: Date.now() % 100000,
+      //   ...short[key]
+      // }));
+      const shortList = Object.keys(short).map(key => {
+        const item = short[key];
+        let fileName
+        if (item?.file) {
+          const url = item?.file?.file?.response?.res?.requestUrls?.[0]
+          const parsedUrl = new URL(url);
+          fileName = parsedUrl.origin + parsedUrl.pathname;
+        }
+        return {
+          shortId: Date.now() % 100000,
+          ...item,
+          file: fileName
+        };
+      });
 
       const params = {
         ...prevCount,
@@ -180,6 +195,7 @@ export default () => {
                   <Form.Item name={[FORM_SHORT, `${index + 1}`, FORM_SHORTQUESTION]} label={`简答题${index + 1}`}>
                     <Input />
                   </Form.Item>
+                  <UploadImage fileName={'homework'} labelName={'作业材料'} name={[FORM_SHORT, `${index + 1}`, 'file']} />
                   <Form.Item name={[FORM_SHORT, `${index + 1}`, FORM_SHORTANSWER]} label={`答案${index + 1}`}>
                     <Input />
                   </Form.Item>

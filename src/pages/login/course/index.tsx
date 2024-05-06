@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Form, Cascader, Image, Input, message, Avatar, Carousel, Dropdown, Modal, List, Card, Space, Select, Flex } from 'antd'
 import { history, useModel } from 'umi'
 import { storage, ClassOptionTrans } from '@/utils'
+import UploadImage from '@/components/UploadImage'
 import { getCourseList, addCourse, searchCourse, getMajorList, getClassList, createCourse } from '@/api/user'
 
 const cover1 = require('@/assets/images/cover.png')
@@ -109,12 +110,21 @@ export default () => {
   const onFinish = async (values: any) => {
     const courseId = Date.now() % 1000
     courseIdList.push(courseId)
+    let fileName
+    if (values?.material) {
+      const url = values?.material?.file?.response?.res?.requestUrls?.[0]
+      const parsedUrl = new URL(url);
+      fileName = parsedUrl.origin + parsedUrl.pathname;
+    }
     const params = {
       courseId,
       teaId: parseInt(storage.getItem('userInfo1').teaId),
       classId: values?.classId?.[1] || null,
       courseIdsList: JSON.stringify(courseIdList),
-      ...values
+      material: fileName,
+      name: values.name,
+      content: values.content,
+      departId: values.departId
     }
     const res = await createCourse(params)
     if (res) {
@@ -152,10 +162,10 @@ export default () => {
         </div>
         <List grid={{ gutter: 16, column: 4 }}
           dataSource={courseData}
-          renderItem={({ name, classId, departId, courseId, teaId }) => (
+          renderItem={({ name, classId, departId, courseId, teaId, file }) => (
             <List.Item>
               <Card
-                cover={<img src={class_cover}
+                cover={<img src={file}
                   style={{ objectFit: 'cover', width: '100%', height: '100%' }}
                   onClick={async () => {
                     setShowDeatilModal(true)
@@ -209,6 +219,7 @@ export default () => {
           <Form.Item label="课程简介" name="content">
             <Input.TextArea />
           </Form.Item>
+          <UploadImage fileName={'course'} labelName={'课程封面'} />
           <Form.Item label="所属学院" name={"departId"}>
             <Select options={Array.from(departMapList, ([value, label]) => ({ value, label }))} onChange={selectDepart} />
           </Form.Item>

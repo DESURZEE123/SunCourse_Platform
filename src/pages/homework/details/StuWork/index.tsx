@@ -183,9 +183,9 @@ export default () => {
           {/* 选择题 */}
           <div>
             <QuestionTitle>一、单选题(共{select?.length}题，每题{dataSource[0]?.select / select?.length}分)</QuestionTitle>
-            {select.map((item) => (
+            {select.map((item,index) => (
               <div key={item.id}>
-                {item.id}.{item.question}
+                {index + 1}.{item.question}
                 <Form.Item name={`select${item.id}`}>
                   <Radio.Group>
                     <Radio value={item.option_A}>{item.option_A}</Radio>
@@ -204,10 +204,10 @@ export default () => {
           <div>
             <QuestionTitle>二、简答题(共{short?.length}题，每题{dataSource[0]?.short / short?.length}分)</QuestionTitle>
             <div>
-              {short.map((item) => (
+              {short.map((item,index) => (
                 <div key={item.id}>
-                  <div>第{item.id}题.{item.question}</div>
-                  {/* <Image preview={false} src={QImage} /> */}
+                  <div>第{index + 1}题.{item.question}</div>
+                  {item?.file && <Image preview={false} src={item?.file} />}
                   <Form.Item name={`short${item.id}`}>
                     <Input.TextArea />
                   </Form.Item>
