@@ -4,10 +4,10 @@ export const getTableColumns = () => {
   return [
     {
       title: '文件名',
-      dataIndex: 'activityId',
+      dataIndex: 'name',
       width: 200,
       fieldProps: {
-        placeholder: '请输入活动ID'
+        placeholder: '请输入文件名'
       }
     },
     {
@@ -19,39 +19,39 @@ export const getTableColumns = () => {
         placeholder: '请输入活动名称'
       }
     },
-    {
-      title: '创建日期',
-      dataIndex: 'activityTime',
-      valueType: 'dateRange',
-      width: 350,
-      hideInTable: true,
-      fieldProps: {
-        placeholder: ['开始时间', '结束时间']
-      },
-      search: {
-        transform: (value) => {
-          return {
-            startTime: value[0],
-            endTime: value[1]
-          }
-        }
-      }
-    },
-
-    {
-      title: '创建日期',
-      dataIndex: 'activityTime',
-      valueType: 'dateRange',
-      hideInSearch: true,
-      width: 350
-    },
+    // {
+    //   title: '创建日期',
+    //   dataIndex: 'activityTime',
+    //   valueType: 'dateRange',
+    //   width: 350,
+    //   hideInTable: true,
+    //   fieldProps: {
+    //     placeholder: ['开始时间', '结束时间']
+    //   },
+    //   search: {
+    //     transform: (value) => {
+    //       return {
+    //         startTime: value[0],
+    //         endTime: value[1]
+    //       }
+    //     }
+    //   }
+    // },
+    // {
+    //   title: '创建日期',
+    //   dataIndex: 'activityTime',
+    //   valueType: 'dateRange',
+    //   hideInSearch: true,
+    //   width: 350
+    // },
     {
       title: '操作',
       width: 100,
       valueType: 'option',
       fixed: 'right',
       render: (_, record) => (
-        <Button type='link' danger>
+        <Button type='link' danger onClick={()=> {console.log('record', record.file);
+         open(record?.file)}}>
           查看详情
         </Button>
       )

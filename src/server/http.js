@@ -105,6 +105,10 @@ app.post('/tree', downLoadApi.getTreeData)
 app.post('/tree/change', downLoadApi.changeTreeData)
 // 初始化树形结构
 app.post('/tree/init', downLoadApi.initTreeData)
+// 获取资料数据
+app.post('/material', downLoadApi.getMaterialData)
+// 上传资料数据
+app.post('/material/upload', downLoadApi.uploadMaterialData)
 const port = 3000
 app.listen(port, () => {
   console.log(`Server running on port ${port}`)

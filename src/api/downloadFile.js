@@ -23,3 +23,19 @@ export const initTreeData = async (params) => {
     params
   })
 }
+
+// 获取资料数据
+export const getMaterialData = async (params) => {
+  return request('/api/material', {
+    method: 'post',
+    params
+  })
+}
+
+// 上传资料数据
+export const uploadMaterialData = async (params) => {
+  return request('/api/material/upload', {
+    method: 'post',
+    params
+  })
+}

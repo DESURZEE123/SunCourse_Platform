@@ -47,10 +47,38 @@ const initTreeData = (req, res) => {
   })
 }
 
+// 获取资料数据
+const getMaterialData = (req, res) => {
+  const { courseId } = req.query
+  pool.query('SELECT * FROM DownloadFile where courseId = ?;', [courseId], (err, rows) => {
+    if (err) {
+      res.status(500).send('Internal Server Error')
+    } else {
+      const data = { data: rows, status: 200 }
+      res.status(200).json(data)
+    }
+  })
+}
+
+// 上传资料数据
+const uploadMaterialData = (req, res) => {
+  const { courseId, file, name, selectedId } = req.query
+  pool.query('INSERT INTO DownloadFile (courseId, file, name, selectedId) VALUES (?, ?, ?, ?);', [courseId, file, name, selectedId], (err, rows) => {
+    if (err) {
+      res.status(500).send('Internal Server Error')
+    } else {
+      const data = { status: 200, msg: '上传成功' }
+      res.status(200).json(data)
+    }
+  })
+}
+
 const downLoadApi = {
   getTreeData,
   changeTreeData,
-  initTreeData
+  initTreeData,
+  getMaterialData,
+  uploadMaterialData
 }
 
 export { downLoadApi }
