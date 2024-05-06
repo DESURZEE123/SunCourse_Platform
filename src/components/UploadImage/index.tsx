@@ -9,7 +9,7 @@ const client = new OSS({
   accessKeySecret: '',
 });
 
-export default () => {
+export default ({ fileName }) => {
   const checkFileSize = (file) => {
     // const maxSize = 10 * 1024 * 1024;
     // if (file.size > maxSize) {
@@ -20,12 +20,13 @@ export default () => {
   };
 
   const uploadPath = (path, file) => {
-    return `${path}/${file.name.split(".")[0]}-${file.uid}.${file.type.split("/")[1]}`;
+    // return `${path}/${file.name.split(".")[0]}-${file.uid}.${file.type.split("/")[1]}`;
+    return `${path}/${file.name.split(".")[0]}.${file.type.split("/")[1]}`;
   };
 
   const OssUpload = async (option) => {
     const { file, onSuccess, onProgress, onError } = option;
-    const folder = "discuss";
+    const folder = fileName
     const url = uploadPath(folder, file);
     let data = null;
     try {
@@ -67,7 +68,6 @@ export default () => {
 
   return (
     <Form.Item name={'material'} label='添加附件'>
-
       <Upload {...uploadProps}>
         <div>
           <PlusOutlined />
