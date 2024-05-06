@@ -10,7 +10,7 @@ export async function getInitialState() {
 
 export const layout = () => {
   return {
-    logo: 'https://img.alicdn.com/tfs/TB1YHEpwUT1gK0jSZFhXXaAtVXa-28-27.svg',
+    logo: 'https://img.ixintu.com/upload/jpg/20210623/f085942092a377ba0b8c89baa2b23fc0_57124_800_800.jpg!con',
     menu: {
       locale: false,
     }

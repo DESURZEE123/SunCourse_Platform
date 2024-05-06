@@ -15,7 +15,7 @@ export default defineConfig({
   initialState: {},
   request: {},
   layout: {
-    title: '平台设计',
+    title: '课程平台',
     layout: 'top'
   },
   routes,

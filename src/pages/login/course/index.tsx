@@ -90,7 +90,7 @@ export default () => {
   const getCourse = async () => {
     const res = await getCourseList();
     if (res) {
-      const courseData = allCourse ? res.data : res.data.filter(item => courseIdList.includes(item.courseId));
+      const courseData = allCourse ? res.data : res.data.filter(item => (courseIdList || []).includes(item.courseId));
       setCourseData(courseData)
     }
   }
@@ -168,13 +168,13 @@ export default () => {
                 <div>{departMapList.get(departId)}</div>
                 <div className='flex-container'>
                   <div>{classMapList.get(classId)}</div>
-                  {courseIdList.includes(courseId) && (
+                  {(courseIdList || []).includes(courseId) && (
                     <Button type='primary' onClick={() => {
                       storage.setItem('courseId', courseId)
                       history.push('/home')
                     }}>进入课程</Button>
                   )}
-                  {!courseIdList.includes(courseId) && !user.isTeacher && (
+                  {!(courseIdList || []).includes(courseId) && !user.isTeacher && (
                     <Button type='primary'
                       onClick={() => {
                         Modal.confirm({
