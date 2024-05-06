@@ -4,24 +4,30 @@ import { PageContainer } from '@ant-design/pro-components'
 import { useModel } from 'umi'
 import NewModel from './NewModel'
 import { findDiscuss, getDiscussList, SearchDiscuss } from '@/api/discuss'
-import { discussTrans } from '../../utils'
+import { discussTrans, storage } from '../../utils'
 
+const user = storage.getItem('userInfo1')
+const courseId = storage.getItem('courseId')
 const Discuss = () => {
   const { Search } = Input
+  const { teacherMapList, studentMapList } = useModel('course')
   const { discussList, setDiscussList } = useModel('system')
 
   const onSearch = async (value: string) => {
-    const res = await SearchDiscuss({ title: value })
-    setDiscussList((discussTrans(res)))
+    const data = await SearchDiscuss({ title: value })
+    const filterData = data.filter((item) => item.idCourse === courseId)
+    setDiscussList(discussTrans(filterData))
   }
 
   const allDiscussion = async () => {
-    const res = await getDiscussList()
-    setDiscussList((discussTrans(res)))
+    const data = await getDiscussList()
+    const filterData = data.filter((item) => item.idCourse === courseId)
+    setDiscussList(discussTrans(filterData))
   }
 
   const FindDiscuss = async () => {
-    const res = await findDiscuss({ id: 1 })
+    const DisName = user?.teaId ? teacherMapList.get(parseInt(user.teaId)) : studentMapList.get(parseInt(user.stuId))
+    const res = await findDiscuss({ DisName })
     setDiscussList(res)
   }
 

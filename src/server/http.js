@@ -83,7 +83,7 @@ app.post('/discuss/new', discussApi.newDiscuss)
 app.post('/discuss/replay', discussApi.replayDiscuss)
 
 // 查找讨论
-app.post('/discuss/id=:id', discussApi.findDiscuss)
+app.post('/discuss/my', discussApi.findDiscuss)
 
 // 查找讨论，有bug，应该查询出对应IdDiscuss，再去查找；否则会不显示回复数量
 app.post('/discuss/search/title=:title', discussApi.SearchDiscuss)

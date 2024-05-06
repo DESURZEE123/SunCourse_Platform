@@ -45,21 +45,21 @@ const changeLike = (req, res) => {
 }
 // 新建讨论
 const newDiscuss = (req, res) => {
-  const { idDiscussion, idCourse, replayId, belongId, DisName, title, content } = req.body
+  const { idDiscussion, idCourse, replayId, belongId, DisName, title, content, material } = req.body
   const queryText = `
   INSERT INTO discussion (
-    idDiscussion, idCourse, replayId, belongId, DisName, title, content
+    idDiscussion, idCourse, replayId, belongId, DisName, title, content, file
   ) VALUES (
-    ?, ?, ?, ?, ?, ?, ?
+    ?, ?, ?, ?, ?, ?, ?, ?
   )`;
-  const values = [idDiscussion, idCourse, replayId, belongId, DisName, title, content];
-
+  const values = [idDiscussion, idCourse, replayId, belongId, DisName, title, content, material];
   pool.query(queryText, values, (err, rows) => {
     if (err) {
       console.error('Error querying database:', err)
       res.status(500).send('Internal Server Error')
     } else {
-      res.json(rows)
+      const data = { status: 200, msg: '新建成功' };
+      res.status(200).json(data);
     }
   })
 }
@@ -86,8 +86,8 @@ const replayDiscuss = (req, res) => {
 }
 // 查找讨论
 const findDiscuss = (req, res) => {
-  const { id } = req.params
-  pool.query(`SELECT * FROM discussion WHERE id = ? and replayId = 0;`, [id], (err, rows) => {
+  const { DisName } = req.body
+  pool.query(`SELECT * FROM discussion WHERE DisName = ? and replayId = 0;`, [DisName], (err, rows) => {
     if (err) {
       console.error('Error querying database:', err)
       res.status(500).send('Internal Server Error')
@@ -99,7 +99,6 @@ const findDiscuss = (req, res) => {
 // 搜索讨论
 const SearchDiscuss = (req, res) => {
   const { title } = req.params
-  console.log(title);
   pool.query(`SELECT * FROM discussion WHERE title LIKE ? and replayId = 0;`, [`%${title}%`], (err, rows) => {
     if (err) {
       console.error('Error querying database:', err)

@@ -11,7 +11,7 @@ export const newDiscuss = (parmas) => post(`/api/discuss/new`, parmas)
 // 回复
 export const replayDiscuss = (parmas) => post(`/api/discuss/replay`, parmas)
 // 查找讨论
-export const findDiscuss = (params) => post(`/api/discuss/id=${params.id}`, params)
+export const findDiscuss = (params) => post(`/api/discuss/my`, params)
 // 搜索讨论
 export const SearchDiscuss = (params) => post(`/api/discuss/search/title=${params.title}`, params)
 

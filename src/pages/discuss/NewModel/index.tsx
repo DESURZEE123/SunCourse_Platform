@@ -1,7 +1,9 @@
 import { useState } from 'react'
-import UploadImage from '@/components/UploadImage'
+import { useModel } from 'umi'
 import { Button, Form, Input, Modal, message } from 'antd'
+import UploadImage from '@/components/UploadImage'
 import { newDiscuss } from '@/api/discuss'
+import { storage } from '@/utils'
 import { TITLE, CONTENT, MATERIAL } from '@/constants'
 
 const layout = {
@@ -9,7 +11,11 @@ const layout = {
   wrapperCol: { span: 16 }
 }
 
+const courseId = storage.getItem('courseId')
+const user = storage.getItem('userInfo1')
 export default () => {
+  const { teacherMapList, studentMapList } = useModel('course')
+
   const [open, setOpen] = useState(false)
   const [form] = Form.useForm()
 
@@ -18,13 +24,25 @@ export default () => {
   }
 
   const onFinish = async (values: any) => {
-    console.log('Success:', values);
-
-    const idDiscussion = Date.now()
+    let fileName
+    if (form.getFieldValue(MATERIAL)) {
+      const url = form.getFieldValue(MATERIAL)?.file?.response?.res?.requestUrls?.[0]
+      const parsedUrl = new URL(url);
+      fileName = parsedUrl.origin + parsedUrl.pathname;
+    }
+    const idDiscussion = Date.now() % 100000
     const belongId = idDiscussion
-    const data = { ...values, idDiscussion, belongId, idCourse: 1, replayId: 0, DisName: 'wyy' }
+    const DisName = user?.teaId ? teacherMapList.get(parseInt(user.teaId)) : studentMapList.get(parseInt(user.stuId))
+    const data = { ...values, material: fileName, idDiscussion, belongId, idCourse: courseId, replayId: 0, DisName }
     const res = await newDiscuss(data)
-    message.success('新建成功')
+    if (res.status === 200) {
+      message.success('新建成功');
+      setTimeout(() => {
+        location.reload();
+      }, 1300)
+    } else {
+      message.error('新建失败');
+    }
 
     setOpen(false)
   }
@@ -49,7 +67,7 @@ export default () => {
           <Form.Item name={CONTENT} label='描述'>
             <Input.TextArea />
           </Form.Item>
-          <UploadImage />
+          <UploadImage fileName={'discuss'} />
           <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
             <Button htmlType='button' onClick={onReset} style={{ marginRight: '10px' }}>
               取消
