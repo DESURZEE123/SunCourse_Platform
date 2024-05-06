@@ -1,6 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
-import { Input, Popconfirm, Tree, Form, Modal, Upload, Button, Flex } from 'antd'
+import { Input, Popconfirm, Tree, Form, Modal, Upload, Button, Flex, message } from 'antd'
+import { getTreeData, changeTreeData } from '@/api/downloadFile'
+import { storage } from '@/utils'
+
 import styled from 'styled-components'
 
 const CatalogText = styled.div`
@@ -12,81 +15,34 @@ const CatalogText = styled.div`
 `
 const { TreeNode } = Tree
 let tempKey = '1000'
-const treeDataTemp = [
-  {
-    title: `${'战略管理'}`,
-    key: '0-0',
-    children: [
-      {
-        title: '第一单元 战略管理导论',
-        key: '0-0-0',
-        children: [
-          {
-            title: '1.1 教学课件-1.战略管理导论',
-            key: '0-0-0-0'
-          },
-          {
-            title: '1.2 课后思考-1',
-            key: '0-0-0-1'
-          }
-        ]
-      },
-      {
-        title: '第二单元 战略导航：使命、愿景与目标',
-        key: '0-0-1',
-        children: [
-          {
-            title: '2.1 教学课件-2.战略导航',
-            key: '0-0-1-0'
-          },
-          {
-            title: '2.2 课后思考-2',
-            key: '0-0-1-1'
-          }
-        ]
-      },
-      {
-        title: '第二单元 外部环境与分析',
-        key: '0-0-2',
-        children: [
-          {
-            title: '3.1 教学课件-3.外部环境分析',
-            key: '0-0-2-0'
-          },
-          {
-            title: '3.2 课后思考-3',
-            key: '0-0-2-1'
-          }
-        ]
-      },
-      {
-        title: '第四单元 内部环境与分析',
-        key: '0-0-3',
-        children: [
-          {
-            title: '4.1 教学课件-4.内部环境分析',
-            key: '0-0-3-0'
-          },
-          {
-            title: '4.2 课后思考-4',
-            key: '0-0-3-1'
-          },
-          {
-            title: '4.3 视频：波特五力模型',
-            key: '0-0-3-2'
-          }
-        ]
-      }
-    ]
-  }
-]
+const courseId = storage.getItem('courseId')
 export default (props) => {
   const { onHandleCancel = () => { }, onHandleOk = () => { }, data = {} } = props
   const [form] = Form.useForm()
   const [showValue, setShowValue] = useState(false)
   const [changeValue, setChangeValue] = useState('')
   const [showValueKey, setShowValueKey] = useState('')
-  const [treeData, setTreeData] = useState(treeDataTemp)
+  const [treeData, setTreeData] = useState([])
+
+  const getTreeDataList = async () => {
+    const res = await getTreeData({ courseId })
+    if (res.status === 200) {
+      if (res?.data?.treeContent) {
+        try {
+          const parsedData = JSON.parse(res.data.treeContent);
+          setTreeData([parsedData]);
+        } catch (error) {
+          console.error('解析目录失败', error);
+        }
+      }
+    } else {
+      console.log('获取目录失败');
+    }
+  }
+
+  useEffect(() => {
+    getTreeDataList()
+  }, [])
 
   const onAdd = (key) => {
     console.log('onAdd', key)
@@ -181,7 +137,15 @@ export default (props) => {
   }
 
   const onSave = (values: any) => {
-    console.log(values)
+    console.log(treeData, '~~~~~~~~~~~~~~~');
+    changeTreeData({ courseId, treeContent: treeData }).then(res => {
+      // changeTreeData({ courseId, treeContent: JSON.stringify(treeData[0]) }).then(res => {
+      if (res.status === 200) {
+        message.success('保存成功')
+      } else {
+        message.error('保存失败')
+      }
+    })
   }
 
   const onReset = () => {
@@ -212,10 +176,12 @@ export default (props) => {
   return (
     <>
       <CatalogText>目录资料更改</CatalogText>
-      <Tree className='draggable-tree' defaultExpandAll={true} titleRender={onTitleRender}>
-        {treeData?.length && renderTreeNodes(treeData)}
-      </Tree>
-      <Modal title="小杰内容" open={showValue} onOk={onFinish} onCancel={() => { setShowValue(false); setShowValueKey(''); form.resetFields() }}>
+      {treeData.length > 0 && (
+        <Tree className='draggable-tree' defaultExpandAll={true} titleRender={onTitleRender}>
+          {treeData?.length && renderTreeNodes(treeData)}
+        </Tree>
+      )}
+      <Modal title="小节内容" open={showValue} onOk={onFinish} onCancel={() => { setShowValue(false); setShowValueKey(''); form.resetFields() }}>
         <Form form={form} >
           <Form.Item label="标题名称" name="title">
             <Input placeholder={'请输入更新标题'} />

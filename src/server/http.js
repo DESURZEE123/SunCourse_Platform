@@ -2,6 +2,7 @@ import { discussApi } from './detail/discussion.js';
 import { loginApi } from './detail/login.js';
 import { userApi } from './detail/user.js';
 import { homeworkApi } from './detail/homework.js';
+import { downLoadApi } from './detail/downloadFile.js';
 // const http = require('http');//用于搭建服务器
 import express from 'express';
 
@@ -98,6 +99,12 @@ app.post('/homework/submit', homeworkApi.submitHomework)
 // 教师创建作业
 app.post('/homework/create', homeworkApi.createHomework)
 
+// 获取树形结构
+app.post('/tree', downLoadApi.getTreeData)
+// 改变树形结构
+app.post('/tree/change', downLoadApi.changeTreeData)
+// 初始化树形结构
+app.post('/tree/init', downLoadApi.initTreeData)
 const port = 3000
 app.listen(port, () => {
   console.log(`Server running on port ${port}`)

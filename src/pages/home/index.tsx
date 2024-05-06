@@ -1,7 +1,8 @@
+import React, { useState, useEffect } from 'react'
 import { Col, Row, Button, Tree } from 'antd'
 import { useModel, history } from 'umi'
 import DiscussCard from '@/components/DiscussCard'
-import TreeDirectory from './TreeDirectory'
+import { getTreeData, initTreeData } from '@/api/downloadFile'
 import { storage } from '@/utils'
 
 import styled from 'styled-components'
@@ -15,18 +16,18 @@ const CatalogText = styled.div`
   background:#f0f0f0;
 `
 const user = storage.getItem('userInfo1')
-
-const treeData = [
+const courseId = storage.getItem('courseId')
+const treeData1 = [
   {
-    title: `${'战略管理'}`,
+    title: `${'示例目录'}`,
     key: '0-0',
     children: [
       {
-        title: '第一单元 战略管理导论',
+        title: '第一单元',
         key: '0-0-0',
         children: [
           {
-            title: '1.1 教学课件-1.战略管理导论',
+            title: '1.1 教学课件-1.',
             key: '0-0-0-0'
           },
           {
@@ -36,48 +37,16 @@ const treeData = [
         ]
       },
       {
-        title: '第二单元 战略导航：使命、愿景与目标',
+        title: '第二单元',
         key: '0-0-1',
         children: [
           {
-            title: '2.1 教学课件-2.战略导航',
+            title: '2.1 教学课件-2.',
             key: '0-0-1-0'
           },
           {
             title: '2.2 课后思考-2',
             key: '0-0-1-1'
-          }
-        ]
-      },
-      {
-        title: '第二单元 外部环境与分析',
-        key: '0-0-2',
-        children: [
-          {
-            title: '3.1 教学课件-3.外部环境分析',
-            key: '0-0-2-0'
-          },
-          {
-            title: '3.2 课后思考-3',
-            key: '0-0-2-1'
-          }
-        ]
-      },
-      {
-        title: '第四单元 内部环境与分析',
-        key: '0-0-3',
-        children: [
-          {
-            title: '4.1 教学课件-4.内部环境分析',
-            key: '0-0-3-0'
-          },
-          {
-            title: '4.2 课后思考-4',
-            key: '0-0-3-1'
-          },
-          {
-            title: '4.3 视频：波特五力模型',
-            key: '0-0-3-2'
           }
         ]
       }
@@ -86,9 +55,29 @@ const treeData = [
 ]
 const HomePage = () => {
   const { discussList } = useModel('system')
+  const [treeData, setTreeData] = useState([])
   const onSelect = (selectedKeys, info) => {
     console.log('selected', selectedKeys, info)
   }
+  const getTreeDataList = async () => {
+    const res = await getTreeData({ courseId })
+    if (res.status === 200) {
+      if (!res?.data?.treeContent) {
+        await initTreeData({ courseId, treeData: treeData1 })
+        setTreeData(treeData1)
+      } else {
+        const parsedData = [res.data.treeContent].map(item => JSON.parse(item));
+        setTreeData(parsedData)
+      }
+    } else {
+      console.log('获取目录失败')
+    }
+  }
+
+  useEffect(() => {
+    getTreeDataList()
+  }, [])
+
   return (
     <>
       <Row gutter={16}>
@@ -98,9 +87,8 @@ const HomePage = () => {
               <div>目录</div>
               {user.isTeacher && <Button type='primary' onClick={() => { history.push('/material/edit') }}>编辑目录</Button>}
             </CatalogText>
-            <Tree style={{ fontSize: '18px' }} defaultExpandAll={true} defaultExpandedKeys={['0-0-0']} onSelect={onSelect} treeData={treeData} />
+            {treeData.length > 0 && <Tree style={{ fontSize: '18px' }} defaultExpandAll={true} defaultExpandedKeys={['0-0-0']} onSelect={onSelect} treeData={treeData} />}
           </div>
-
         </Col>
         <Col span={12}>
           {discussList.map((item: { idDiscussion: number }) => {
