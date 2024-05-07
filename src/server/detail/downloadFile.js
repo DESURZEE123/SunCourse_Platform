@@ -73,12 +73,41 @@ const uploadMaterialData = (req, res) => {
   })
 }
 
+// 查找资料数据
+const searchMaterialData = (req, res) => {
+  const { courseId, name } = req.query
+  pool.query('SELECT * FROM DownloadFile where courseId = ? and name like ?;', [courseId, `%${name}%`], (err, rows) => {
+    if (err) {
+      res.status(500).send('Internal Server Error')
+    } else {
+      const data = { data: rows, status: 200 }
+      res.status(200).json(data)
+    }
+  })
+}
+
+// 删除资料数据
+const deleteMaterialData = (req, res) => {
+  const { courseId, fileId } = req.query
+  console.log(courseId, fileId);
+  pool.query('DELETE FROM DownloadFile where courseId = ? and fileId = ?;', [courseId, fileId], (err, rows) => {
+    if (err) {
+      res.status(500).send('Internal Server Error')
+    } else {
+      const data = { status: 200, msg: '删除成功' }
+      res.status(200).json(data)
+    }
+  })
+}
+
 const downLoadApi = {
   getTreeData,
   changeTreeData,
   initTreeData,
   getMaterialData,
-  uploadMaterialData
+  uploadMaterialData,
+  searchMaterialData,
+  deleteMaterialData
 }
 
 export { downLoadApi }

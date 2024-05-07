@@ -39,3 +39,19 @@ export const uploadMaterialData = async (params) => {
     params
   })
 }
+
+// 查找资料数据
+export const searchMaterialData = async (params) => {
+  return request('/api/material/search', {
+    method: 'post',
+    params
+  })
+}
+
+// 删除资料数据
+export const deleteMaterialData = async (params) => {
+  return request('/api/material/delete', {
+    method: 'post',
+    params
+  })
+}

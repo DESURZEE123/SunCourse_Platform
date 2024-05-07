@@ -109,6 +109,10 @@ app.post('/tree/init', downLoadApi.initTreeData)
 app.post('/material', downLoadApi.getMaterialData)
 // 上传资料数据
 app.post('/material/upload', downLoadApi.uploadMaterialData)
+// 查找资料数据
+app.post('/material/search', downLoadApi.searchMaterialData)
+// 删除资料数据
+app.post('/material/delete', downLoadApi.deleteMaterialData)
 const port = 3000
 app.listen(port, () => {
   console.log(`Server running on port ${port}`)

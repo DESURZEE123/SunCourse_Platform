@@ -3,7 +3,7 @@ import { ProTable } from '@ant-design/pro-components'
 import { Button, Modal, Form, } from 'antd'
 import UploadImage from '@/components/UploadImage'
 import { getTableColumns } from './tableConfig'
-import { getMaterialData, uploadMaterialData } from '@/api/downloadFile'
+import { getMaterialData, uploadMaterialData, searchMaterialData } from '@/api/downloadFile'
 import { storage } from '@/utils'
 
 const layout = {
@@ -16,7 +16,7 @@ const Material = () => {
   const [dataSource, setDataSource] = useState([])
   const [open, setOpen] = useState(false)
   const [form] = Form.useForm()
-  const columns = getTableColumns()
+  const columns = getTableColumns(setDataSource)
 
   useEffect(() => {
     getMaterialData({ courseId }).then(res => {
@@ -48,10 +48,21 @@ const Material = () => {
       }
     })
   }
+
   const onReset = () => {
     form.resetFields()
     setOpen(false)
   }
+
+  const searchFile = async (formProps) => {
+    const { name } = formProps.form.getFieldsValue()
+    searchMaterialData({ courseId, name }).then(res => {
+      if (res?.data?.length !== 0) {
+        setDataSource(res.data)
+      }
+    })
+  }
+
   return (
     <>
       <div>课程资料</div>
@@ -61,8 +72,8 @@ const Material = () => {
           collapsed: false,
           collapseRender: () => '',
           optionRender: (_, formProps) => [
-            <Button type='primary' onClick={() => { formProps?.form?.submit() }}>搜索</Button>,
-            <Button onClick={() => { setOpen(true) }}>上传资料</Button>
+            <Button onClick={() => { setOpen(true) }}>上传资料</Button>,
+            <Button type='primary' onClick={() => { searchFile(formProps) }}>搜索</Button>,
           ]
         }}
         dataSource={dataSource}

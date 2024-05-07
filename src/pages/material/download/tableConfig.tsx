@@ -1,6 +1,21 @@
-import { Button } from 'antd'
+import { Button, message } from 'antd'
+import { deleteMaterialData, getMaterialData } from '@/api/downloadFile'
+import { storage } from '@/utils'
 
-export const getTableColumns = () => {
+const courseId = storage.getItem('courseId')
+export const getTableColumns = (setDataSource) => {
+  const deleteFile = (fileId) => {
+    deleteMaterialData({ courseId, fileId }).then(res => {
+      if (res.status === 200) {
+        message.success('删除成功')
+        getMaterialData({ courseId }).then(res => {
+          if (res.status === 200) {
+            setDataSource(res.data)
+          }
+        })
+      }
+    })
+  }
   return [
     {
       title: '文件名',
@@ -19,41 +34,21 @@ export const getTableColumns = () => {
         placeholder: '请输入活动名称'
       }
     },
-    // {
-    //   title: '创建日期',
-    //   dataIndex: 'activityTime',
-    //   valueType: 'dateRange',
-    //   width: 350,
-    //   hideInTable: true,
-    //   fieldProps: {
-    //     placeholder: ['开始时间', '结束时间']
-    //   },
-    //   search: {
-    //     transform: (value) => {
-    //       return {
-    //         startTime: value[0],
-    //         endTime: value[1]
-    //       }
-    //     }
-    //   }
-    // },
-    // {
-    //   title: '创建日期',
-    //   dataIndex: 'activityTime',
-    //   valueType: 'dateRange',
-    //   hideInSearch: true,
-    //   width: 350
-    // },
     {
       title: '操作',
       width: 100,
       valueType: 'option',
       fixed: 'right',
       render: (_, record) => (
-        <Button type='link' danger onClick={()=> {console.log('record', record.file);
-         open(record?.file)}}>
-          查看详情
-        </Button>
+        <>
+          <Button type='link' onClick={() => { open(record?.file) }}>
+            资料下载
+          </Button>
+          <Button type='link' danger onClick={() => { deleteFile(record.fileId) }}>
+            删除
+          </Button>
+        </>
+
       )
     }
   ]
