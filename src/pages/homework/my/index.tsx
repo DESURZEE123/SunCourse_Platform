@@ -51,22 +51,24 @@ const HomeWork = () => {
           search: `?id=${homework_id}`
         })
       }
-    } else if (isMark === 0) {
-      message.error('作业未批改')
-    } else if (isMark === 1) {
-      history.push({
-        pathname: '/homework/my/details/StuWork',
-        search: `?id=${homework_id}?isMark=1?stuId=${stuId}`
-      })
-    } else {
-      const res = await getHomeworStudentFinish({ courseId, isFinish: 1, stuId: user?.stuId })
-      if (res.data.length === 0) {
+    } else if (!user.isTeacher) {
+      if (isMark === 0) {
+        message.error('作业未批改')
+      } else if (isMark === 1) {
         history.push({
           pathname: '/homework/my/details/StuWork',
-          search: `?id=${homework_id}?isMark=3?stuId=${user.stuId}`
+          search: `?id=${homework_id}?isMark=1?stuId=${stuId}`
         })
       } else {
-        message.error('作业已完成')
+        const res = await getHomeworStudentFinish({ courseId, isFinish: 1, stuId: user?.stuId })
+        if (res.data.length === 0) {
+          history.push({
+            pathname: '/homework/my/details/StuWork',
+            search: `?id=${homework_id}?isMark=3?stuId=${user.stuId}`
+          })
+        } else {
+          message.error('作业已完成')
+        }
       }
     }
   }
