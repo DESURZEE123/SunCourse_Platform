@@ -33,7 +33,7 @@ const HomeWork = () => {
     getHomeWorkData()
   }, [])
 
-  const goDetail = ({ homework_id, isMark, stuId }) => {
+  const goDetail = async ({ homework_id, isMark, stuId }) => {
     if (user.isTeacher) {
       if (isMark === 0) {
         history.push({
@@ -59,10 +59,15 @@ const HomeWork = () => {
         search: `?id=${homework_id}?isMark=1?stuId=${stuId}`
       })
     } else {
-      history.push({
-        pathname: '/homework/my/details/StuWork',
-        search: `?id=${homework_id}?isMark=3?stuId=${user.stuId}`
-      })
+      const res = await getHomeworStudentFinish({ courseId, isFinish: 1, stuId: user?.stuId })
+      if (res.data.length === 0) {
+        history.push({
+          pathname: '/homework/my/details/StuWork',
+          search: `?id=${homework_id}?isMark=3?stuId=${user.stuId}`
+        })
+      } else {
+        message.error('作业已完成')
+      }
     }
   }
 
