@@ -12,6 +12,7 @@ const layout = {
 }
 
 const courseId = storage.getItem('courseId')
+const user = storage.getItem('userInfo1')
 const Material = () => {
   const [dataSource, setDataSource] = useState([])
   const [open, setOpen] = useState(false)
@@ -71,10 +72,12 @@ const Material = () => {
         search={{
           collapsed: false,
           collapseRender: () => '',
-          optionRender: (_, formProps) => [
-            <Button onClick={() => { setOpen(true) }}>上传资料</Button>,
-            <Button type='primary' onClick={() => { searchFile(formProps) }}>搜索</Button>,
-          ]
+          optionRender: (_, formProps) => (
+            <>
+              {user.isTeacher && <Button onClick={() => { setOpen(true) }} style={{ marginRight: '10px' }}>上传资料</Button>}
+              <Button type='primary' onClick={() => { searchFile(formProps) }}>搜索</Button>
+            </>
+          )
         }}
         dataSource={dataSource}
         columns={columns}
