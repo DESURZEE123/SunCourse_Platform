@@ -22,18 +22,19 @@ export default [
   },
   {
     name: '首页',
-    icon: 'SmileOutlined',
     path: '/home',
+    icon: 'SmileOutlined',
+    access: 'canAccess',
     // layout: false,  // 不使用layout配置
     routes: [
       { path: '/home', component: './home' },
-      // { path: '/home/edit', component: './home/edit' }
     ]
   },
   {
     name: '资料查询',
     path: '/material',
     icon: 'FolderOutlined',
+    access: 'canAccess',
     // component: './material',
     routes: [
       { path: '/material/download', name: '资料下载', component: './material/download' },
@@ -44,6 +45,7 @@ export default [
     name: '课后作业',
     path: '/homework',
     icon: 'FileDoneOutlined',
+    access: 'canAccess',
     routes: [
       { path: '/homework/my', name: '我的作业', component: './homework/my' },
       { path: '/homework/new', name: '发布作业', access: 'isTeacher', component: './homework/new' },
@@ -55,7 +57,7 @@ export default [
     name: '讨论区域',
     path: '/discuss',
     icon: 'TeamOutlined',
-    // component: './discuss'
+    access: 'canAccess',
     routes: [
       { path: '/discuss', component: './discuss' },
       { path: '/discuss/detail', component: './discuss/detail' },
@@ -70,13 +72,8 @@ export default [
       { path: '/users/userGroup', name: '人员管理', component: './users/userGroup' },
       { path: '/users/classGroup', name: '学院管理', component: './users/classGroup' },
       { path: '/users/courseGroup', name: '课程管理', component: './users/courseGroup' }
-    ]
+    ],
   },
-  // {
-  //   name: '权限管理',
-  //   path: '/access',
-  //   component: './access'
-  // },
   {
     path: '/*',
     layout: false,

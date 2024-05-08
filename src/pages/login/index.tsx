@@ -34,8 +34,8 @@ export default () => {
         storage.setItem('userInfo1', { admin: true })
         setTimeout(() => {
           location.reload();
-          history.push('/home')
-        }, 1300)
+        }, 800)
+        history.push('/users/userGroup')
       } else if (status === 404) {
         message.error('账号或密码错误')
       }
@@ -97,18 +97,19 @@ export default () => {
                 <Select
                   options={[
                     { label: '学生', value: false },
-                    { label: '老师', value: true }
+                    { label: '老师', value: true },
+                    { label: '管理员', value: '1' }
                   ]}
-                  onChange={(value) => setIsTeacher(value)}
+                  onChange={(value) => { if (value === '1') { setIsTeacher(true) } else { setIsTeacher(value) } }}
                   placeholder="请选择身份"
                 />
               </Form.Item>
               {
                 isTeacher ?
-                  <Form.Item label="教工号" name={["login", "teaId"]}>
+                  <Form.Item label="账号" name={["login", "teaId"]}>
                     <Input placeholder='请输入教工号' />
                   </Form.Item> :
-                  <Form.Item label="学号" name={["login", "stuId"]}>
+                  <Form.Item label="账号" name={["login", "stuId"]}>
                     <Input placeholder='请输入学号' />
                   </Form.Item>
               }
