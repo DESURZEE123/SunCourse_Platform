@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from 'react'
-import { Avatar, Button, Card, Input, Space, message, Image } from 'antd'
+import { Avatar, Button, Card, Input, Space, message, Image, Collapse } from 'antd'
 import { history, useModel } from 'umi'
 import { BarsOutlined, LikeOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons'
-import { changeLike, getDiscussList, replayDiscuss } from '@/api/discuss'
+import { changeLike, getDiscussList, replayDiscuss, getDiscussDetail } from '@/api/discuss'
 import { discussTrans, storage } from '@/utils'
 import styled from 'styled-components'
 
@@ -12,13 +12,13 @@ const ReplayLike = styled.div`
 `
 const courseId = storage.getItem('courseId')
 const user = storage.getItem('userInfo1')
-export default ({ TitleList }: { TitleList: string[] }) => {
+export default ({ TitleList, hasReplay }: { TitleList: string[], hasReplay: boolean }) => {
   const { setDiscussList } = useModel('system')
   const { teacherMapList, studentMapList } = useModel('course')
   const [isReplay, setIsReplay] = useState(false)
+  const [replayList, setReplayList] = useState([])
   const [isLike, setIsLike] = useState(false)
   const [LikeNum, setLikeNum] = useState(0)
-  console.log(TitleList);
 
   const { idDiscussion, DisName, title, data, content, asList = [], like, file, nameId } = TitleList
   const inputRef = useRef()
@@ -62,6 +62,15 @@ export default ({ TitleList }: { TitleList: string[] }) => {
     }
   }
 
+  const getReplayList = async () => {
+    const res = await getDiscussDetail({ idDiscussion })
+    setReplayList(res)
+  }
+
+  useEffect(() => {
+    getReplayList()
+  }, [])
+
   return (
     <Card style={{ marginBottom: '10px' }}>
       <Space>
@@ -87,7 +96,7 @@ export default ({ TitleList }: { TitleList: string[] }) => {
                 setIsReplay((prevState) => !prevState)
               }}
             />
-            <span className='text-detail'> 回复 {asList.length}</span>
+            <span className='text-detail'> 回复 {!hasReplay ? asList.length : replayList.length}</span>
           </div>
           {/* 赞 */}
           <div style={{ marginRight: '15px' }}>
@@ -128,6 +137,20 @@ export default ({ TitleList }: { TitleList: string[] }) => {
           </div>
         </div>
       )}
+      {hasReplay && <Collapse
+        items={[{
+          key: '1', label: '回复详情',
+          children: <div>{replayList.map((item) => (
+            <div>
+              <span>{item.DisName}
+                {(item?.nameId && user?.isTeacher) && <span className='text-detail'> (账号 {item?.nameId})</span>}
+              </span>
+              <span>：  {item.content}</span>
+            </div>
+          ))}</div>
+        }]}
+        style={{ margin: '9px 0 -15px' }}
+      />}
     </Card>
   )
 }

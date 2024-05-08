@@ -43,10 +43,10 @@ export default () => {
       </div>
       <Line />
       <Card>
-        {disDetailList[0] && <DiscussCard TitleList={disDetailList[0]} />}
+        {disDetailList[0] && <DiscussCard TitleList={disDetailList[0]} hasReplay={false}/>}
         {(disDetailList[0]?.asList || []).length !== 0 && disDetailList[0].asList.map((item: { idDiscussion: number }) => (
           <div style={{ paddingLeft: '30px', marginTop: '-5px' }}>
-            <DiscussCard TitleList={item} />
+            <DiscussCard TitleList={item} hasReplay={true}/>
           </div>
         ))}
       </Card>
