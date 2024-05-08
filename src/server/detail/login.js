@@ -51,11 +51,11 @@ const registerTeacher = (req, res) => {
 }
 // 学生注册
 const registerStudent = (req, res) => {
-  const { Id, name, classValue, password, classId, departId } = req.query
+  const { Id, name, classValue, password, classId, departId, courseId } = req.query
   const sql = `INSERT INTO Student
-    (StuId, name, class, password, classId, departId ) 
-    VALUES (?, ?, ?, ?, ?, ?)`;
-  const values = [Id, name, classValue, password, classId, departId];
+    (StuId, name, class, password, classId, departId, courseId ) 
+    VALUES (?, ?, ?, ?, ?, ?, ?)`;
+  const values = [Id, name, classValue, password, classId, departId, courseId];
 
   pool.query(sql, values, (err, rows) => {
     if (err) {
@@ -88,7 +88,7 @@ const getStudentInfo = (req, res) => {
       console.error('Error querying database:', err)
       res.status(500).send('Internal Server Error')
     } else {
-      const data = { status: 200, data: { ...rows[0], Id: rows[0].stuId } };
+      const data = { status: 200, data: { ...rows[0], Id: rows[0]?.stuId } };
       res.status(200).json(data);
     }
   })

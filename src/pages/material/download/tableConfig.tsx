@@ -3,6 +3,8 @@ import { deleteMaterialData, getMaterialData } from '@/api/downloadFile'
 import { storage } from '@/utils'
 
 const courseId = storage.getItem('courseId')
+const user = storage.getItem('userInfo1')
+
 export const getTableColumns = (setDataSource) => {
   const deleteFile = (fileId) => {
     deleteMaterialData({ courseId, fileId }).then(res => {
@@ -44,11 +46,8 @@ export const getTableColumns = (setDataSource) => {
           <Button type='link' onClick={() => { open(record?.file) }}>
             资料下载
           </Button>
-          <Button type='link' danger onClick={() => { deleteFile(record.fileId) }}>
-            删除
-          </Button>
+          {user?.teaId && <Button type='link' danger onClick={() => { deleteFile(record.fileId) }}>删除</Button>}
         </>
-
       )
     }
   ]

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
 import { Input, Popconfirm, Tree, Form, Modal, Upload, Button, Flex, message } from 'antd'
-import { getTreeData, changeTreeData } from '@/api/downloadFile'
+import UploadImage from '@/components/UploadImage'
+import { getTreeData, changeTreeData, uploadSingleTreeDataFile } from '@/api/downloadFile'
 import { storage } from '@/utils'
 
 import styled from 'styled-components'
@@ -133,13 +134,26 @@ export default (props) => {
     onChange(showValueKey, form.getFieldValue('title'))
     setShowValue(false)
     setChangeValue('')
-    // form.resetFields()
+    let fileName
+    let name
+    if (form.getFieldValue('material')) {
+      const url = form.getFieldValue('material')?.file?.response?.res?.requestUrls?.[0]
+      const parsedUrl = new URL(url);
+      fileName = parsedUrl.origin + parsedUrl.pathname;
+      name = form.getFieldValue('material').file.name
+    }
+    uploadSingleTreeDataFile({ courseId, file: fileName, name, selectedId: showValueKey }).then(res => {
+      if (res.status === 200) {
+        message.success('上传成功')
+      } else {
+        message.error('上传失败')
+      }
+    })
+    form.resetFields()
   }
 
   const onSave = (values: any) => {
-    console.log(treeData, '~~~~~~~~~~~~~~~');
     changeTreeData({ courseId, treeContent: treeData }).then(res => {
-      // changeTreeData({ courseId, treeContent: JSON.stringify(treeData[0]) }).then(res => {
       if (res.status === 200) {
         message.success('保存成功')
       } else {
@@ -186,11 +200,7 @@ export default (props) => {
           <Form.Item label="标题名称" name="title">
             <Input placeholder={'请输入更新标题'} />
           </Form.Item>
-          <Form.Item label='添加附件' name={"material"} >
-            <Upload>
-              <Button icon={<UploadOutlined />}>上传资料</Button>
-            </Upload>
-          </Form.Item>
+          <UploadImage fileName={'treeData'} labelName={'上传资料'} />
         </Form>
       </Modal>
       <Flex justify={'center'} align={'center'}>

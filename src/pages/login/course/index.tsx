@@ -41,8 +41,7 @@ export default () => {
   const [courseDetail, setCourseDetail] = useState({})
   const [classOptions, setClassOptions] = useState([])
   const { name, departId, Id, class: classValue, courseId: courseIds } = userInitInfo
-  const courseIdList = JSON.parse(courseIds)
-
+  const courseIdList = JSON.parse(courseIds || '[]')
   const items = [
     {
       key: '1',
@@ -75,9 +74,6 @@ export default () => {
       }
     }
   ]
-  // useEffect(() => {
-  //   location.reload()
-  // }, [user])
 
   const onSearch = async (value: string) => {
     const res = await searchCourse({ searchValue: value })

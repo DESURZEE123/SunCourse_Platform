@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Col, Row, Button, Tree } from 'antd'
+import { Col, Row, Button, Tree, message, Modal, Flex } from 'antd'
 import { useModel, history } from 'umi'
 import DiscussCard from '@/components/DiscussCard'
-import { getTreeData, initTreeData } from '@/api/downloadFile'
+import { getTreeData, initTreeData, getSingleTreeDataFile } from '@/api/downloadFile'
 import { storage } from '@/utils'
 
 import styled from 'styled-components'
@@ -56,9 +56,9 @@ const treeData1 = [
 const HomePage = () => {
   const { discussList } = useModel('system')
   const [treeData, setTreeData] = useState([])
-  const onSelect = (selectedKeys, info) => {
-    console.log('selected', selectedKeys, info)
-  }
+  const [open, setOpen] = useState(false)
+  const [downloadFile, setDownloadFile] = useState({})
+
   const getTreeDataList = async () => {
     const res = await getTreeData({ courseId })
     if (res.status === 200) {
@@ -74,6 +74,21 @@ const HomePage = () => {
     }
   }
 
+  const showFile = async (selectedKeys) => {
+    setOpen(true)
+    console.log('selected', selectedKeys[0])
+    const res = await getSingleTreeDataFile({ courseId, selectedId: selectedKeys[0] })
+    if (res.status === 200) {
+      setDownloadFile(res.data[0])
+    } else {
+      message.error('获取文件失败')
+    }
+  }
+
+  const downFile = () => {
+    setOpen(false)
+    window.open(downloadFile.file)
+  }
   useEffect(() => {
     getTreeDataList()
   }, [])
@@ -87,7 +102,7 @@ const HomePage = () => {
               <div>目录</div>
               {user.isTeacher && <Button type='primary' onClick={() => { history.push('/material/edit') }}>编辑目录</Button>}
             </CatalogText>
-            {treeData.length > 0 && <Tree style={{ fontSize: '18px' }} defaultExpandAll={true} defaultExpandedKeys={['0-0-0']} onSelect={onSelect} treeData={treeData} />}
+            {treeData.length > 0 && <Tree style={{ fontSize: '18px' }} defaultExpandAll={true} defaultExpandedKeys={['0-0-0']} onSelect={showFile} treeData={treeData} />}
           </div>
         </Col>
         <Col span={12}>
@@ -96,6 +111,15 @@ const HomePage = () => {
           })}
         </Col>
       </Row>
+      <Modal title='目录详情' closable={false} open={open} footer={null}>
+        {downloadFile?.name && <h3>文件名：{downloadFile?.name}</h3>}
+        <Flex justify={'center'} align={'center'}>
+          <Button onClick={() => { setOpen(false) }} style={{ margin: '15px' }}>取消</Button>
+          <Button type='primary' onClick={downFile}>
+            下载
+          </Button>
+        </Flex>
+      </Modal>
     </>
   )
 }

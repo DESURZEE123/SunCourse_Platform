@@ -24,6 +24,22 @@ export const initTreeData = async (params) => {
   })
 }
 
+// 获取单个树的资料数据
+export const getSingleTreeDataFile = async (params) => {
+  return request('/api/tree/file', {
+    method: 'post',
+    params
+  })
+}
+
+// 上传单个树的资料数据
+export const uploadSingleTreeDataFile = async (params) => {
+  return request('/api/tree/file/upload', {
+    method: 'post',
+    params
+  })
+}
+
 // 获取资料数据
 export const getMaterialData = async (params) => {
   return request('/api/material', {

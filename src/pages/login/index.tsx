@@ -26,10 +26,16 @@ export default () => {
       if (status === 200) {
         message.success('登录成功')
         storage.setItem('userInfo1', values.login)
+        setTimeout(() => {
+          location.reload();
+        }, 800)
         history.push('/login/course')
       } else if (values.login.teaId === '123') {
         storage.setItem('userInfo1', { admin: true })
-        history.push('/home')
+        setTimeout(() => {
+          location.reload();
+          history.push('/home')
+        }, 1300)
       } else if (status === 404) {
         message.error('账号或密码错误')
       }
@@ -39,13 +45,15 @@ export default () => {
       const params = !isTeacher ? {
         Id: Date.now() % 10000,
         departId: parseInt(departId),
-        classValue: classMapList.get(parseInt(classOptions[1])),
-        classId: parseInt(classOptions[1]),
+        classValue: classOptions && classMapList.get(parseInt(classOptions[1])) || null,
+        classId: classOptions && parseInt(classOptions[1]) || null,
+        courseId: JSON.stringify([]),
         ...values.register
       } :
         {
           Id: Date.now() % 10000,
           departId: parseInt(departId),
+          courseId: JSON.stringify([]),
           ...values.register
         }
       const res = await registerApi(params)
