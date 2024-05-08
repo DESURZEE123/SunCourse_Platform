@@ -18,7 +18,9 @@ export default ({ TitleList }: { TitleList: string[] }) => {
   const [isReplay, setIsReplay] = useState(false)
   const [isLike, setIsLike] = useState(false)
   const [LikeNum, setLikeNum] = useState(0)
-  const { idDiscussion, DisName, title, data, content, asList = [], like, file } = TitleList
+  console.log(TitleList);
+
+  const { idDiscussion, DisName, title, data, content, asList = [], like, file, nameId } = TitleList
   const inputRef = useRef()
   const isDetail = history.location.search.split('=')[1];
   useEffect(() => {
@@ -36,8 +38,6 @@ export default ({ TitleList }: { TitleList: string[] }) => {
 
   // 回复
   const ReplayDiscuss = async () => {
-    // const belongId = idDiscussion
-    // const data = { ...values, idDiscussion, belongId, idCourse: 1, replayId: 0, DisName: 'wyy' }
     const content = inputRef?.current.resizableTextArea.textArea.value
     const DisName = user?.teaId ? teacherMapList.get(parseInt(user.teaId)) : studentMapList.get(parseInt(user.stuId))
     const params = {
@@ -47,7 +47,8 @@ export default ({ TitleList }: { TitleList: string[] }) => {
       belongId: idDiscussion,
       DisName,
       title: '',
-      content
+      content,
+      nameId: user?.teaId || user?.stuId
     }
     const res = await replayDiscuss(params)
     if (res) {
@@ -67,6 +68,7 @@ export default ({ TitleList }: { TitleList: string[] }) => {
         <Avatar style={{ backgroundColor: '#c5ccdd' }} icon={<UserOutlined />} />
         <div>
           <span className='text-detail'>{DisName}</span>
+          {(nameId && user?.isTeacher) && <span className='text-detail'>  账号：{nameId}</span>}
           <div className='text-detail'>{data}</div>
         </div>
       </Space>

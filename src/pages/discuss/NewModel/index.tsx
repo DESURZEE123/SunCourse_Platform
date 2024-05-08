@@ -33,7 +33,16 @@ export default () => {
     const idDiscussion = Date.now() % 100000
     const belongId = idDiscussion
     const DisName = user?.teaId ? teacherMapList.get(parseInt(user.teaId)) : studentMapList.get(parseInt(user.stuId))
-    const data = { ...values, material: fileName, idDiscussion, belongId, idCourse: courseId, replayId: 0, DisName }
+    const data = {
+      ...values,
+      material: fileName,
+      idDiscussion,
+      belongId,
+      idCourse: courseId,
+      replayId: 0,
+      DisName, 
+      nameId: user?.teaId || user?.stuId
+    }
     const res = await newDiscuss(data)
     if (res.status === 200) {
       message.success('新建成功');
@@ -65,7 +74,7 @@ export default () => {
           <Form.Item name={CONTENT} label='描述'>
             <Input.TextArea />
           </Form.Item>
-          <UploadImage fileName={'discuss'} labelName={'添加图片'}/>
+          <UploadImage fileName={'discuss'} labelName={'添加图片'} />
           <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
             <Button htmlType='button' onClick={onReset} style={{ marginRight: '10px' }}>
               取消
