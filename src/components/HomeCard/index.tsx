@@ -1,4 +1,5 @@
 import { Button } from 'antd'
+import { useModel } from 'umi'
 import styled from 'styled-components'
 
 const Container = styled.div`
@@ -37,27 +38,32 @@ const ScoreText = styled.span`
   font-weight: bold;
 `
 export default ({ goDetail, detail }) => {
-  const { homework_id, title, date_start, date_end, status, score, isMark, isFinish, stuId, scoretotal } = detail
+  const { studentMapList } = useModel('course')
+
+  const { homework_id, title, date_start, date_end, status, score, isMark, isFinish, stuId, scoretotal, finishDate } = detail
 
   return (
     <Container>
       <div style={{ padding: '15px' }}>
         <Title>{title}</Title>
-        {stuId && <Title>学号：{stuId}</Title>}
-        {status === 0 && (
+        {stuId && <h4>姓名：{studentMapList.get(stuId)}</h4>}
+        {stuId && <h4>学号：{stuId}</h4>}
+        {date_start && (
           <>
             <TimeText>开始时间：{date_start}</TimeText>
             <TimeText>截止时间：{date_end}</TimeText>
           </>
         )}
+        {finishDate && <TimeText>完成时间：{finishDate}</TimeText>}
         <div style={{ marginBottom: '8px' }}>
           <span style={{ color: '#555', fontWeight: 'bold' }}>{isMark === 0 && '作业状态：未批改'}</span>
+          <span style={{ color: '#555', fontWeight: 'bold' }}>{isMark === 1 && '作业状态：已批改'}</span>
         </div>
       </div>
       <Score>
-        {status !== 0 && <ScoreText>{scoretotal}分</ScoreText>}
+        {scoretotal && <ScoreText>{scoretotal}分</ScoreText>}
         {isMark === 0 && <ScoreText>未批改</ScoreText>}
-        <Button type='primary' onClick={() => goDetail({ homework_id, isMark, stuId })}>
+        <Button type='primary' onClick={() => goDetail({ homework_id, isMark, stuId, isFinish })}>
           查看
         </Button>
       </Score>

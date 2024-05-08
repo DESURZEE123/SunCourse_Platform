@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import HomeCard from '@/components/HomeCard'
 import { PageContainer } from '@ant-design/pro-components'
 import { history } from 'umi'
-import { Flex, Tabs } from 'antd'
+import { Flex, Tabs, message } from 'antd'
 import { storage } from '@/utils'
 import { getHomeworkList, getHomeworStudentFinish } from '@/api/homework'
 
@@ -24,19 +24,14 @@ const HomeWork = () => {
       const isMarked = await getHomeworStudentFinish({ courseId, isMark: 1, isFinish: 1 })
       setIsMarkedHomeWorkList(isMarked.data)
     } else {
-      const isMarked = await getHomeworStudentFinish({ courseId, isMark: 1, isFinish: 1 })
+      const isMarked = await getHomeworStudentFinish({ courseId, isFinish: 1, stuId: user?.stuId })
       setIsMarkedHomeWorkList(isMarked.data)
     }
-
   }
 
   useEffect(() => {
     getHomeWorkData()
   }, [])
-
-  const onChange = (key: string) => {
-    // console.log(key)
-  }
 
   const goDetail = ({ homework_id, isMark, stuId }) => {
     if (user.isTeacher) {
@@ -56,6 +51,8 @@ const HomeWork = () => {
           search: `?id=${homework_id}`
         })
       }
+    } else if (isMark === 0) {
+      message.error('作业未批改')
     } else if (isMark === 1) {
       history.push({
         pathname: '/homework/my/details/StuWork',
@@ -107,7 +104,7 @@ const HomeWork = () => {
   return (
     <PageContainer>
       <div>
-        <Tabs defaultActiveKey='1' items={user.isTeacher ? [items[0], items[1], items[2]] : [items[0], items[3]]} onChange={onChange} />
+        <Tabs defaultActiveKey='1' items={user.isTeacher ? [items[0], items[1], items[2]] : [items[0], items[3]]} />
       </div>
     </PageContainer>
   )

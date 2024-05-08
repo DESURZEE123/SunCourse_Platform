@@ -24,6 +24,7 @@ export default () => {
   const [select, setSelect] = useState([])
   const [selectAnswerOption, setSelectAnswerOption] = useState([])
   const [short, setShort] = useState([])
+  const [title, setTitle] = useState('')
   const params = history.location.search.split('?');
   const homework_id = Number(params?.[1].split('=')[1]);
   const isMark = Number(params?.[2].split('=')[1]);
@@ -37,6 +38,7 @@ export default () => {
       short: data.short_score * short.length,
       total: data.select_score * select.length + data.short_score * short.length
     }]
+    setTitle(data.title)
     // console.log(res);
     setDataSource(dataSources)
     setSelect(select)
@@ -45,7 +47,7 @@ export default () => {
   console.log(MarkHomeworkDetail);
 
   const MarkHomework = async () => {
-    const res = await getHomeworStudentFinish({ courseId, isMark, isFinish: 1 })
+    const res = await getHomeworStudentFinish({ courseId, isMark, isFinish: 1, stuId: markStuId })
     const data = res.data.filter((item) => item.stuId === markStuId)
     setMarkHomeworkDetail(data)
   }
@@ -110,7 +112,9 @@ export default () => {
       select: JSON.stringify(selectAnswer),
       short: JSON.stringify(shortAnswer),
       isFinish: 1,
-      isMark: 1 // 0 未批改 1 已批改
+      isMark: 0, // 0 未批改 1 已批改
+      finishDate: new Date(),
+      title
     }
     const res = await submitHomework(params)
     if (res.status === 200) {
@@ -180,10 +184,11 @@ export default () => {
       <Watermark content={user.stuId} font={{ fontSize: '10' }} gap={[110, 100]}>
         {/* <Table dataSource={dataSource} columns={columns} pagination={false} /> */}
         <Form form={form} name='control-hooks' onFinish={onFinish} style={{ padding: '0 20px', backgroundColor: '#fff' }}>
+          <h2>{title}</h2>
           {/* 选择题 */}
           <div>
             <QuestionTitle>一、单选题(共{select?.length}题，每题{dataSource[0]?.select / select?.length}分)</QuestionTitle>
-            {select.map((item,index) => (
+            {select.map((item, index) => (
               <div key={item.id}>
                 {index + 1}.{item.question}
                 <Form.Item name={`select${item.id}`}>
@@ -194,9 +199,10 @@ export default () => {
                     <Radio value={item.option_D}>{item.option_D}</Radio>
                   </Radio.Group>
                 </Form.Item>
-                <Form.Item name={`mark_select${item.id}`} label={'分数：'}>
-                  <InputNumber />
-                </Form.Item>
+                {isMark !== 3 &&
+                  <Form.Item name={`mark_select${item.id}`} label={'分数：'}>
+                    <InputNumber min={0} max={dataSource[0]?.select / select?.length} />
+                  </Form.Item>}
               </div>
             ))}
           </div>
@@ -204,16 +210,20 @@ export default () => {
           <div>
             <QuestionTitle>二、简答题(共{short?.length}题，每题{dataSource[0]?.short / short?.length}分)</QuestionTitle>
             <div>
-              {short.map((item,index) => (
+              {short.map((item, index) => (
                 <div key={item.id}>
                   <div>第{index + 1}题.{item.question}</div>
                   {item?.file && <Image preview={false} src={item?.file} />}
                   <Form.Item name={`short${item.id}`}>
                     <Input.TextArea />
                   </Form.Item>
-                  <Form.Item name={`mark_short${item.id}`} label={'分数：'}>
+                  {isMark !== 3 &&
+                    <Form.Item name={`mark_short${item.id}`} label={'分数：'}>
+                      <InputNumber min={0} max={dataSource[0]?.short / short?.length} />
+                    </Form.Item>}
+                  {/* <Form.Item name={`mark_short${item.id}`} label={'分数：'}>
                     <InputNumber />
-                  </Form.Item>
+                  </Form.Item> */}
                 </div>
               ))}
             </div>
@@ -228,7 +238,7 @@ export default () => {
                 <Button type='primary' htmlType='submit'>提交</Button>
               </>
               )}
-              {isMark === 1 && <Button type='primary' onClick={() => history.push('/homework/my')}>返回</Button>}
+              {isMark !== 3 && <Button type='primary' onClick={() => history.push('/homework/my')}>返回</Button>}
             </Flex>
           </Form.Item>
         </Form>

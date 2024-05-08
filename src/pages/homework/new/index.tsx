@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { InputNumber, Space, Tooltip, Button, message, Steps, Radio, Form, Input, DatePicker, Divider, Flex, Select } from 'antd';
 import { PlusSquareOutlined, EyeOutlined } from '@ant-design/icons'
-import { history } from 'umi'
+import { useModel, history } from 'umi'
 import { storage } from '@/utils'
 import { PageContainer } from '@ant-design/pro-components'
 import UploadImage from '@/components/UploadImage'
@@ -57,6 +57,7 @@ const steps = [
 const user = storage.getItem('userInfo1')
 const selectedCourse = storage.getItem('courseId')
 export default () => {
+  const { teacherMapList } = useModel('course')
   const [form] = Form.useForm()
   const [current, setCurrent] = useState(0)
   const [formContext, setFormContext] = useState({})
@@ -111,10 +112,6 @@ export default () => {
         selectId: Date.now() % 10000,
         ...select[key]
       }))
-      // const shortList = Object.keys(short).map(key => ({
-      //   shortId: Date.now() % 100000,
-      //   ...short[key]
-      // }));
       const shortList = Object.keys(short).map(key => {
         const item = short[key];
         let fileName
@@ -129,7 +126,6 @@ export default () => {
           file: fileName
         };
       });
-
       const params = {
         ...prevCount,
         ...form.getFieldsValue(),
@@ -137,8 +133,10 @@ export default () => {
         teaId: user.teaId,
         courseId: selectedCourse,
         select: selectList,
-        short: shortList
+        short: shortList,
+        short_score: answerScore
       }
+
       const res = await createHomework(params)
       if (res.status === 200) {
         message.success('作业发布成功')
@@ -206,11 +204,11 @@ export default () => {
           {current === 3 &&
             <>
               <h3 style={{ fontWeight: 'bold' }}>作业发布</h3>
-              <Form.Item name={FORM_STATUS} label='发布状态'>
+              {/* <Form.Item name={FORM_STATUS} label='发布状态'>
                 <Select options={[{ label: '已发布', value: 1 }, { label: '未发布', value: 0 }]} />
-              </Form.Item>
+              </Form.Item> */}
               <Form.Item name={FORM_AUTHOR} label='发布人'>
-                <div>{'wyy'}</div>
+                <div>{teacherMapList.get(parseInt(user?.teaId))}</div>
               </Form.Item>
               {/* <Form.Item name={FORM_Way} label='是否作业互批'>
                 <Radio.Group >
@@ -219,10 +217,10 @@ export default () => {
                 </Radio.Group>
               </Form.Item> */}
               <Form.Item name={FORM_SELECT_SCORE} label='客观题分数'>
-                {selectNumber} × <Form.Item name={FORM_SELECT_SCORE} noStyle><InputNumber onChange={(value) => { setSelectScore(value) }} /></Form.Item> = {selectNumber * selectScore}分
+                {selectNumber} × <Form.Item name={FORM_SELECT_SCORE} noStyle><InputNumber onChange={(value) => { setSelectScore(value) }} min={0} /></Form.Item> = {selectNumber * selectScore}分
               </Form.Item>
               <Form.Item name={FORM_ANSWER_SCORE} label='主观题分数'>
-                {answerNumber} × <Form.Item name={FORM_ANSWER_SCORE} noStyle><InputNumber onChange={(value) => { setAnswerScore(value) }} /> </Form.Item> = {answerNumber * answerScore}分
+                {answerNumber} × <Form.Item name={FORM_ANSWER_SCORE} noStyle><InputNumber onChange={(value) => { setAnswerScore(value) }} min={0} /> </Form.Item> = {answerNumber * answerScore}分
               </Form.Item>
               总分：{selectNumber * selectScore + answerNumber * answerScore}分
             </>}

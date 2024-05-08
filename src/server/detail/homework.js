@@ -52,17 +52,33 @@ const getHomeworkDetail = (req, res) => {
 
 // 教师获取学生作业详情
 const getHomeworStudentFinish = (req, res) => {
-  const { courseId, isFinish, isMark } = req.query
-  pool.query('SELECT * FROM Homework_Answer WHERE courseId =? and isFinish =? and isMark =?;', [courseId, isFinish, isMark], (err, rows1) => {
+  const { courseId, isFinish, isMark, stuId } = req.query;
+
+  let query = 'SELECT * FROM Homework_Answer WHERE courseId = ? and isFinish = ?';
+  let params = [courseId, isFinish];
+
+  if (isMark) {
+    query += ' and isMark = ?';
+    params.push(isMark);
+  }
+
+  if (stuId) {
+    query += ' and stuId = ?';
+    params.push(stuId);
+  }
+
+  query += ';';
+
+  pool.query(query, params, (err, rows1) => {
     if (err) {
-      console.error('Error querying database:', err)
-      res.status(500).send('Internal Server Error')
+      console.error('Error querying database:', err);
+      res.status(500).send('Internal Server Error');
     } else {
-      const data = { data: rows1, status: 200, msg: '查询成功' }
-      res.status(200).json(data)
+      const data = { data: rows1, status: 200, msg: '查询成功' };
+      res.status(200).json(data);
     }
-  })
-}
+  });
+};
 
 // 教师批改作业
 const markHomework = (req, res) => {
@@ -114,13 +130,13 @@ const getHomeworkDetailStudent = (req, res) => {
 
 // 学生提交作业
 const submitHomework = (req, res) => {
-  const { homework_id, stuId, courseId, select, short, isFinish, isMark } = req.query
+  const { homework_id, stuId, courseId, select, short, isFinish, isMark, title, finishDate } = req.query
   const AnswerSql =
     `INSERT INTO homework_answer 
-      (homework_id, stuId, courseId, selectAnswer, shortAnswer, isFinish, isMark) 
-      VALUES (?, ?, ?, ?, ?, ?, ?);
+      (homework_id, stuId, courseId, selectAnswer, shortAnswer, isFinish, isMark, title, finishDate) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
     `
-  const AnswerValues = [homework_id, stuId, courseId, select, short, isFinish, isMark]
+  const AnswerValues = [homework_id, stuId, courseId, select, short, isFinish, isMark, title, finishDate]
   pool.query(AnswerSql, AnswerValues, (err, rows) => {
     if (err) {
       console.error('Error querying database:', err)

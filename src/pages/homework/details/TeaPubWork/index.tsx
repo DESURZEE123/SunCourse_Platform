@@ -69,7 +69,6 @@ export default () => {
                 <Radio value={item.option_D}>{item.option_D}</Radio>
               </Radio.Group>
             </div>
-            {/* </Form.Item> */}
           </>
         ))}
       </Card>
@@ -78,7 +77,8 @@ export default () => {
         {short.map((item, index) => (
           <>
             <div>{index + 1}.{item.question}</div>
-            {item?.file && <Image src={item?.file} />}
+            {item?.file && <Image src={item?.file} style={{ margin: '5px 0' }} />}
+            <h3>答案：</h3>
             <Input.TextArea value={item.answer} />
           </>
         ))}
