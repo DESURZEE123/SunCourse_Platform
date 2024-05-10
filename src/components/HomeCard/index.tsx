@@ -42,6 +42,12 @@ export default ({ goDetail, detail }) => {
 
   const { homework_id, title, date_start, date_end, status, score, isMark, isFinish, stuId, scoretotal, finishDate } = detail
 
+  const dataTransLocal = (dataTime: string) => {
+    const date = new Date(dataTime.replace(/"/g, ''));
+    const localDateTimeString = date.toLocaleString()
+    return localDateTimeString
+  }
+
   return (
     <Container>
       <div style={{ padding: '15px' }}>
@@ -50,11 +56,11 @@ export default ({ goDetail, detail }) => {
         {stuId && <h4>学号：{stuId}</h4>}
         {date_start && (
           <>
-            <TimeText>开始时间：{date_start}</TimeText>
-            <TimeText>截止时间：{date_end}</TimeText>
+            <TimeText>开始时间：{dataTransLocal(date_start)}</TimeText>
+            <TimeText>截止时间：{dataTransLocal(date_end)}</TimeText>
           </>
         )}
-        {finishDate && <TimeText>完成时间：{finishDate}</TimeText>}
+        {finishDate && <TimeText>完成时间：{dataTransLocal(finishDate)}</TimeText>}
         <div style={{ marginBottom: '8px' }}>
           <span style={{ color: '#555', fontWeight: 'bold' }}>{isMark === 0 && '作业状态：未批改'}</span>
           <span style={{ color: '#555', fontWeight: 'bold' }}>{isMark === 1 && '作业状态：已批改'}</span>

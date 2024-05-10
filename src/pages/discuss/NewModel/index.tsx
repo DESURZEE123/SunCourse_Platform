@@ -36,6 +36,7 @@ export default () => {
     const data = {
       ...values,
       material: fileName,
+      data:new Date(),
       idDiscussion,
       belongId,
       idCourse: courseId,

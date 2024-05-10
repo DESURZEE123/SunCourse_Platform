@@ -49,6 +49,7 @@ export default ({ TitleList, hasReplay }: { TitleList: string[], hasReplay: bool
       DisName,
       title: '',
       content,
+      data: new Date(),
       nameId: user?.teaId || user?.stuId
     }
     const res = await replayDiscuss(params)
@@ -72,6 +73,12 @@ export default ({ TitleList, hasReplay }: { TitleList: string[], hasReplay: bool
     getReplayList()
   }, [])
 
+  const dataTransLocal = (dataTime: string) => {
+    const date = new Date(dataTime.replace(/"/g, ''));
+    const localDateTimeString = date.toLocaleString()
+    return localDateTimeString
+  }
+
   return (
     <Card style={{ marginBottom: '10px' }}>
       <Space>
@@ -79,7 +86,7 @@ export default ({ TitleList, hasReplay }: { TitleList: string[], hasReplay: bool
         <div>
           <span className='text-detail'>{DisName}</span>
           {(nameId && user?.isTeacher) && <span className='text-detail'>  账号：{nameId}</span>}
-          <div className='text-detail'>{data}</div>
+          {data && <div className='text-detail'>{dataTransLocal(data || '')}</div>}
         </div>
       </Space>
       <div>

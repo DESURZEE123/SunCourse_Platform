@@ -45,14 +45,14 @@ const changeLike = (req, res) => {
 }
 // 新建讨论
 const newDiscuss = (req, res) => {
-  const { idDiscussion, idCourse, replayId, belongId, DisName, title, content, material, nameId } = req.body
+  const { idDiscussion, idCourse, replayId, belongId, DisName, title, content, material, nameId, data } = req.body
   const queryText = `
   INSERT INTO discussion (
-    idDiscussion, idCourse, replayId, belongId, DisName, title, content, file, nameId
+    idDiscussion, idCourse, replayId, belongId, DisName, title, content, file, nameId, data
   ) VALUES (
-    ?, ?, ?, ?, ?, ?, ?, ?, ?
+    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
   )`;
-  const values = [idDiscussion, idCourse, replayId, belongId, DisName, title, content, material, nameId];
+  const values = [idDiscussion, idCourse, replayId, belongId, DisName, title, content, material, nameId, data];
   pool.query(queryText, values, (err, rows) => {
     if (err) {
       console.error('Error querying database:', err)
@@ -65,14 +65,14 @@ const newDiscuss = (req, res) => {
 }
 // 回复
 const replayDiscuss = (req, res) => {
-  const { idDiscussion, idCourse, replayId, belongId, DisName, title, content, nameId } = req.body
+  const { idDiscussion, idCourse, replayId, belongId, DisName, title, content, nameId, data } = req.body
   const queryText = `
   INSERT INTO discussion (
-    idDiscussion, idCourse, replayId, belongId, DisName, title, content, nameId
+    idDiscussion, idCourse, replayId, belongId, DisName, title, content, nameId, data
   ) VALUES (
-    ?, ?, ?, ?, ?, ?, ?, ?
+    ?, ?, ?, ?, ?, ?, ?, ?, ?
   )`;
-  const values = [idDiscussion, idCourse, replayId, belongId, DisName, title, content, nameId];
+  const values = [idDiscussion, idCourse, replayId, belongId, DisName, title, content, nameId, data];
 
   pool.query(queryText, values, (err, rows) => {
     if (err) {
