@@ -33,7 +33,8 @@ export default ({ TitleList, hasReplay }: { TitleList: string[], hasReplay: bool
     const like = isLike ? -1 : 1
     await changeLike({ idDiscussion, like })
     const res = await getDiscussList()
-    setDiscussList(discussTrans(res))
+    const filterData = res.filter((item) => item.idCourse === courseId)
+    setDiscussList(discussTrans(filterData))
   }
 
   // 回复

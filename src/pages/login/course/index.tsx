@@ -125,6 +125,9 @@ export default () => {
     const res = await createCourse(params)
     if (res) {
       message.success('新建成功')
+      setTimeout(() => {
+        location.reload();
+      }, 500)
     } else {
       message.error('新建失败')
     }

@@ -44,7 +44,6 @@ export default () => {
     setSelect(select)
     setShort(short)
   }
-  console.log(MarkHomeworkDetail);
 
   const MarkHomework = async () => {
     const res = await getHomeworStudentFinish({ courseId, isMark, isFinish: 1, stuId: markStuId })
@@ -78,11 +77,18 @@ export default () => {
       selectAnswer.forEach(item => {
         formValues[`select${item.id}`] = item.answer;
         const selectedOption = selectAnswerOption;
-        if (selectedOption === item.answer) {
-          formValues[`mark_select${item.id}`] = dataSource[0]?.select / select?.length;
-        } else {
-          formValues[`mark_select${item.id}`] = 0;
-        }
+        select.map((_item) => {
+          const answerOption = `option_${_item.answer}`;
+          const answerValue = _item[answerOption];
+
+          if (_item.id === item.id) {
+            if (answerValue === item.answer) {
+              formValues[`mark_select${item.id}`] = dataSource[0]?.select / select?.length;
+            } else {
+              formValues[`mark_select${item.id}`] = 0;
+            }
+          }
+        })
       });
 
       shortAnswer.forEach(item => {
@@ -230,7 +236,7 @@ export default () => {
           </div>
           <Form.Item>
             <Flex justify="center" style={{ margin: '10px 0' }}>
-              {isMark === 0 && <Button type='primary' onClick={() => finishMark()}>批改完成</Button>}
+              {isMark === 0 && <Button type='primary' onClick={() => finishMark()} style={{marginRight:'10px'}}>批改完成</Button>}
               {isMark === 3 && (<>
                 <Button type='primary' onClick={() => form.resetFields()} style={{ marginRight: '20px' }}>
                   重置

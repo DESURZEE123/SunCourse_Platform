@@ -108,7 +108,7 @@ const getHomeworkDetailStudent = (req, res) => {
       console.error('Error querying database:', err)
       res.status(500).send('Internal Server Error')
     } else {
-      pool.query('SELECT id, question, option_A, option_B, option_C, option_D FROM homework_selectquestion WHERE homework_id = ?;', [homework_id], (err, rows2) => {
+      pool.query('SELECT id, question, option_A, option_B, option_C, option_D, answer FROM homework_selectquestion WHERE homework_id = ?;', [homework_id], (err, rows2) => {
         if (err) {
           console.error('Error querying database:', err)
           res.status(500).send('Internal Server Error')

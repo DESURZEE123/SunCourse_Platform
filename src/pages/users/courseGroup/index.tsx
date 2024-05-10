@@ -41,7 +41,7 @@ export default () => {
         }}
         pagination={{
           pageSize: 10,
-          total: 12,
+          total: data.length,
           current: page,
           onChange: page => setPage(page),
         }}
