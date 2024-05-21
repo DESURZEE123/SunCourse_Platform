@@ -44,7 +44,7 @@ app.post('/user/delete/stuId', userApi.deleteStudent)
 // 获取学院 全部数据
 app.get('/user/depart', userApi.getDepartList)
 // // 创建学院
-// app.post('/user/depart/create', userApi.addDepart)
+app.post('/user/depart/create', userApi.addDepart)
 // // 删除学院
 // app.post('/user/depart/delete', userApi.deleteDepart)
 // // 获取专业

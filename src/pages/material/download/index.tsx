@@ -17,6 +17,8 @@ const Material = () => {
   const [dataSource, setDataSource] = useState([])
   const [open, setOpen] = useState(false)
   const [form] = Form.useForm()
+  const [page, setPage] = useState(1)
+
   const columns = getTableColumns(setDataSource)
 
   useEffect(() => {
@@ -80,6 +82,12 @@ const Material = () => {
         dataSource={dataSource}
         columns={columns}
         options={false}
+        pagination={{
+          pageSize: 10,
+          total: dataSource.length,
+          current: page,
+          onChange: page => setPage(page),
+        }}
       />
       <Modal title='新建话题' closable={false} open={open} footer={null}>
         <Form form={form}>

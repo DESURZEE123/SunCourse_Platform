@@ -46,7 +46,7 @@ export default () => {
         Id: Date.now() % 10000,
         departId: parseInt(departId),
         classValue: classOptions && classMapList.get(parseInt(classOptions[1])) || null,
-        classId: classOptions && parseInt(classOptions[1]) || null,
+        // classId: classOptions && parseInt(classOptions[1]) || null,
         courseId: JSON.stringify([]),
         ...values.register
       } :
@@ -140,10 +140,10 @@ export default () => {
                 <Form.Item label="所属学院" name={["register", "departId"]}>
                   <Select options={Array.from(departMapList, ([value, label]) => ({ value, label }))} onChange={selectDepart} />
                 </Form.Item>
-                {!isTeacher &&
+                {/* {!isTeacher &&
                   <Form.Item label="所属班级" name={["register", "class"]}>
                     <Cascader options={classOptions} placeholder="请选择班级" />
-                  </Form.Item>}
+                  </Form.Item>} */}
                 <Form.Item label="密码" name={["register", "password"]}>
                   <Input.Password />
                 </Form.Item>

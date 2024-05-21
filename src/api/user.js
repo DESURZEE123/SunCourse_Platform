@@ -24,7 +24,12 @@ export const getDepartList = async () => {
 }
 
 // 创建 学院
-export const addDepart = (parmas) => post('/api/user/depart/create', parmas)
+export const addDepart = async (params) => {
+  return request(`/api/user/depart/create`, {
+    method: 'post',
+    params
+  })
+}
 // 删除 学院 
 export const deleteDepart = async (params) => {
   return request(`/api/user/depart/delete`, {

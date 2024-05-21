@@ -204,6 +204,21 @@ const getMajorList = (req, res) => {
   });
 }
 
+// 创建学院
+const addDepart = (req, res) => {
+  const { departId, name } = req.query
+  console.log(departId, name);
+  pool.query('INSERT INTO Department (departId, name) VALUES (?, ?);', [departId, name], (err, rows) => {
+    if (err) {
+      console.error('Error querying database:', err)
+      res.status(500).send('Internal Server Error')
+    } else {
+      const data = { status: 200, msg: '新建成功' }
+      res.status(200).json(data)
+    }
+  })
+}
+
 const userApi = {
   getTeacherList,
   getStudentList,
@@ -218,7 +233,7 @@ const userApi = {
   addCourse,
   searchCourse,
   createCourse,
-  // addDepart,
+  addDepart,
   // addMajor,
   // deleteMajor,
   // deleteClass,

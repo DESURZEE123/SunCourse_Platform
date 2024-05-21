@@ -115,7 +115,7 @@ export default () => {
     const params = {
       courseId,
       teaId: parseInt(storage.getItem('userInfo1').teaId),
-      classId: values?.classId?.[1] || null,
+      // classId: values?.classId?.[1] || null,
       courseIdsList: JSON.stringify(courseIdList),
       material: fileName,
       name: values.name,
@@ -176,10 +176,13 @@ export default () => {
                 <div>{teacherMapList.get(teaId)}</div>
                 <div>{departMapList.get(departId)}</div>
                 <div className='flex-container'>
-                  <div>{classMapList.get(classId)}</div>
+                  {/* <div>{classMapList.get(classId)}</div> */}
                   {(courseIdList || []).includes(courseId) && (
                     <Button type='primary' onClick={() => {
                       storage.setItem('courseId', courseId)
+                      setTimeout(() => {
+                        location.reload();
+                      }, 800)
                       history.push('/home')
                     }}>进入课程</Button>
                   )}
@@ -222,9 +225,9 @@ export default () => {
           <Form.Item label="所属学院" name={"departId"}>
             <Select options={Array.from(departMapList, ([value, label]) => ({ value, label }))} onChange={selectDepart} />
           </Form.Item>
-          <Form.Item label="指定班级" name={"classId"}>
+          {/* <Form.Item label="指定班级" name={"classId"}>
             <Cascader options={classOptions} placeholder="请选择班级" />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
             <Button htmlType='button' onClick={onReset} style={{ marginRight: '10px' }}>
               取消
@@ -239,8 +242,8 @@ export default () => {
         <Flex>
           <Image preview={false} src={class_cover} style={{ minWidth: '250px' }}></Image>
           <div style={{ marginLeft: '20px' }}>
-            <h3>主讲老师：{teacherMapList.get(courseDetail.teaId)}</h3>
-            <h3>所属学院：{departMapList.get(courseDetail.departId)}</h3>
+            <h3>主讲老师：{teacherMapList.get(courseDetail?.teaId)}</h3>
+            <h3>所属学院：{departMapList.get(courseDetail?.departId)}</h3>
             <h3>课程简介：{courseDetail?.content || '暂无简介'}</h3>
           </div>
         </Flex>

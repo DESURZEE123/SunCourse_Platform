@@ -39,14 +39,14 @@ export const ExpandedRowComponent = (departId) => {
           <Button type='primary' onClick={() => { showDrawer(record?.majId) }}>
             详情
           </Button>
-          <Popconfirm
+          {/* <Popconfirm
             description="确定要删除此条专业信息?"
             onConfirm={confirm}
           >
             <Button type='link' danger>
               删除
             </Button>
-          </Popconfirm>
+          </Popconfirm> */}
         </Space>
       )
     }

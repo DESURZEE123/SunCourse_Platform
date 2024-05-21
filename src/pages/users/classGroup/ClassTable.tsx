@@ -20,19 +20,19 @@ export default (props) => {
       title: '班级名称',
       dataIndex: 'name',
     },
-    {
-      title: 'Action',
-      render: (_, record) => (
-        <Popconfirm
-          description="确定要删除此条班级信息?"
-          onConfirm={confirm}
-        >
-          <Button type='link' danger>
-            删除
-          </Button>
-        </Popconfirm>
-      ),
-    },
+    // {
+    //   title: 'Action',
+    //   render: (_, record) => (
+    //     <Popconfirm
+    //       description="确定要删除此条班级信息?"
+    //       onConfirm={confirm}
+    //     >
+    //       <Button type='link' danger>
+    //         删除
+    //       </Button>
+    //     </Popconfirm>
+    //   ),
+    // },
   ];
   return (
     <Drawer title="专业班级详情" onClose={onClose} open={open} size={'large'}>
