@@ -8,7 +8,8 @@
  */
 export default {
   '/api': {
-    'target': 'http://localhost:3000',
+    // 'target': 'http://localhost:3000',
+    'target': 'http://8.130.22.144:3000',
     'changeOrigin': true,
     'pathRewrite': { '^/api': '' }
   }

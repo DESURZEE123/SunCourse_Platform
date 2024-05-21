@@ -85,7 +85,7 @@ export default ({ TitleList, hasReplay }: { TitleList: string[], hasReplay: bool
         <Avatar style={{ backgroundColor: '#c5ccdd' }} icon={<UserOutlined />} />
         <div>
           <span className='text-detail'>{DisName}</span>
-          {(nameId && user?.isTeacher) && <span className='text-detail'>  账号：{nameId}</span>}
+          {/* {(nameId && user?.isTeacher) && <span className='text-detail'>  账号：{nameId}</span>} */}
           {data && <div className='text-detail'>{dataTransLocal(data || '')}</div>}
         </div>
       </Space>

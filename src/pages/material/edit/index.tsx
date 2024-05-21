@@ -132,6 +132,7 @@ export default (props) => {
 
   const onFinish = () => {
     onChange(showValueKey, form.getFieldValue('title'))
+    // console.log('onFinish', form.getFieldValue('title'))
     setShowValue(false)
     setChangeValue('')
     let fileName
@@ -141,14 +142,14 @@ export default (props) => {
       const parsedUrl = new URL(url);
       fileName = parsedUrl.origin + parsedUrl.pathname;
       name = form.getFieldValue('material').file.name
+      uploadSingleTreeDataFile({ courseId, file: fileName, name, selectedId: showValueKey }).then(res => {
+        if (res.status === 200) {
+          message.success('上传成功')
+        } else {
+          message.error('上传失败')
+        }
+      })
     }
-    uploadSingleTreeDataFile({ courseId, file: fileName, name, selectedId: showValueKey }).then(res => {
-      if (res.status === 200) {
-        message.success('上传成功')
-      } else {
-        message.error('上传失败')
-      }
-    })
     form.resetFields()
   }
 
@@ -156,6 +157,7 @@ export default (props) => {
     changeTreeData({ courseId, treeContent: treeData }).then(res => {
       if (res.status === 200) {
         message.success('保存成功')
+        history.back()
       } else {
         message.error('保存失败')
       }
@@ -165,6 +167,11 @@ export default (props) => {
   const onReset = () => {
     history.back()
   }
+
+
+  useEffect(()=>{
+    form.setFieldValue('title', changeValue)
+  },[changeValue, showValueKey])
 
   const onTitleRender = (item) => {
     return (
@@ -208,7 +215,7 @@ export default (props) => {
           取消
         </Button>
         <Button type='primary' onClick={onSave}>
-          确定
+          确定更改
         </Button>
       </Flex>
     </>

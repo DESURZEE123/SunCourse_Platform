@@ -75,13 +75,14 @@ const HomePage = () => {
   }
 
   const showFile = async (selectedKeys) => {
-    setOpen(true)
     console.log('selected', selectedKeys[0])
     const res = await getSingleTreeDataFile({ courseId, selectedId: selectedKeys[0] })
-    if (res.status === 200) {
-      setDownloadFile(res.data[0])
+    if (res.status === 200 && res.data.length > 0) {
+      setOpen(true)
+      const file = res.data[res.data.length - 1];
+      setDownloadFile(file)
     } else {
-      message.error('获取文件失败')
+      message.error('本节无资料')
     }
   }
 

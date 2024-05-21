@@ -9,6 +9,8 @@ export default defineConfig({
    * @doc https://umijs.org/docs/api/config#hash
    */
   // hash: false,
+  history: { type: 'hash' },
+  hash: true,
   antd: {},
   access: {},
   model: {},
