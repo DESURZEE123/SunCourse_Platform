@@ -61,14 +61,23 @@ const HomeWork = () => {
         })
       } else {
         const res = await getHomeworStudentFinish({ courseId, isFinish: 1, stuId: user?.stuId })
-        if (res.data.length === 0) {
+        const isFinishHomework_id = res.data.find(item => item.homework_id === homework_id)
+        if (isFinishHomework_id) {
+          message.error('作业已完成')
+        } else {
           history.push({
             pathname: '/homework/my/details/StuWork',
             search: `?id=${homework_id}?isMark=3?stuId=${user.stuId}`
           })
-        } else {
-          message.error('作业已完成')
         }
+        // if (res.data.length === 0) {
+        //   history.push({
+        //     pathname: '/homework/my/details/StuWork',
+        //     search: `?id=${homework_id}?isMark=3?stuId=${user.stuId}`
+        //   })
+        // } else {
+        //   message.error('作业已完成')
+        // }
       }
     }
   }

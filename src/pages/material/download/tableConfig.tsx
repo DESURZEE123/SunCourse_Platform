@@ -27,15 +27,15 @@ export const getTableColumns = (setDataSource) => {
         placeholder: '请输入文件名'
       }
     },
-    {
-      title: '上传者',
-      dataIndex: 'activityName',
-      width: 200,
-      hideInSearch: true,
-      fieldProps: {
-        placeholder: '请输入活动名称'
-      }
-    },
+    // {
+    //   title: '上传者',
+    //   dataIndex: 'activityName',
+    //   width: 200,
+    //   hideInSearch: true,
+    //   fieldProps: {
+    //     placeholder: '请输入活动名称'
+    //   }
+    // },
     {
       title: '操作',
       width: 100,

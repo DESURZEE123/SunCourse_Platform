@@ -151,7 +151,7 @@ export default ({ TitleList, hasReplay }: { TitleList: string[], hasReplay: bool
           children: <div>{replayList.map((item) => (
             <div>
               <span>{item.DisName}
-                {(item?.nameId && user?.isTeacher) && <span className='text-detail'> (账号 {item?.nameId})</span>}
+                {/* {(item?.nameId && user?.isTeacher) && <span className='text-detail'> (账号 {item?.nameId})</span>} */}
               </span>
               <span>：  {item.content}</span>
             </div>
