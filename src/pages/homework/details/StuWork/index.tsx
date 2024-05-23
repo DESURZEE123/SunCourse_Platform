@@ -69,8 +69,10 @@ export default () => {
   // 学生答案回显 && 选择自动批改
   useEffect(() => {
     if ((isMark === 1 || isMark === 0) && MarkHomeworkDetail.length !== 0) {
-      const selectAnswer = JSON.parse(MarkHomeworkDetail[0].selectAnswer);
-      const shortAnswer = JSON.parse(MarkHomeworkDetail[0].shortAnswer);
+      const Markslected = MarkHomeworkDetail.filter((item) => item.homework_id === homework_id);
+      
+      const selectAnswer = JSON.parse(Markslected[0].selectAnswer);
+      const shortAnswer = JSON.parse(Markslected[0].shortAnswer);
 
       const formValues = {};
 
@@ -96,7 +98,7 @@ export default () => {
       });
 
       if (isMark === 1) {
-        const markShort = JSON.parse(MarkHomeworkDetail[0].markShort);
+        const markShort = JSON.parse(Markslected[0].markShort);
         markShort.forEach(item => {
           formValues[`mark_short${item.id}`] = item.value;
         });

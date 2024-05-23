@@ -172,11 +172,14 @@ export default () => {
                     setCourseDetail(data)
                   }}
                 />}>
-                <h3>{name}</h3>
-                <div>{teacherMapList.get(teaId)}</div>
-                <div>{departMapList.get(departId)}</div>
                 <div className='flex-container'>
+                  <div>
+                    <h3 style={{ fontWeight: '800' }}>{name}</h3>
+                    <div>{teacherMapList.get(teaId)}</div>
+                    <div>{departMapList.get(departId)}</div>
+                  </div>
                   {/* <div>{classMapList.get(classId)}</div> */}
+                  <div />
                   {(courseIdList || []).includes(courseId) && (
                     <Button type='primary' onClick={() => {
                       storage.setItem('courseId', courseId)
